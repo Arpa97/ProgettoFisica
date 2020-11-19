@@ -51,7 +51,7 @@ void WaveFront::checkDistance()
             (Polygon[i].y + Polygon[i + 1].y)/2,
             i + 1
                     );
-    
+     
         // Return back to see if the 
         // mid point inserted is at a right distance
         i--;
