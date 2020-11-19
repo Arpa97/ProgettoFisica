@@ -39,7 +39,7 @@ void WaveFront::insertVertex(const Vertex & v, int i)
 }
 
 
-void WaveFront::checkDistance(int n)
+void WaveFront::checkDistance()
 {
 
     for(int i = 0; i != Polygon.size(); i++)

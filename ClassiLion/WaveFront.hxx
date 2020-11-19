@@ -33,7 +33,7 @@ struct WaveFront
 
     // Method to check the distance from two points and add another one if the distance is too small
     // i is where to start the checking, so i can iterate the last segment
-    void checkDistance(int n);
+    void checkDistance();
 
     // Method to detect collision
     bool isColliding(const Vertex & v);
