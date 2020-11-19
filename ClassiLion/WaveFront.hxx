@@ -1,11 +1,11 @@
 /*********************************************************************
  * 
- * Class for the rappresentecion of the polygon of the fire, is a 
- * collection of vertex and the name wave came from the method of 
- * Huygens that is at the bottom of the model
+ * Class for the rappresentation of the fire polygon. It is a 
+ * collection of vertex and the name comes from Huygens principle 
+ * wich is the core of the model
  * 
  *********************************************************************/
-
+ 
 # pragma once
 
 # include "Vertex.hxx"
@@ -17,8 +17,8 @@
 
 struct WaveFront
 {
-    std::vector<Vertex> Poligon;
-
+    std::vector<Vertex> Polygon;
+     
     //-----------Constructors-------------
 
     WaveFront(double x = 0, double y = 0);
@@ -27,14 +27,14 @@ struct WaveFront
 
     //--------------Methods---------------
 
-    // Metod to insert a vertex in a specific position
+    // Method to insert a vertex in a specific position
     void insertVertex(double x, double y, int i = -1);
     void insertVertex(const Vertex & v, int i);
 
-    // Metod to ceck the distance from two points and ad another if the distance is too small
-    // i is where to start the cecking, so i can iterate the last segment
-    void checkDistance(int ii = 0);
+    // Method to check the distance from two points and add another one if the distance is too small
+    // i is where to start the checking, so i can iterate the last segment
+    void checkDistance();
 
-    // Metod to detect collision
+    // Method to detect collision
     bool isColliding(const Vertex & v);
 };
