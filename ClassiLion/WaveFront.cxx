@@ -42,7 +42,7 @@ void WaveFront::insertVertex(const Vertex & v, int i)
 void WaveFront::checkDistance(int n)
 {
 
-    for(int i = 0; i != Polygon.size() - 1; i++)
+    for(int i = 0; i != Polygon.size(); i++)
     if(Distanza(Polygon[i], Polygon[i + 1]) > DISTMAX)
     {
         insertVertex(
@@ -57,29 +57,14 @@ void WaveFront::checkDistance(int n)
         i--;
     }
 
-    int n = Polygon.size() - 1;
-
-    // Inserting between the last segment
-    if(Distanza(Polygon[n], Polygon[0]) > DISTMAX)
-    {
-        insertVertex(
-            // Insert the mid point
-            (Polygon[n].x + Polygon[0].x)/2,
-            (Polygon[n].y + Polygon[0].y)/2,
-            n + 1
-        );
-
-        checkDistance(n - 2);
-    }
 }
 
 
 bool WaveFront::isColliding(const Vertex & v)
 {
     int crosNum = 0;
-    int n = Polygon.size();
 
-    for(int i = 0; i != n - 1; i++)
+    for(int i = 0; i != Polygon.size(); i++)
     {
         // If either the vertex are above, or at the left of the point skip it
         if( 
@@ -91,20 +76,6 @@ bool WaveFront::isColliding(const Vertex & v)
         // scamming false crossing
 
         double xcross = (v.y - Polygon[i].y)*(Polygon[i].x - Polygon[i + 1].x)/(Polygon[i].y - Polygon[i + 1].y) + Polygon[i].x;
-
-        crosNum += (xcross > v.x) ? 1 : 0;
-    }
-
-    // checking the last segment
-    if( 
-        !(Polygon[n - 1].y > v.y && Polygon[0].y > v.y) && 
-        !(Polygon[n - 1].y < v.y && Polygon[0].y < v.y) &&
-        !(Polygon[n - 1].x < v.x && Polygon[0].x < v.x)
-      )
-    {
-        // scamming false crossing
-
-        double xcross = (v.y - Polygon[n - 1].y)*(Polygon[n - 1].x - Polygon[0].x)/(Polygon[n - 1].y - Polygon[0].y) + Polygon[n - 1].x;
 
         crosNum += (xcross > v.x) ? 1 : 0;
     }
