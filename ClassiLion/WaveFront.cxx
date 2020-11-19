@@ -39,7 +39,7 @@ void WaveFront::insertVertex(const Vertex & v, int i)
 }
 
 
-void WaveFront::checkDistance()
+void WaveFront::checkDistance(int n)
 {
 
     for(int i = 0; i != Polygon.size() - 1; i++)
@@ -60,14 +60,16 @@ void WaveFront::checkDistance()
     int n = Polygon.size() - 1;
 
     // Inserting between the last segment
-    while(Distanza(Polygon[n], Polygon[0]) > DISTMAX)
+    if(Distanza(Polygon[n], Polygon[0]) > DISTMAX)
     {
         insertVertex(
             // Insert the mid point
             (Polygon[n].x + Polygon[0].x)/2,
             (Polygon[n].y + Polygon[0].y)/2,
             n + 1
-                    );
+        );
+
+        checkDistance(n - 2);
     }
 }
 
