@@ -18,7 +18,7 @@
 struct WaveFront
 {
     std::vector<Vertex> Polygon;
-
+     
     //-----------Constructors-------------
 
     WaveFront(double x = 0, double y = 0);
