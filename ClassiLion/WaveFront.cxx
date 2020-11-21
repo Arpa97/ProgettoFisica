@@ -43,7 +43,7 @@ void WaveFront::checkDistance()
 {
 
     for(int i = 0; i != Polygon.size(); i++)
-    if(Distanza(Polygon[i], Polygon[i + 1]) > DISTMAX)
+    if(Distance(Polygon[i], Polygon[i + 1]) > MAX_DISTANCE)
     {
         insertVertex(
             // Insert the mid point

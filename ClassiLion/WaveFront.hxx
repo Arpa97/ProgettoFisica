@@ -10,14 +10,13 @@
 
 # include "Vertex.hxx"
 
-# include "CiclicContainer.hxx"
+# include "CiclicVector.hxx"
+# include "Definitions.hxx"
 
-// Constant that express the maximum distance from two vertices
-# define DISTMAX 0.1
 
 struct WaveFront
 {
-    CiclicContainer<Vertex> Polygon;
+    ciclicVector<Vertex> Polygon;
      
     //-----------Constructors-------------
 
