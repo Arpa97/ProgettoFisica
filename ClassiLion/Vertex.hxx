@@ -18,7 +18,7 @@ struct Vertex
     Vertex(const Vertex & v);
 };
 
-//--------------- Non member functions ---------------------
+//---------------Funzioni esterne---------------------
 
-// Function that calculates the distance between two vertices.
-double Distance(const Vertex & v1, const Vertex & v2);
+// Funzione per il calcolo della distanza tra due vertici
+double Distanza(const Vertex & v1, const Vertex & v2);
