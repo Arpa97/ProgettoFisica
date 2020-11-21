@@ -11,7 +11,11 @@
 # include "WaveFront.hxx"
 
 // For future class that is needed
-class Enviroment;
+struct Enviroment
+{
+    double tetha = 0;
+    double U = 0;
+};
 
 struct Fire : public WaveFront
 {
@@ -27,13 +31,9 @@ struct Fire : public WaveFront
     // Metod for the spread of fire based Huygens principle
     void Propagate(double dt);
 
-    // Metod for computing the a, b and c of the ellipses in a 
-    // particular vertex signed by an index i
-    double * elipsesAxises(int i);
-
-    // Metod for getting the RoS of a vertex signed by an index i 
-    // stored in the right cell of the enviroment
-    double getRoS(int i);
+    // Metod for getting the RoS and the other par of a vertex signed by an index i 
+    // stored in the right cell of the enviroment and put it in an array "par"
+    void getParam(double * par, int i);
 
     // Metod to compute the differential arrays for the Richard equation
     CiclicContainer<Vertex> calcDiff(const CiclicContainer<Vertex> & v);
