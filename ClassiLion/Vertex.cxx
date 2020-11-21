@@ -31,7 +31,7 @@ Vertex Vertex::operator/(double n) const
 
 //---------------Funzioni esterne---------------------
 
-double Distanza(const Vertex & v1, const Vertex & v2)
+double Distance(const Vertex & v1, const Vertex & v2)
 {
     return std::sqrt( std::pow((v1.x - v2.x), 2) + std::pow((v1.y - v2.y), 2) );
 }
