@@ -1,7 +1,7 @@
 /*********************************************************************
  * 
- * Conteiner whith a ciclic structure, implemented because is usefull
- * for rappresenting polygon
+ * Container with a ciclic structure, implemented because is usefull
+ * for rappresenting polygons
  * 
  *********************************************************************/
 
@@ -10,11 +10,12 @@
 # include <vector>
 
 template<typename T>
-struct CiclicContainer : public std::vector<T>
+struct ciclicVector : public std::vector<T>
 {
-    CiclicContainer(int N = 1): std::vector<T>(N) {}
+    ciclicVector(int N): std::vector<T>(N) {}
+    ciclicVector() : std::vector<T>() {}
 
-    //-------------Metods--------------
+    //-------------Methods--------------
 
     // Overwriting of the [] operator to build the ciclic structure
     T & operator[] (int n)
