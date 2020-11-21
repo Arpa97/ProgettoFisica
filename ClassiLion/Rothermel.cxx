@@ -2,6 +2,9 @@
 #include <cmath>
 #include <iostream>
 
+using std::exp;
+using std::pow;
+
 double Rothermel_R0(Fuel* fuel, double _M_f)
 {
 	double h = fuel->h;

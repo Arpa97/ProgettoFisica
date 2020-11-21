@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Fuel.h"
+#include "Fuel.hxx"
 #include "Definitions.hxx"
 
 struct Cell 

@@ -34,4 +34,7 @@ struct Fire : public WaveFront
     // Metod for getting the RoS of a vertex signed by an index i 
     // stored in the right cell of the enviroment
     double getRoS(int i);
+
+    // Metod to compute the differential arrays for the Richard equation
+    CiclicContainer<Vertex> calcDiff(const CiclicContainer<Vertex> & v);
 };

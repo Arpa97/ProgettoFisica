@@ -2,9 +2,10 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
+/.vs
 /Debug
+/Local
 /IncendiVS.vcxproj.user
 /IncendiVS.vcxproj.filters
 /IncendiVS.vcxproj
 /IncendiVS.sln
-/.vs
