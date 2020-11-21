@@ -15,4 +15,4 @@
 #define MAX_DISTANCE 0.5						// m. Maximum distance between two vertices of the fire polygon.
 
 #define N_FUEL_TYPES 53							// Number of different fuel types.
-#define FUEL_PATH "/home/luca/Scrivania/Introduzione sistemi complessi/Progetto/FARSITE/Applicazione/Applicazione/File/FuelTypes.txt"			
+#define FUEL_PATH "FuelTypes.txt"			
