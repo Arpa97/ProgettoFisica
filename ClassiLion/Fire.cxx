@@ -12,7 +12,7 @@ void Fire::Propagate(double dt)
 
     double par[4];
     double tetha = Forest->tetha;
-    CiclicContainer<Vertex> Diff = calcDiff(Polygon);
+    ciclicVector<Vertex> Diff = calcDiff(Polygon);
     
     double Ct = std::cos(tetha), St = std::sin(tetha);
 
@@ -40,9 +40,9 @@ void Fire::getParam(double * par, int i)
 }
 
 
-CiclicContainer<Vertex> Fire::calcDiff(const CiclicContainer<Vertex> & v)
+ciclicVector<Vertex> Fire::calcDiff(const ciclicVector<Vertex> & v)
 {
-    CiclicContainer<Vertex> Diff(Polygon.size());
+    ciclicVector<Vertex> Diff(Polygon.size());
 
     for(int i = 0; i != Polygon.size(); i++)
     Diff[i] = (Polygon[i + 1] - Polygon[i - 1])/2;

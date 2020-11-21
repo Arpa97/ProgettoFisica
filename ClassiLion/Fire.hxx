@@ -36,5 +36,5 @@ struct Fire : public WaveFront
     void getParam(double * par, int i);
 
     // Metod to compute the differential arrays for the Richard equation
-    CiclicContainer<Vertex> calcDiff(const CiclicContainer<Vertex> & v);
+    ciclicVector<Vertex> calcDiff(const ciclicVector<Vertex> & v);
 };
