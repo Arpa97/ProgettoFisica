@@ -3,14 +3,11 @@
 # include <cmath>
 
 
-// ----------------Metods-------------------
+// ----------------Methods-------------------
 
 void Fire::Propagate(double dt)
 {
-    // Checking distance from verteces
-    checkDistance();
-
-    double par[4];
+    double par[3];
     double tetha = Forest->tetha;
     ciclicVector<Vertex> Diff = calcDiff(Polygon);
     
@@ -29,9 +26,11 @@ void Fire::Propagate(double dt)
 
         den = std::sqrt(At*At + Bt*Bt);
 
-        Polygon[i].x += (num1/den + par[3] * St)*dt;
-        Polygon[i].y += (num2/den + par[3] * Ct)*dt;
+        Polygon[i].x += (num1/den + par[2] * St)*dt;
+        Polygon[i].y += (num2/den + par[2] * Ct)*dt;
     }
+    // Checking distance from verteces
+    checkDistance();
 }
 
 void Fire::getParam(double * par, int i)
