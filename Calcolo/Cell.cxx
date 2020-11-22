@@ -9,17 +9,12 @@
 Fuel* Cell::FuelType[N_FUEL_TYPES];
 
 
-void Cell::FillFuelType()
+void Cell::FillFuelType(double M_f)
 {
 	std::ifstream fcin;
 	fcin.open(FUEL_PATH);
-
-	if (fcin.fail())
-	{
-		std::cerr << strerror(errno) << '\n';
-		throw;
-	}
-
+	if (fcin.fail())	throw;
+	
 	double w_0, SAV, delta, M_x;
 	int fuelIndex;
 
@@ -46,7 +41,7 @@ void Cell::FillFuelType()
 		M_x /= 100;
 
 		FuelType[i] = new Fuel(w_0, SAV,  delta, M_x);
-		FuelType[i]->setR0(MOISTURE_CONTENT);
+		FuelType[i]->setR0(M_f);
 	}
 }
 

@@ -14,7 +14,6 @@
 struct Cell 
 {
 	int fuelIndex;
-	int cellIndex;			//TBD
 	double height;
 
 	double R;
@@ -30,7 +29,7 @@ struct Cell
 
 
 	//-----------Methods-------------
-	static void FillFuelType();
+	static void FillFuelType(double M_f);
 	void setR(double U);
 	void updateEllipseParams(double U);
 

@@ -1,4 +1,5 @@
 /*****************************************************************************************************
+* 
 * A fuel is the source of heat that sustains the combustion process. It include
 * all the combustible plant-derived material including grass, litter, duff, etc..
 * Refer to Rothermel.hxx for variable definitions.

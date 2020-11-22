@@ -12,7 +12,7 @@
 Parameters intrinsic to the fuel particle, held constant for all types of fuel.
 * h: Low heat content (Btu/lb). Heat released during combustion. 8 Btu/lb
 * S_T: Total mineral (ash) content (fraction). 0.0555 lb minerals/lb wood
-* S_e: Effective mineral content (fraction). 0.010 (lb minerals � lb silica)/lb wood
+* S_e: Effective mineral content (fraction). 0.010 (lb minerals - lb silica)/lb wood
 * rho_p: Oven-dry particle density (lb/ft3). 32 lb/ft3
 
 -------------------------------------- Fuel array --------------------------------------
