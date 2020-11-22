@@ -14,7 +14,7 @@
 
 #include <vector>
 
-class Environnement
+class Environment
 {
 	double U;
 	//Nota: volutamente privati, in modo che non si possa modificare direttamente U ma lo si possa fare
@@ -32,7 +32,7 @@ public:
 	//Nota: bozza eventualmente da buttare a seconda di come si deciderà gestire la variabilità dei fuel, 
 	//e può essere reso un std::array in modo da contenere l'informazione sulla size 
 	//Nota2: Andrà modificato per ricevere dalla GUI anche vento, direzione e umidità	
-	Environnement(double (*fuelPercentages)[2] = nullptr, int nDifferentFuels = 0);
+	Environment(double (*fuelPercentages)[2] = nullptr, int nDifferentFuels = 0);
 
 	//---------------Methods----------------
 	void advance();
@@ -48,4 +48,7 @@ public:
 	double getU() const;
 	double getTheta() const;
 	double getM_f() const;
+
+	// Methods for getting the polygon of a specific fire in the index i
+	ciclicVector<Vertex> getPolygon(int i);
 };

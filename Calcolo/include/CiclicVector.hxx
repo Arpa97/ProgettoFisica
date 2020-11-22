@@ -12,7 +12,7 @@
 template<typename T>
 struct ciclicVector : public std::vector<T>
 {
-    ciclicVector(int N = 1): std::vector<T>(N) {}
+    ciclicVector(int N): std::vector<T>(N) {}
     ciclicVector() : std::vector<T>() {}
 
     //-------------Methods--------------

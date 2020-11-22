@@ -6,7 +6,7 @@ Vertex::Vertex(double x, double y): x(x), y(y) {}
 
 Vertex::Vertex(const Vertex & v): x(v.x), y(v.y) {}
 
-//---------------------Metods-------------------------
+//---------------------Methods-------------------------
 
 Vertex Vertex::operator-(const Vertex & v) const
 {

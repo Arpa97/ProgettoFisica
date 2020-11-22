@@ -17,7 +17,7 @@ struct Vertex
     Vertex(double x = 0, double y = 0);
     Vertex(const Vertex & v);
 
-    //---------------Metods----------------
+    //---------------Methods----------------
 
     Vertex operator-(const Vertex & v) const;
     Vertex operator+(const Vertex & v) const;

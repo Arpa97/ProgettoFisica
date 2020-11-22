@@ -1,11 +1,11 @@
-#include "Environnement.hxx"
+#include "Environment.hxx"
 
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
 
-Environnement::Environnement(double (*fuelPercentages)[2], int nDifferentFuels)
+Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 {
 	U = WIND_SPEED;
 	theta = WIND_DIRECTION;
@@ -42,7 +42,7 @@ Environnement::Environnement(double (*fuelPercentages)[2], int nDifferentFuels)
 
 
 
-void Environnement::advance()
+void Environment::advance()
 {
 	for (int i = 0; i != wildfire.size(); i++)
 	{
@@ -53,7 +53,7 @@ void Environnement::advance()
 
 
 
-Cell * Environnement::getCell(const Vertex & v)
+Cell * Environment::getCell(const Vertex & v)
 {
 	int cellIndex = findCell(v.x, v.y);
 	int step = GRID_SIDE / CELL_SIDE;
@@ -64,7 +64,7 @@ Cell * Environnement::getCell(const Vertex & v)
 
 
 
-Cell* Environnement::getCell(int cellIndex)
+Cell* Environment::getCell(int cellIndex)
 {
 	int step = GRID_SIDE / CELL_SIDE;
 	int j = cellIndex % step;
@@ -74,7 +74,7 @@ Cell* Environnement::getCell(int cellIndex)
 
 
 
-int Environnement::findCell(double x, double y) const
+int Environment::findCell(double x, double y) const
 {
 	if (x > GRID_SIDE || y > GRID_SIDE) throw;		//Nota: cosa succede quando un vertice esce dalla griglia? occorrer� capire come gestire la cosa
 	int step = GRID_SIDE / CELL_SIDE;
@@ -88,7 +88,7 @@ int Environnement::findCell(double x, double y) const
 
 
 
-void Environnement::addFire(double Xi, double Yi)
+void Environment::addFire(double Xi, double Yi)
 {
 	wildfire.push_back(
 		new Fire(this, Xi, Yi)
@@ -97,7 +97,7 @@ void Environnement::addFire(double Xi, double Yi)
 
 
 
-void Environnement::setU(double _U)
+void Environment::setU(double _U)
 {
 	U = _U;
 	int step = GRID_SIDE / CELL_SIDE;
@@ -110,17 +110,23 @@ void Environnement::setU(double _U)
 	}
 }
 
-double Environnement::getU() const
+double Environment::getU() const
 {
 	return U;
 }
 
-double Environnement::getTheta() const
+double Environment::getTheta() const
 {
 	return theta;
 }
 
-double Environnement::getM_f() const
+double Environment::getM_f() const
 {
 	return M_f;
+}
+
+
+ciclicVector<Vertex> Environment::getPolygon(int i)
+{
+	return wildfire[i]->Polygon;
 }

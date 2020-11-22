@@ -1,10 +1,10 @@
 # include "Fire.hxx"
-# include "Environnement.hxx"
+# include "Environment.hxx"
 
 # include <cmath>
 
 
-Fire::Fire(Environnement * Forest, double Xi, double Yi): Forest(Forest)
+Fire::Fire(Environment * Forest, double Xi, double Yi): Forest(Forest)
 {
     Polygon.resize(10);
     
@@ -33,17 +33,13 @@ Fire::Fire(Environnement * Forest, double Xi, double Yi): Forest(Forest)
 
 Fire::Fire(const Fire & f): Forest(f.Forest)
 {
-    Polygon.resize(f.Polygon.size());
-
     for(int i = 0; i != Polygon.size(); i++)
-    {
-        Polygon[i] = f.Polygon[i];
-    }
+    Polygon.push_back(f.Polygon[i]);
 }
 
 
 
-// ----------------Metods-------------------
+// ----------------Methods-------------------
 
 void Fire::Propagate(double dt)
 {
@@ -74,6 +70,28 @@ void Fire::Propagate(double dt)
         Polygon[i].x += (num1/den + par[2] * St)*dt;
         Polygon[i].y += (num2/den + par[2] * Ct)*dt;
     }
+}
+
+void Fire::calcPropagation(double * val, int i)
+{
+    double par[3];
+    getParam(par, i);
+
+    double At, Bt, num1, num2, den;
+    double Ct = std::cos(Forest->getTheta());
+    double St = std::sin(Forest->getTheta());
+    Vertex Diff = (Polygon[i + 1] - Polygon[i - 1])/2; 
+
+    At = par[0] * (Diff.x * St + Diff.y * Ct);
+    Bt = par[1] * (Diff.y * St - Diff.x * Ct);
+
+    num1 = par[0] * At * Ct + par[1] * Bt * St;
+    num2 = par[1] * Bt * Ct - par[0] * At * St;
+
+    den = std::sqrt(At*At + Bt*Bt);
+
+    val[0] =  num1/den + par[2] * St;
+    val[1] =  num2/den + par[2] * Ct;
 }
 
 void Fire::getParam(double * par, int i)
