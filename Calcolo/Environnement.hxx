@@ -26,21 +26,23 @@ public:
 
 	Cell*** grid;
 	std::vector<Fire*> wildfire;
-	double time;
+	double time = 0;
 
 	//Constructor that creates a grid based on an array of couples fuelIndex-fuelPercentage (sum of all percentages must be 1)
-	//Nota: bozza eventualmente da buttare a seconda di come si decider‡ gestire la variabilit‡ dei fuel, 
-	//e puÚ essere reso un std::array in modo da contenere l'informazione sulla size 
-	//Nota2: Andr‡ modificato per ricevere dalla GUI anche vento, direzione e umidit‡	
+	//Nota: bozza eventualmente da buttare a seconda di come si decider√† gestire la variabilit√† dei fuel, 
+	//e pu√≤ essere reso un std::array in modo da contenere l'informazione sulla size 
+	//Nota2: Andr√† modificato per ricevere dalla GUI anche vento, direzione e umidit√†	
 	Environnement(double (*fuelPercentages)[2] = nullptr, int nDifferentFuels = 0);
 
 	//---------------Methods----------------
 	void advance();
 
-	Cell* getCell(int cellIndex);
+	Cell * getCell(const Vertex & v);
+	Cell * getCell(int cellIndex);
 	int findCell(double x, double y) const;
 
-	void addFire(Fire* fire);
+	// Used to add a fire in a specific point defined by xi e yi
+	void addFire(double Xi, double Yi);
 
 	void setU(double _U);
 	double getU() const;

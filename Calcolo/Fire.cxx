@@ -4,10 +4,52 @@
 # include <cmath>
 
 
-// ----------------Methods-------------------
+Fire::Fire(Environnement * Forest, double Xi, double Yi): Forest(Forest)
+{
+    Polygon.resize(10);
+    
+    // Creation of a little ellipse centered on the point roted by
+    // the direction of the wind
+
+    Cell * cell = Forest->getCell(Vertex(Xi, Yi));
+    double tetha = Forest->getTheta();
+
+    // Support variable for the rotation
+    double x1, y1;
+
+    for(int i = 0; i != 10; i++)
+    {
+        // Divided by 100 because the initial ellipse is needed to be small
+        Polygon[i].x = cell->a * std::cos(i*M_PI/5)/100;
+        Polygon[i].y = cell->b * std::sin(i*M_PI/5)/100;
+
+        x1 = Polygon[i].x * std::cos(tetha) + Polygon[i].y * std::sin(tetha);
+        y1 = Polygon[i].y * std::cos(tetha) - Polygon[i].x * std::sin(tetha);
+
+        Polygon[i].x = Xi + x1;
+        Polygon[i].y = Yi + y1;
+    }
+}
+
+Fire::Fire(const Fire & f): Forest(f.Forest)
+{
+    Polygon.resize(f.Polygon.size());
+
+    for(int i = 0; i != Polygon.size(); i++)
+    {
+        Polygon[i] = f.Polygon[i];
+    }
+}
+
+
+
+// ----------------Metods-------------------
 
 void Fire::Propagate(double dt)
 {
+    // Checking distance from verteces
+    checkDistance();
+
     double par[3];
     double tetha = Forest->getTheta();
     ciclicVector<Vertex> Diff = calcDiff(Polygon);
@@ -32,13 +74,17 @@ void Fire::Propagate(double dt)
         Polygon[i].x += (num1/den + par[2] * St)*dt;
         Polygon[i].y += (num2/den + par[2] * Ct)*dt;
     }
-    // Checking distance from verteces
-    checkDistance();
 }
 
 void Fire::getParam(double * par, int i)
 {
     // Da scrivere una volta che ho tutti i parametri
+
+    Cell * cella = Forest->getCell(Polygon[i]);
+
+    par[0] = cella->a;
+    par[1] = cella->b;
+    par[2] = cella->c;
 }
 
 

@@ -41,3 +41,7 @@ Vertex operator* (double n, const Vertex & v)
     return v*n;
 }
 
+Vertex operator/ (double n, const Vertex & v)
+{
+    return v/n;
+}

@@ -1,5 +1,5 @@
-#include "Cell.hxx"
 #include "Rothermel.hxx"
+#include "Cell.hxx"
 
 #include <iostream>
 #include <fstream>

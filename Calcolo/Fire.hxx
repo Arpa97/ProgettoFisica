@@ -1,8 +1,8 @@
 /*********************************************************************
  * 
  * Class for the rappresentation of the fire, it will be an extension
- * of the class WaveFront and will perform calculations for the
- * fire expansion
+ * of the class WaveFront and is going to make the calculation fro the
+ * expansion etcetera
  * 
  *********************************************************************/
 
@@ -14,23 +14,22 @@ class Environnement;
 
 struct Fire : public WaveFront
 {
-    // Pointer to the class environnement for taking the ambiental 
+    // Pointer to the class enviroment for taking the ambiental 
     // parameter needed for calculation
-
     Environnement * Forest;
 
-    Fire(Environnement* Forest, double Xi, double Yi);
+    Fire(Environnement * Forest, double Xi, double Yi);
     Fire(const Fire & f);
 
-    //--------------Methods----------------
+    //--------------Metods----------------
 
-    // Method for the spread of fire based on Huygens principle
+    // Metod for the spread of fire based Huygens principle
     void Propagate(double dt);
 
-    // Method for getting the RoS and the other par of a vertex signed by an index i 
+    // Metod for getting the RoS and the other par of a vertex signed by an index i 
     // stored in the right cell of the enviroment and put it in an array "par"
     void getParam(double * par, int i);
 
-    // Method to compute the differential arrays for the Richard equation
+    // Metod to compute the differential arrays for the Richard equation
     ciclicVector<Vertex> calcDiff(const ciclicVector<Vertex> & v);
 };

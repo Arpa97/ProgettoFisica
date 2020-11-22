@@ -10,7 +10,6 @@ Environnement::Environnement(double (*fuelPercentages)[2], int nDifferentFuels)
 	U = WIND_SPEED;
 	theta = WIND_DIRECTION;
 	M_f = MOISTURE_CONTENT;
-	time = 0;
 	Cell::FillFuelType(M_f);
 
 	int step = GRID_SIDE / CELL_SIDE;	
@@ -54,6 +53,17 @@ void Environnement::advance()
 
 
 
+Cell * Environnement::getCell(const Vertex & v)
+{
+	int cellIndex = findCell(v.x, v.y);
+	int step = GRID_SIDE / CELL_SIDE;
+	int j = cellIndex % step;
+	int i = (cellIndex - j) / step;
+	return grid[i][j];
+}
+
+
+
 Cell* Environnement::getCell(int cellIndex)
 {
 	int step = GRID_SIDE / CELL_SIDE;
@@ -66,7 +76,7 @@ Cell* Environnement::getCell(int cellIndex)
 
 int Environnement::findCell(double x, double y) const
 {
-	if (x > GRID_SIDE || y > GRID_SIDE) throw;		//Nota: cosa succede quando un vertice esce dalla griglia? occorrerà capire come gestire la cosa
+	if (x > GRID_SIDE || y > GRID_SIDE) throw;		//Nota: cosa succede quando un vertice esce dalla griglia? occorrerï¿½ capire come gestire la cosa
 	int step = GRID_SIDE / CELL_SIDE;
 
 	int i = static_cast<int>(y / CELL_SIDE);
@@ -78,9 +88,11 @@ int Environnement::findCell(double x, double y) const
 
 
 
-void Environnement::addFire(Fire* fire)
+void Environnement::addFire(double Xi, double Yi)
 {
-	wildfire.push_back(fire);
+	wildfire.push_back(
+		new Fire(this, Xi, Yi)
+	);
 }
 
 

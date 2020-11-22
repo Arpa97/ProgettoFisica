@@ -17,7 +17,7 @@ struct Vertex
     Vertex(double x = 0, double y = 0);
     Vertex(const Vertex & v);
 
-    //---------------Methods----------------
+    //---------------Metods----------------
 
     Vertex operator-(const Vertex & v) const;
     Vertex operator+(const Vertex & v) const;
@@ -25,9 +25,10 @@ struct Vertex
     Vertex operator/(double n) const;
 };
 
-//--------------- Non-member functions ---------------------
+//---------------Funzioni esterne---------------------
 
-// Function that computes the distance between two vertices
+// Funzione per il calcolo della distanza tra due vertici
 double Distance(const Vertex & v1, const Vertex & v2);
 
 Vertex operator* (double n, const Vertex & v);
+Vertex operator/ (double n, const Vertex & v);
