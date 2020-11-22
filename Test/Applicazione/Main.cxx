@@ -2,6 +2,7 @@
 # include <cmath>
 
 using std::cout;
+using std::cin;
 using std::endl;
 
 # include "Environnement.hxx"
@@ -20,11 +21,11 @@ int main()
 
     Foresta.addFire(50, 50);
 
-    VisualizzaFuoco(*Foresta.wildfire[0]);
-
-    Foresta.advance();
-
-    VisualizzaFuoco(*Foresta.wildfire[0]);
-
+    do
+    {   
+        VisualizzaFuoco(*Foresta.wildfire[0]);
+        Foresta.advance();
+        cout << '\n' << "input q to stop";
+    } while (cin.get() != 'q');
     return 0;
 }
