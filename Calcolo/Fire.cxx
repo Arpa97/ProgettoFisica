@@ -1,4 +1,5 @@
 # include "Fire.hxx"
+# include "Environnement.hxx"
 
 # include <cmath>
 
@@ -8,7 +9,7 @@
 void Fire::Propagate(double dt)
 {
     double par[3];
-    double tetha = Forest->tetha;
+    double tetha = Forest->getTheta();
     ciclicVector<Vertex> Diff = calcDiff(Polygon);
     
     double Ct = std::cos(tetha), St = std::sin(tetha);

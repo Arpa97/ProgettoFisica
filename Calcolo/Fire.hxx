@@ -10,17 +10,13 @@
 
 # include "WaveFront.hxx"
 
-// For future class that is needed
-struct Environnement
-{
-    double tetha = 0;
-    double U = 0;
-};
+class Environnement;
 
 struct Fire : public WaveFront
 {
     // Pointer to the class environnement for taking the ambiental 
     // parameter needed for calculation
+
     Environnement * Forest;
 
     Fire(Environnement* Forest, double Xi, double Yi);
