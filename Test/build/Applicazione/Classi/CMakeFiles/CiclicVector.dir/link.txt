@@ -1,0 +1,2 @@
+/bin/ar qc libCiclicVector.a  CMakeFiles/CiclicVector.dir/src/CiclicVector.cxx.o
+/bin/ranlib libCiclicVector.a

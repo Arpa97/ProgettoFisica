@@ -1,0 +1,130 @@
+{
+	"archive" : {},
+	"artifacts" : 
+	[
+		{
+			"path" : "Applicazione/Classi/libWaveFront.a"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"include_directories"
+		],
+		"files" : 
+		[
+			"Applicazione/Classi/CMakeLists.txt",
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 3,
+				"parent" : 0
+			},
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 12,
+				"parent" : 2
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-std=c++1z -g  "
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 3,
+					"path" : "/home/luca/Scrivania/Introduzione sistemi complessi/Progetto/git/ProgettoFisica/Test/Applicazione/Classi/Include"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "/home/luca/Scrivania/Introduzione sistemi complessi/Progetto/git/ProgettoFisica/Test/Applicazione/Librerie/Include"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "/home/luca/Scrivania/Introduzione sistemi complessi/Progetto/git/ProgettoFisica/Test/Applicazione"
+				}
+			],
+			"language" : "CXX",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 1,
+			"id" : "Rothermel::@68915d458c1b3fcc9094"
+		},
+		{
+			"backtrace" : 1,
+			"id" : "CiclicVector::@0380132dc965a8b414fb"
+		},
+		{
+			"backtrace" : 1,
+			"id" : "Vertex::@0380132dc965a8b414fb"
+		}
+	],
+	"id" : "WaveFront::@0380132dc965a8b414fb",
+	"name" : "WaveFront",
+	"nameOnDisk" : "libWaveFront.a",
+	"paths" : 
+	{
+		"build" : "Applicazione/Classi",
+		"source" : "Applicazione/Classi"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Header Files",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"path" : "Applicazione/Classi/Include/WaveFront.hxx",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "Applicazione/Classi/src/WaveFront.cxx",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "STATIC_LIBRARY"
+}

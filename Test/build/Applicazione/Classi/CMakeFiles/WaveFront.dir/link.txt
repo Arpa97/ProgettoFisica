@@ -1,0 +1,2 @@
+/bin/ar qc libWaveFront.a  CMakeFiles/WaveFront.dir/src/WaveFront.cxx.o
+/bin/ranlib libWaveFront.a
