@@ -18,6 +18,8 @@ void Fire::Propagate(double dt)
 
     for(int i = 0; i != Polygon.size(); i++)
     {
+    	getParam(par, i);
+    	
         // Computing the vertex differential for propagating the front
         At = par[0] * (Diff[i].x * St + Diff[i].y * Ct);
         Bt = par[1] * (Diff[i].y * St - Diff[i].x * Ct);
@@ -44,7 +46,9 @@ ciclicVector<Vertex> Fire::calcDiff(const ciclicVector<Vertex> & v)
 {
     ciclicVector<Vertex> Diff(Polygon.size());
 
-    for(int i = 0; i != Polygon.size(); i++)
+    Diff[0] = (Polygon[Polygon.size() - 1] - Polygon[1])/2;
+
+    for(int i = 1; i != Polygon.size(); i++)
     Diff[i] = (Polygon[i + 1] - Polygon[i - 1])/2;
 
     return Diff;
