@@ -1,2 +1,0 @@
-/bin/ar qc libFire.a  CMakeFiles/Fire.dir/src/Fire.cxx.o
-/bin/ranlib libFire.a

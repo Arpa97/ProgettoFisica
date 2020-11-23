@@ -1,2 +1,0 @@
-/bin/ar qc libRothermel.a  CMakeFiles/Rothermel.dir/src/Rothermel.cxx.o
-/bin/ranlib libRothermel.a

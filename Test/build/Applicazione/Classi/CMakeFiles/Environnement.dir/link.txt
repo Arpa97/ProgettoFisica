@@ -1,2 +1,0 @@
-/bin/ar qc libEnvironnement.a  CMakeFiles/Environnement.dir/src/Environnement.cxx.o
-/bin/ranlib libEnvironnement.a

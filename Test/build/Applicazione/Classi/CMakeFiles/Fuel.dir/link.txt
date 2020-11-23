@@ -1,2 +1,0 @@
-/bin/ar qc libFuel.a  CMakeFiles/Fuel.dir/src/Fuel.cxx.o
-/bin/ranlib libFuel.a

@@ -1,2 +1,0 @@
-/bin/ar qc libVertex.a  CMakeFiles/Vertex.dir/src/Vertex.cxx.o
-/bin/ranlib libVertex.a
