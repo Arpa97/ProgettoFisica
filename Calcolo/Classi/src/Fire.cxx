@@ -45,7 +45,7 @@ void Fire::Propagate(double dt)
     // Checking distance from verteces
     checkDistance();
 
-    double par[3];
+    Cell * cella;
     double tetha = Forest->getTheta();
     ciclicVector<Vertex> Diff = calcDiff(Polygon);
     
@@ -54,43 +54,42 @@ void Fire::Propagate(double dt)
     double At, Bt, num1, num2, den;
 
     for(int i = 0; i != Polygon.size(); i++)
-    {
-    	getParam(par, i);
-    	
-        // Computing the vertex differential for propagating the front
-        At = par[0] * (Diff[i].x * St + Diff[i].y * Ct);
-        Bt = par[1] * (Diff[i].y * St - Diff[i].x * Ct);
+    {	
+        cella = Forest->getCell(Polygon[i]);
 
-        num1 = par[0] * At * Ct + par[1] * Bt * St;
-        num2 = par[1] * Bt * Ct - par[0] * At * St;
+        // Computing the vertex differential for propagating the front
+        At = cella->a * (Diff[i].x * St + Diff[i].y * Ct);
+        Bt = cella->b * (Diff[i].y * St - Diff[i].x * Ct);
+
+        num1 = cella->a * At * Ct + cella->b * Bt * St;
+        num2 = cella->b * Bt * Ct - cella->a * At * St;
 
         den = std::sqrt(At*At + Bt*Bt);
 
-        Polygon[i].x += (num1/den + par[2] * St)*dt;
-        Polygon[i].y += (num2/den + par[2] * Ct)*dt;
+        Polygon[i].x += (num1/den + cella->c * St)*dt;
+        Polygon[i].y += (num2/den + cella->c * Ct)*dt;
     }
 }
 
 void Fire::calcPropagation(double * val, int i)
 {
-    double par[3];
-    getParam(par, i);
+    Cell * cella = Forest->getCell(Polygon[i]);
 
     double At, Bt, num1, num2, den;
     double Ct = std::cos(Forest->getTheta());
     double St = std::sin(Forest->getTheta());
     Vertex Diff = (Polygon[i + 1] - Polygon[i - 1])/2; 
 
-    At = par[0] * (Diff.x * St + Diff.y * Ct);
-    Bt = par[1] * (Diff.y * St - Diff.x * Ct);
+    At = cella->a * (Diff.x * St + Diff.y * Ct);
+    Bt = cella->b * (Diff.y * St - Diff.x * Ct);
 
-    num1 = par[0] * At * Ct + par[1] * Bt * St;
-    num2 = par[1] * Bt * Ct - par[0] * At * St;
+    num1 = cella->a * At * Ct + cella->b * Bt * St;
+    num2 = cella->b * Bt * Ct - cella->a * At * St;
 
     den = std::sqrt(At*At + Bt*Bt);
 
-    val[0] =  num1/den + par[2] * St;
-    val[1] =  num2/den + par[2] * Ct;
+    val[0] =  num1/den + cella->c * St;
+    val[1] =  num2/den + cella->c * Ct;
 }
 
 void Fire::getParam(double * par, int i)
