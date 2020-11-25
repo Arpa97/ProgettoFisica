@@ -2,7 +2,6 @@
 #include "Environment.hxx"
 
 #include <cmath>
-#include <corecrt_math_defines.h>
 
 Fire::Fire(Environment * Forest, double Xi, double Yi): Forest(Forest)
 {
