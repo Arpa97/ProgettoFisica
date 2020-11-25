@@ -53,9 +53,8 @@ void Environment::advance()
 
 
 
-Cell * Environment::getCell(const Vertex & v)
+Cell* Environment::getCell(int cellIndex)
 {
-	int cellIndex = findCell(v.x, v.y);
 	int step = GRID_SIDE / CELL_SIDE;
 	int j = cellIndex % step;
 	int i = (cellIndex - j) / step;
@@ -64,12 +63,9 @@ Cell * Environment::getCell(const Vertex & v)
 
 
 
-Cell* Environment::getCell(int cellIndex)
+Cell * Environment::getCell(const Vertex & v)
 {
-	int step = GRID_SIDE / CELL_SIDE;
-	int j = cellIndex % step;
-	int i = (cellIndex - j) / step;
-	return grid[i][j];
+	return getCell(findCell(v));
 }
 
 
@@ -84,6 +80,13 @@ int Environment::findCell(double x, double y) const
 
 	int cellIndex = step * i + j;
 	return cellIndex;
+}
+
+
+
+int Environment::findCell(const Vertex& v)
+{
+	return findCell(v.x, v.y);
 }
 
 

@@ -37,9 +37,10 @@ public:
 	//---------------Methods----------------
 	void advance();
 
-	Cell * getCell(const Vertex & v);
-	Cell * getCell(int cellIndex);
+	Cell* getCell(int cellIndex);
+	Cell* getCell(const Vertex & v);
 	int findCell(double x, double y) const;
+	int findCell(const Vertex& v);
 
 	// Used to add a fire in a specific point defined by xi e yi
 	void addFire(double Xi, double Yi);

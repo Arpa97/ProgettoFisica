@@ -4,7 +4,7 @@
 #include <cmath>
 #include <corecrt_math_defines.h>
 
-Fire::Fire(Environment * Forest, double Xi, double Yi): Forest(Forest)
+Fire::Fire(Environment * _Forest, double Xi, double Yi): Forest(_Forest)
 {
     Polygon.resize(10);
     

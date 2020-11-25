@@ -1,8 +1,8 @@
 /*********************************************************************
  * 
  * Class for the rappresentation of the fire, it will be an extension
- * of the class WaveFront and is going to make the calculation fro the
- * expansion etcetera
+ * of the class WaveFront and will perform calculations for the
+ * fire expansion.
  * 
  *********************************************************************/
 
@@ -18,7 +18,7 @@ struct Fire : public WaveFront
     // parameter needed for calculation
     Environment * Forest;
 
-    Fire(Environment * Forest, double Xi, double Yi);
+    Fire(Environment * _Forest, double Xi, double Yi);
     Fire(const Fire & f);
 
     //--------------Methods----------------
