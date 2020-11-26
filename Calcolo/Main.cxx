@@ -8,31 +8,17 @@ using std::endl;
 
 # include "Environment.hxx"
 
-void VisualizzaFuoco(Fire & f)
-{
-    cout << '\n';
-
-    for (int i = 0; i != f.Polygon.size(); i++)
-        cout << std::setprecision(4) << std::fixed <<  f.Polygon[i].nextTime << "\t  ";
-
-    cout << '\n';
-    for(int i = 0; i != f.Polygon.size(); i++)
-    cout << "(" << f.Polygon[i].x << ", " << f.Polygon[i].y << ")\t";
-
-    cout << "\n\n";
-}
-
 int main()
 {
     Environment Foresta;
 
     Foresta.addFire(45, 45);
-    VisualizzaFuoco(*Foresta.wildfire[0]);
+    // Foresta.wildfire[0]->Visualize();
 
     do 
     {   
-        Foresta.advance();
-        VisualizzaFuoco(*Foresta.wildfire[0]);
+        Foresta.advance(10);
+        Foresta.wildfire[0]->Visualize();
         cout << '\n' << ">>input q to stop";
     } while (cin.get() != 'q');
 

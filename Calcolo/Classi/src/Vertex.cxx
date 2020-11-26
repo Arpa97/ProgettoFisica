@@ -4,7 +4,12 @@
 
 Vertex::Vertex(double x, double y): x(x), y(y) {}
 
-Vertex::Vertex(const Vertex & v): x(v.x), y(v.y) {}
+Vertex::Vertex(const Vertex & v): x(v.x), y(v.y) 
+{
+    cellIndex = v.cellIndex;
+    dx = v.dx, dy = v.dy;
+    nextTime = v.nextTime;
+}
 
 //---------------------Methods-------------------------
 
@@ -40,4 +45,9 @@ double Distance(const Vertex & v1, const Vertex & v2)
 Vertex operator* (double n, const Vertex & v)
 {
     return v*n;
+}
+
+Vertex operator/ (double n, const Vertex & v)
+{
+    return v/n;
 }

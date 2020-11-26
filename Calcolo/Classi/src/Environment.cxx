@@ -4,6 +4,10 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <iomanip> 
+
+using std::cout;
+using std::endl;
 
 Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 {
@@ -21,7 +25,7 @@ Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 
 	for (int i = 0; i != step; i++)
 	{
-		grid[i] = new Cell * [step];
+		grid[i] = i != step - 1 ? new Cell * [step] : new Cell * [step + 1];
 
 		for (int j = 0; j != step; j++)
 		{
@@ -38,24 +42,40 @@ Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 			grid[i][j]->setR(U);
 		}
 	}
+
+	// Adding the fuel of type 0 at the end
+	grid[step-1][step] = new Cell(0, 0);
 }
 
 
 
-void Environment::advance()
+void Environment::advance(double dt)
 {
-	double nextTime = timeHeap.top();
-	timeHeap.pop();
-	double dt = nextTime - time;
-	//std::cerr << "Actual time : " << time << '\t' << "Next time: " << nextTime << '\t';
-	time += dt;
+	double dt1, nextTime;
+	double tfinale = time + dt - 0.00001;
+
+	while(time < tfinale)
+	{
+		// Searching the next timestep
+		nextTime = timeHeap.top();
+		// timeHeap.pop();
+		dt1 = nextTime - time;
+		time += dt1;
+
+		if(time > tfinale)
+		{
+			dt1 += tfinale - time;
+			time = tfinale;
+		}
+		else
+		timeHeap.pop();
+
+		// propagation of the fire
+		for (int i = 0; i != wildfire.size(); i++)
+		wildfire[i]->Propagate(dt1);
+	}
 
 	std::cerr << "Time : " << time << '\n';
-
-	for (int i = 0; i != wildfire.size(); i++)
-	{
-		wildfire[i]->Propagate(dt);
-	}
 }
 
 
@@ -84,9 +104,10 @@ Cell * Environment::getCell(const Vertex & v)
 
 int Environment::findCell(double x, double y) const
 {
-	if (x > GRID_SIDE || y > GRID_SIDE || x < 0 || y < 0) throw;		//Nota: cosa succede quando un vertice esce dalla griglia? occorrer� capire come gestire la cosa
-
 	int step = GRID_SIDE / CELL_SIDE;
+
+	// Returning the fuel of type 0 if the vertex croos the forest
+	if (x > GRID_SIDE || y > GRID_SIDE || x < 0 || y < 0) step*step;		
 
 	int i = static_cast<int>(y / CELL_SIDE);
 	int j = static_cast<int>(x / CELL_SIDE);
@@ -145,4 +166,18 @@ double Environment::getM_f() const
 ciclicVector<Vertex> Environment::getPolygon(int i)
 {
 	return wildfire[i]->Polygon;
+}
+
+
+void Environment::VisualizeGrid()
+{
+	int step = GRID_SIDE/CELL_SIDE;
+
+	for(int i = 0; i != step; i++)
+	for(int j = 0; j != step; j++)
+	if(j != step - 1)
+	cout << grid[i][j]->fuelIndex;
+	else 
+	cout << grid[i][j]->fuelIndex << endl; 
+
 }

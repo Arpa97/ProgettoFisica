@@ -39,7 +39,7 @@ public:
 	Environment(double (*fuelPercentages)[2] = nullptr, int nDifferentFuels = 0);
 
 	//---------------Methods----------------
-	void advance();
+	void advance(double dt);
 
 	Cell* getCell(int cellIndex);
 	Cell* getCell(double x, double y);
@@ -57,4 +57,7 @@ public:
 
 	// Methods for getting the polygon of a specific fire in the index i
 	ciclicVector<Vertex> getPolygon(int i);
+
+	//Method to visualize the grid
+	void VisualizeGrid();
 };

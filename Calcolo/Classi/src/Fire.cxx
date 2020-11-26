@@ -5,6 +5,9 @@
 #include <iostream>
 #include <iomanip>
 
+using std::cout;
+using std::endl;
+
 Fire::Fire(Environment * _Forest, double Xi, double Yi): Forest(_Forest)
 {
     Polygon.resize(10);
@@ -18,12 +21,11 @@ Fire::Fire(Environment * _Forest, double Xi, double Yi): Forest(_Forest)
     // Support variable for the rotation
     double x1, y1;
 
-    //std::cerr << cell->a << ' ' << cell->b << '\n';
     for(int i = 0; i != 10; i++)
     {
         // Divided by 100 because the initial ellipse is needed to be small
-        x1 = cell->a * std::cos(i*M_PI/5)/100;
-        y1 = cell->b * std::sin(i*M_PI/5)/100;
+        x1 = cell->a * std::cos(i*M_PI/5)/GRID_SIDE;
+        y1 = cell->b * std::sin(i*M_PI/5)/GRID_SIDE;
 
         x1 = x1 * std::cos(tetha) + y1 * std::sin(tetha);
         y1 = y1 * std::cos(tetha) - x1 * std::sin(tetha);
@@ -31,10 +33,10 @@ Fire::Fire(Environment * _Forest, double Xi, double Yi): Forest(_Forest)
         Polygon[i].x = Xi + x1;
         Polygon[i].y = Yi + y1;
 
-        //std::cerr << Polygon[i].x << ' ' << Polygon[i].y << '\n';
         Polygon[i].cellIndex = Forest->findCell(Polygon[i]);
     }
-    std::cerr << '\n';
+
+    // Calcolation of the dynamical timestep for the initial vertex
     for (int i = 0; i != 10; i++)
     {
         calcPropagation(i);
@@ -48,13 +50,8 @@ Fire::Fire(const Fire & f): Forest(f.Forest)
 {
     Polygon.resize(f.Polygon.size());
     for (int i = 0; i != f.Polygon.size(); i++)
-    {
-        Polygon[i].x = f.Polygon[i].x;
-        Polygon[i].y = f.Polygon[i].y;
-        Polygon[i].cellIndex = Forest->findCell(Polygon[i]);
-        calcPropagation(i);
-        calcTime(i);
-    }
+    // Al posto di 3 righe così è più facile e non vanno chiamati membri
+    Polygon[i] = f.Polygon[i];
 }
 
 
@@ -63,46 +60,26 @@ Fire::Fire(const Fire & f): Forest(f.Forest)
 
 void Fire::Propagate(double dt)
 {
-    //Cell * cella;
-    //double tetha = Forest->getTheta();
-    //ciclicVector<Vertex> Diff = calcDiff(Polygon);
-    //
-    //double Ct = std::cos(tetha), St = std::sin(tetha);
-
-    //double At, Bt, num1, num2, den;
-
-    //for(int i = 0; i != Polygon.size(); i++)
-    //{	
-    //    cella = Forest->getCell(Polygon[i]);
-
-    //    // Computing the vertex differential for propagating the front
-    //    At = cella->a * (Diff[i].x * St + Diff[i].y * Ct);
-    //    Bt = cella->b * (Diff[i].y * St - Diff[i].x * Ct);
-
-    //    num1 = cella->a * At * Ct + cella->b * Bt * St;
-    //    num2 = cella->b * Bt * Ct - cella->a * At * St;
-
-    //    den = std::sqrt(At*At + Bt*Bt);
-
-    //    Polygon[i].x += (num1/den + cella->c * St)*dt;
-    //    Polygon[i].y += (num2/den + cella->c * Ct)*dt;
-    //}
-
-    int iChange;
+    int iChange = -1;
+    
     for (int i = 0; i != Polygon.size(); i++)
     {
         Polygon[i].x += Polygon[i].dx * dt;
         Polygon[i].y += Polygon[i].dy * dt;
 
-        if (Forest->time >= Polygon[i].nextTime)
-        {
-            std::cerr << (Forest->time == Polygon[i].nextTime) << '\n';      //mi aspetto che ce ne sia solo uno che va dentro questo if, e che i tempi siano proprio uguali
-            iChange = i;
-        }
+        // Find the one that change cell exatly in that time
+        if (Forest->time >= Polygon[i].nextTime)     
+        iChange = i;
     }
-    Polygon[iChange].cellIndex = Forest->findCell(Polygon[iChange]);
-    calcPropagation(iChange);
-    calcTime(iChange);
+
+    // Calculation for the one that changes cell
+    if(iChange != -1)
+    {
+        Polygon[iChange].cellIndex = Forest->findCell(Polygon[iChange]);
+        calcPropagation(iChange);
+        calcTime(iChange);
+    }
+
     // Checking distance from verteces
     checkDistance();
 }
@@ -140,7 +117,6 @@ void Fire::calcPropagation(int i)
     double Ct = std::cos(Forest->getTheta());
     double St = std::sin(Forest->getTheta());
     Vertex Diff = (Polygon[i + 1] - Polygon[i - 1]) / 2;
-    //std::cerr << Diff.x << ' ' << Diff.y << '\n';
 
     At = cella->a * (Diff.x * St + Diff.y * Ct);
     Bt = cella->b * (Diff.y * St - Diff.x * Ct);
@@ -152,7 +128,6 @@ void Fire::calcPropagation(int i)
 
     Polygon[i].dx = num1 / den + cella->c * St;
     Polygon[i].dy = num2 / den + cella->c * Ct;
-    //std::cerr << "( " << Polygon[i].dx << ", " << Polygon[i].dy << " )" << '\t';
 }
 
 
@@ -182,12 +157,14 @@ void Fire::calcTime(int i)
     double dt = std::min(timeX, timeY);
     double nextTime = Forest->time + dt;
 
-    //std::cerr << dx << ' ' << dy << ' ' << dt << ' ' << nextTime << '\n';
+    if(nextTime > 100000)
+    {
+        cout << "cellaFutura: [" << _i << "][" << _j << "]  ";
+        cout << "Varizione tempo = " << dt << endl;
+    }
 
     Polygon[i].nextTime = nextTime;
     Forest->timeHeap.push(nextTime);
-
-    //std::cerr << nextTime << '\n';
 }
 
 
@@ -203,6 +180,8 @@ void Fire::checkDistance()
                 (Polygon[i].y + Polygon[i + 1].y) / 2,
                 i + 1
             );
+
+            // Calculation of the propagation parameter
             Polygon[i + 1].cellIndex = Forest->findCell(Polygon[i + 1]);
             calcPropagation(i + 1);
             calcTime(i + 1);
@@ -225,4 +204,29 @@ ciclicVector<Vertex> Fire::calcDiff(const ciclicVector<Vertex> & v)
     Diff[i] = (Polygon[i + 1] - Polygon[i - 1])/2;
 
     return Diff;
+}
+
+void Fire::Visualize()
+{
+    cout << '\n';
+
+    int step = GRID_SIDE/CELL_SIDE;
+    int cella;
+
+    for (int i = 0; i != Polygon.size(); i++)
+    {
+        cella = Polygon[i].cellIndex;
+
+        cout << "Vertice" << i << " = ";
+        cout << std::setprecision(4) << "(" << Polygon[i].x << ", " << Polygon[i].y << ")";
+        cout << std::setw(10);
+        cout << "Cella [" << (cella - (cella % step))/step << "][" << cella%step << "]";
+        cout << std::setw(10);
+        cout << "tSucc = " << std::setprecision(4) << std::fixed <<  Polygon[i].nextTime  << "\t";
+        cout << std::setw(10);
+        cout << "Propagazione = " << std::setprecision(4) << "(" << Polygon[i].dx << ", " << Polygon[i].dy << ")";
+        cout << std::endl;
+    }
+
+    cout << "\n\n";
 }

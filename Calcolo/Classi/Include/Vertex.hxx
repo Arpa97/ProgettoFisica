@@ -34,3 +34,4 @@ struct Vertex
 double Distance(const Vertex & v1, const Vertex & v2);
 
 Vertex operator* (double n, const Vertex & v);
+Vertex operator/ (double n, const Vertex & v);

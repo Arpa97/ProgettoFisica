@@ -6,7 +6,7 @@
 #include <cstring>
 #include <cmath>
 
-Fuel* Cell::FuelType[N_FUEL_TYPES];
+Fuel* Cell::FuelType[N_FUEL_TYPES + 1];
 
 
 void Cell::FillFuelType(double M_f)
@@ -19,7 +19,7 @@ void Cell::FillFuelType(double M_f)
 	int fuelIndex;
 
 	fcin.ignore(1000, '\n');
-	for (int i = 0; i != N_FUEL_TYPES; i++)
+	for (int i = 1; i != N_FUEL_TYPES + 1; i++)
 	{
 		fcin.ignore(10, '\t');
 		fcin >> fuelIndex;
@@ -43,14 +43,18 @@ void Cell::FillFuelType(double M_f)
 		FuelType[i] = new Fuel(w_0, SAV,  delta, M_x);
 		FuelType[i]->setR0(M_f);
 	}
+
+	// Adding the fuel of type 0
+	FuelType[0] = new Fuel(0, 0, 0, 0);
+	FuelType[0]->setR0(0);
 }
 
 
 
 void Cell::setR(double U)
 {
-	double R0 = FuelType[fuelIndex - 1]->R0;
-	double phi_w = FuelType[fuelIndex - 1]->getWindFactor(U);
+	double R0 = FuelType[fuelIndex]->R0;
+	double phi_w = FuelType[fuelIndex]->getWindFactor(U);
 	R = Rothermel_R(R0, phi_w);
 	R *= 0.00508;							//Conversion: 1 ft/min = 0.00508 m/s
 	updateEllipseParams(U);

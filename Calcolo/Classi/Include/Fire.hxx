@@ -40,4 +40,7 @@ struct Fire : public WaveFront
 
     // Method to compute the differential arrays for the Richard equation
     ciclicVector<Vertex> calcDiff(const ciclicVector<Vertex> & v);
+
+    //Method for visualize the vertex information
+    void Visualize();
 };
