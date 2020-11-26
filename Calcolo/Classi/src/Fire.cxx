@@ -68,8 +68,10 @@ void Fire::Propagate(double dt)
         Polygon[i].y += Polygon[i].dy * dt;
 
         // Find the one that change cell exatly in that time
-        if (Forest->time >= Polygon[i].nextTime)     
-        iChange = i;
+        if (Polygon[i].nextTime != -1 && Forest->time >= Polygon[i].nextTime)
+        {
+            iChange = i;
+        }
     }
 
     // Calculation for the one that changes cell
@@ -113,6 +115,12 @@ void Fire::calcPropagation(int i)
 {
     Cell* cella = Forest->getCell(Polygon[i]);
 
+    if (cella == Forest->nullFuel)
+    {
+        Polygon[i].dx = Polygon[i].dy = 0;
+        return;
+    }
+
     double At, Bt, num1, num2, den;
     double Ct = std::cos(Forest->getTheta());
     double St = std::sin(Forest->getTheta());
@@ -134,6 +142,12 @@ void Fire::calcPropagation(int i)
 
 void Fire::calcTime(int i)
 {
+    if (Polygon[i].cellIndex == -1)
+    {
+        Polygon[i].nextTime = -1;
+        return;
+    }
+
     double dx = Polygon[i].dx;
     double dy = Polygon[i].dy;
 
@@ -148,8 +162,8 @@ void Fire::calcTime(int i)
     double cellY = _i * CELL_SIDE;
 
     //Subtract a little value to make sure that the vertex changes cell and does not remain on the border
-    if (dx < 0 && cellX > 0) cellX -= 0.0001;
-    if (dy < 0 && cellY > 0) cellY -= 0.0001;
+    if (dx < 0) cellX -= 0.0001;
+    if (dy < 0) cellY -= 0.0001;
 
     double timeX = (cellX - Polygon[i].x) / dx;
     double timeY = (cellY - Polygon[i].y) / dy;

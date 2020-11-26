@@ -28,6 +28,7 @@ public:
 
 	double time = 0;
 	Cell*** grid;
+	static Cell* nullFuel;
 	std::vector<Fire*> wildfire;
 	std::priority_queue<double, std::vector<double>, std::greater<double>> timeHeap;
 
@@ -39,7 +40,9 @@ public:
 	Environment(double (*fuelPercentages)[2] = nullptr, int nDifferentFuels = 0);
 
 	//---------------Methods----------------
+	//Advance the system of a specified timestep, or if not specified until the first vertex in Polygon changes cell.
 	void advance(double dt);
+	void advance();
 
 	Cell* getCell(int cellIndex);
 	Cell* getCell(double x, double y);

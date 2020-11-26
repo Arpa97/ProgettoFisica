@@ -9,12 +9,15 @@
 using std::cout;
 using std::endl;
 
+Cell* Environment::nullFuel = new Cell(0, 0);
+
 Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 {
 	U = WIND_SPEED;
 	theta = WIND_DIRECTION;
 	M_f = MOISTURE_CONTENT;
 	Cell::FillFuelType(M_f);
+	nullFuel->setR(0);
 
 	int step = GRID_SIDE / CELL_SIDE;	
 	int fuelNumber, number;
@@ -51,28 +54,48 @@ Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 
 void Environment::advance(double dt)
 {
-	double dt1, nextTime;
+	double dtHeap, dtMin, nextTime;
 	double tfinale = time + dt - 0.00001;
 
 	while(time < tfinale)
 	{
 		// Searching the next timestep
 		nextTime = timeHeap.top();
-		// timeHeap.pop();
-		dt1 = nextTime - time;
-		time += dt1;
+		dtHeap = nextTime - time;
+		dt = tfinale - time;
 
-		if(time > tfinale)
+		if (dtHeap < dt)
 		{
-			dt1 += tfinale - time;
-			time = tfinale;
+			dtMin = dtHeap;
+			timeHeap.pop();
 		}
-		else
-		timeHeap.pop();
+		else dtMin = dt;
+
+		
+		time += dtMin;
 
 		// propagation of the fire
 		for (int i = 0; i != wildfire.size(); i++)
-		wildfire[i]->Propagate(dt1);
+		{
+			wildfire[i]->Propagate(dtMin);
+		}		
+	}
+
+	std::cout << "Time : " << time << '\n';
+}
+
+
+
+void Environment::advance()
+{
+	double nextTime = timeHeap.top();
+	timeHeap.pop();
+	double dt = nextTime - time;
+	time += dt;
+
+	for (int i = 0; i != wildfire.size(); i++)
+	{
+		wildfire[i]->Propagate(dt);
 	}
 
 	std::cerr << "Time : " << time << '\n';
@@ -82,6 +105,11 @@ void Environment::advance(double dt)
 
 Cell* Environment::getCell(int cellIndex)
 {
+	if (cellIndex == -1)
+	{
+		return nullFuel;
+	}
+
 	int step = GRID_SIDE / CELL_SIDE;
 	int j = cellIndex % step;
 	int i = (cellIndex - j) / step;
@@ -107,7 +135,7 @@ int Environment::findCell(double x, double y) const
 	int step = GRID_SIDE / CELL_SIDE;
 
 	// Returning the fuel of type 0 if the vertex croos the forest
-	if (x > GRID_SIDE || y > GRID_SIDE || x < 0 || y < 0) step*step;		
+	if (x >= GRID_SIDE || y >= GRID_SIDE || x < 0 || y < 0) return -1;		
 
 	int i = static_cast<int>(y / CELL_SIDE);
 	int j = static_cast<int>(x / CELL_SIDE);

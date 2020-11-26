@@ -7,12 +7,13 @@ using std::cin;
 using std::endl;
 
 # include "Environment.hxx"
+#include "Definitions.hxx"
 
 int main()
 {
     Environment Foresta;
 
-    Foresta.addFire(45, 45);
+    Foresta.addFire(5, 5);
     // Foresta.wildfire[0]->Visualize();
 
     do 

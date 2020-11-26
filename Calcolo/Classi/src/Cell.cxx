@@ -53,6 +53,12 @@ void Cell::FillFuelType(double M_f)
 
 void Cell::setR(double U)
 {
+	if (fuelIndex == -1)
+	{
+		R = 0;
+		return;
+	}
+
 	double R0 = FuelType[fuelIndex]->R0;
 	double phi_w = FuelType[fuelIndex]->getWindFactor(U);
 	R = Rothermel_R(R0, phi_w);
