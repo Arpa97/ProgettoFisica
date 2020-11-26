@@ -22,12 +22,16 @@ struct ciclicVector : public std::vector<T>
     {
         auto it = this->begin();
 
+        if (n < 0) n = this->size() + n;
+
         return *(it + n % this->size());
     }
 
     T operator[] (int n) const
     {
         auto it = this->begin();
+
+        if (n < 0) n = this->size() + n;
 
         return *(it + n % this->size());
     }

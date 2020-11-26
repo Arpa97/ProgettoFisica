@@ -13,6 +13,8 @@
 #include "Fire.hxx"
 
 #include <vector>
+#include <queue>
+#include <functional>
 
 class Environment
 {
@@ -24,9 +26,11 @@ class Environment
 
 public:
 
+	double time = 0;
 	Cell*** grid;
 	std::vector<Fire*> wildfire;
-	double time = 0;
+	std::priority_queue<double, std::vector<double>, std::greater<double>> timeHeap;
+
 
 	//Constructor that creates a grid based on an array of couples fuelIndex-fuelPercentage (sum of all percentages must be 1)
 	//Nota: bozza eventualmente da buttare a seconda di come si deciderà gestire la variabilità dei fuel, 
@@ -38,9 +42,10 @@ public:
 	void advance();
 
 	Cell* getCell(int cellIndex);
+	Cell* getCell(double x, double y);
 	Cell* getCell(const Vertex & v);
 	int findCell(double x, double y) const;
-	int findCell(const Vertex& v);
+	int findCell(const Vertex& v) const;
 
 	// Used to add a fire in a specific point defined by xi e yi
 	void addFire(double Xi, double Yi);

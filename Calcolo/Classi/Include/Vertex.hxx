@@ -13,6 +13,9 @@ struct Vertex
     double x;
     double y;
 
+    int cellIndex;
+    double dx, dy;
+    double nextTime;
 
     Vertex(double x = 0, double y = 0);
     Vertex(const Vertex & v);

@@ -29,6 +29,7 @@ Vertex Vertex::operator/(double n) const
 }
 
 
+
 //--------------- Non member functions ---------------------
 
 double Distance(const Vertex & v1, const Vertex & v2)
