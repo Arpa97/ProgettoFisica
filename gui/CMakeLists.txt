@@ -46,7 +46,7 @@ main.cpp
 mainwindow.cpp
 mainwindow.h
 mainwindow.ui
-white.qrc)
+resources.qrc)
 
 configure_file(${PROJECT_SOURCE_DIR}/File/FuelTypes.txt ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 

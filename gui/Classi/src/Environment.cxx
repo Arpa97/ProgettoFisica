@@ -72,11 +72,9 @@ Cell* Environment::getCell(int cellIndex)
 	return grid[i][j];
 }
 
-
-
 int Environment::findCell(double x, double y) const
 {
-	if (x > GRID_SIDE || y > GRID_SIDE) throw;		//Nota: cosa succede quando un vertice esce dalla griglia? occorrer� capire come gestire la cosa
+    if (x > GRID_SIDE || y > GRID_SIDE) throw;		//Nota: cosa succede quando un vertice esce dalla griglia? occorrer� capire come gestire la cosa
 	int step = GRID_SIDE / CELL_SIDE;
 
 	int i = static_cast<int>(y / CELL_SIDE);

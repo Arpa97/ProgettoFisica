@@ -25,6 +25,8 @@ private slots:
 
     void on_pushButton_2_clicked();
 
+    void printFire(ciclicVector<Vertex>);
+
 private:
     Ui::MainWindow *ui;
 };
