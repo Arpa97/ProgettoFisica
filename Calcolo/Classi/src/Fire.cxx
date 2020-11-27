@@ -169,10 +169,11 @@ void Fire::calcTime(int i)
     double timeY = (cellY - Polygon[i].y) / dy;
 
     double dt = std::min(timeX, timeY);
-    double nextTime = Forest->time + dt;
+    if (dx == 0) dt = timeY;
+    if (dy == 0) dt = timeX;
 
-    Polygon[i].nextTime = nextTime;
-    Forest->timeHeap.push(nextTime);
+    Polygon[i].nextTime = Forest->time + dt;
+    Forest->timeHeap.push(Forest->time + dt);
 }
 
 
