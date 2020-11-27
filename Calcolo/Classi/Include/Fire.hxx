@@ -1,8 +1,8 @@
 /*********************************************************************
  * 
  * Class for the rappresentation of the fire, it will be an extension
- * of the class WaveFront and is going to make the calculation fro the
- * expansion etcetera
+ * of the class WaveFront and will perform calculations for the
+ * fire expansion.
  * 
  *********************************************************************/
 
@@ -18,7 +18,7 @@ struct Fire : public WaveFront
     // parameter needed for calculation
     Environment * Forest;
 
-    Fire(Environment * Forest, double Xi, double Yi);
+    Fire(Environment * _Forest, double Xi, double Yi);
     Fire(const Fire & f);
 
     //--------------Methods----------------
@@ -30,11 +30,17 @@ struct Fire : public WaveFront
     // the resul is stored in val and the vertex is told by the index i
     // used for computing single incrementation value for dynamic timestep evaluation
     void calcPropagation(double * val, int i);
+    void calcPropagation(int i);
 
-    // Method for getting the RoS and the other par of a vertex signed by an index i 
-    // stored in the right cell of the enviroment and put it in an array "par"
-    void getParam(double * par, int i);
+    void calcTime(int i);
+
+    // Method to check the distance from two points and add another one if the distance is too small
+    // i is where to start the checking, so i can iterate the last segment
+    void checkDistance();
 
     // Method to compute the differential arrays for the Richard equation
     ciclicVector<Vertex> calcDiff(const ciclicVector<Vertex> & v);
+
+    //Method for visualize the vertex information
+    void Visualize();
 };

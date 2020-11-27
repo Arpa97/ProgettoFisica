@@ -1,8 +1,10 @@
 # include "WaveFront.hxx"
+# include "Environment.hxx"
 
 WaveFront::WaveFront(double x, double y): Polygon(1) 
 {
-    Polygon[0].x = x, Polygon[0].y = y;
+    Polygon[0].x = x, 
+    Polygon[0].y = y;
 }
 
 WaveFront::WaveFront(Vertex * ver, int N): Polygon(N) 
@@ -38,26 +40,6 @@ void WaveFront::insertVertex(const Vertex & v, int i)
     Polygon.insert(it + i, v);
 }
 
-
-void WaveFront::checkDistance()
-{
-
-    for(int i = 0; i != Polygon.size(); i++)
-    if(Distance(Polygon[i], Polygon[i + 1]) > MAX_DISTANCE)
-    {
-        insertVertex(
-            // Insert the mid point
-            (Polygon[i].x + Polygon[i + 1].x)/2,
-            (Polygon[i].y + Polygon[i + 1].y)/2,
-            i + 1
-                    );
-     
-        // Return back to see if the 
-        // mid point inserted is at a right distance
-        i--;
-    }
-
-}
 
 
 bool WaveFront::isColliding(const Vertex & v)

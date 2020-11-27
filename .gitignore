@@ -9,5 +9,8 @@ IncendiVS.vcxproj.user
 IncendiVS.vcxproj.filters
 IncendiVS.vcxproj
 IncendiVS.sln
+.vscode/
+build/
+CMakeLists.txt
 
 out/

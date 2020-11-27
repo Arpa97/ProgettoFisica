@@ -2,16 +2,20 @@
 #include "Environment.hxx"
 
 #include <cmath>
-#include <corecrt_math_defines.h>
+#include <iostream>
+#include <iomanip>
 
-Fire::Fire(Environment * Forest, double Xi, double Yi): Forest(Forest)
+using std::cout;
+using std::endl;
+
+Fire::Fire(Environment * _Forest, double Xi, double Yi): Forest(_Forest)
 {
     Polygon.resize(10);
     
-    // Creation of a little ellipse centered on the point roted by
+    // Creation of a little ellipse centered on the point rotated by
     // the direction of the wind
 
-    Cell * cell = Forest->getCell(Vertex(Xi, Yi));
+    Cell * cell = Forest->getCell(Xi, Yi);
     double tetha = Forest->getTheta();
 
     // Support variable for the rotation
@@ -20,21 +24,34 @@ Fire::Fire(Environment * Forest, double Xi, double Yi): Forest(Forest)
     for(int i = 0; i != 10; i++)
     {
         // Divided by 100 because the initial ellipse is needed to be small
-        Polygon[i].x = cell->a * std::cos(i*M_PI/5)/100;
-        Polygon[i].y = cell->b * std::sin(i*M_PI/5)/100;
+        x1 = cell->a * std::cos(i*M_PI/5)/GRID_SIDE;
+        y1 = cell->b * std::sin(i*M_PI/5)/GRID_SIDE;
 
-        x1 = Polygon[i].x * std::cos(tetha) + Polygon[i].y * std::sin(tetha);
-        y1 = Polygon[i].y * std::cos(tetha) - Polygon[i].x * std::sin(tetha);
+        x1 = x1 * std::cos(tetha) + y1 * std::sin(tetha);
+        y1 = y1 * std::cos(tetha) - x1 * std::sin(tetha);
 
         Polygon[i].x = Xi + x1;
         Polygon[i].y = Yi + y1;
+
+        Polygon[i].cellIndex = Forest->findCell(Polygon[i]);
     }
+
+    // Calcolation of the dynamical timestep for the initial vertex
+    for (int i = 0; i != 10; i++)
+    {
+        calcPropagation(i);
+        calcTime(i);
+    }
+    
 }
+
 
 Fire::Fire(const Fire & f): Forest(f.Forest)
 {
-    for(int i = 0; i != Polygon.size(); i++)
-    Polygon.push_back(f.Polygon[i]);
+    Polygon.resize(f.Polygon.size());
+    for (int i = 0; i != f.Polygon.size(); i++)
+    // Al posto di 3 righe così è più facile e non vanno chiamati membri
+    Polygon[i] = f.Polygon[i];
 }
 
 
@@ -43,67 +60,147 @@ Fire::Fire(const Fire & f): Forest(f.Forest)
 
 void Fire::Propagate(double dt)
 {
+    int iChange = -1;
+    
+    for (int i = 0; i != Polygon.size(); i++)
+    {
+        Polygon[i].x += Polygon[i].dx * dt;
+        Polygon[i].y += Polygon[i].dy * dt;
+
+        // Find the one that change cell exatly in that time
+        if (Polygon[i].nextTime != -1 && Forest->time >= Polygon[i].nextTime)
+        {
+            iChange = i;
+        }
+    }
+
+    // Calculation for the one that changes cell
+    if(iChange != -1)
+    {
+        Polygon[iChange].cellIndex = Forest->findCell(Polygon[iChange]);
+        calcPropagation(iChange);
+        calcTime(iChange);
+    }
+
     // Checking distance from verteces
     checkDistance();
-
-    double par[3];
-    double tetha = Forest->getTheta();
-    ciclicVector<Vertex> Diff = calcDiff(Polygon);
-    
-    double Ct = std::cos(tetha), St = std::sin(tetha);
-
-    double At, Bt, num1, num2, den;
-
-    for(int i = 0; i != Polygon.size(); i++)
-    {
-    	getParam(par, i);
-    	
-        // Computing the vertex differential for propagating the front
-        At = par[0] * (Diff[i].x * St + Diff[i].y * Ct);
-        Bt = par[1] * (Diff[i].y * St - Diff[i].x * Ct);
-
-        num1 = par[0] * At * Ct + par[1] * Bt * St;
-        num2 = par[1] * Bt * Ct - par[0] * At * St;
-
-        den = std::sqrt(At*At + Bt*Bt);
-
-        Polygon[i].x += (num1/den + par[2] * St)*dt;
-        Polygon[i].y += (num2/den + par[2] * Ct)*dt;
-    }
 }
+
+
 
 void Fire::calcPropagation(double * val, int i)
 {
-    double par[3];
-    getParam(par, i);
+    Cell * cella = Forest->getCell(Polygon[i]);
 
     double At, Bt, num1, num2, den;
     double Ct = std::cos(Forest->getTheta());
     double St = std::sin(Forest->getTheta());
     Vertex Diff = (Polygon[i + 1] - Polygon[i - 1])/2; 
 
-    At = par[0] * (Diff.x * St + Diff.y * Ct);
-    Bt = par[1] * (Diff.y * St - Diff.x * Ct);
+    At = cella->a * (Diff.x * St + Diff.y * Ct);
+    Bt = cella->b * (Diff.y * St - Diff.x * Ct);
 
-    num1 = par[0] * At * Ct + par[1] * Bt * St;
-    num2 = par[1] * Bt * Ct - par[0] * At * St;
+    num1 = cella->a * At * Ct + cella->b * Bt * St;
+    num2 = cella->b * Bt * Ct - cella->a * At * St;
 
     den = std::sqrt(At*At + Bt*Bt);
 
-    val[0] =  num1/den + par[2] * St;
-    val[1] =  num2/den + par[2] * Ct;
+    val[0] =  num1/den + cella->c * St;
+    val[1] =  num2/den + cella->c * Ct;
 }
 
-void Fire::getParam(double * par, int i)
+
+
+void Fire::calcPropagation(int i)
 {
-    // Da scrivere una volta che ho tutti i parametri
+    Cell* cella = Forest->getCell(Polygon[i]);
 
-    Cell * cella = Forest->getCell(Polygon[i]);
+    if (cella == Forest->nullFuel)
+    {
+        Polygon[i].dx = Polygon[i].dy = 0;
+        return;
+    }
 
-    par[0] = cella->a;
-    par[1] = cella->b;
-    par[2] = cella->c;
+    double At, Bt, num1, num2, den;
+    double Ct = std::cos(Forest->getTheta());
+    double St = std::sin(Forest->getTheta());
+    Vertex Diff = (Polygon[i + 1] - Polygon[i - 1]) / 2;
+
+    At = cella->a * (Diff.x * St + Diff.y * Ct);
+    Bt = cella->b * (Diff.y * St - Diff.x * Ct);
+
+    num1 = cella->a * At * Ct + cella->b * Bt * St;
+    num2 = cella->b * Bt * Ct - cella->a * At * St;
+
+    den = std::sqrt(At * At + Bt * Bt);
+
+    Polygon[i].dx = num1 / den + cella->c * St;
+    Polygon[i].dy = num2 / den + cella->c * Ct;
 }
+
+
+
+void Fire::calcTime(int i)
+{
+    if (Polygon[i].cellIndex == -1)
+    {
+        Polygon[i].nextTime = -1;
+        return;
+    }
+
+    double dx = Polygon[i].dx;
+    double dy = Polygon[i].dy;
+
+    int step = GRID_SIDE / CELL_SIDE;
+    int _j = Polygon[i].cellIndex % step;
+    int _i = (Polygon[i].cellIndex - _j) / step;
+    if (dx > 0) _j += 1;
+    if (dy > 0) _i += 1;
+
+    //Position of the cell borders in the direction in which the vertex is moving
+    double cellX = _j * CELL_SIDE;
+    double cellY = _i * CELL_SIDE;
+
+    //Subtract a little value to make sure that the vertex changes cell and does not remain on the border
+    if (dx < 0) cellX -= 0.0001;
+    if (dy < 0) cellY -= 0.0001;
+
+    double timeX = (cellX - Polygon[i].x) / dx;
+    double timeY = (cellY - Polygon[i].y) / dy;
+
+    double dt = std::min(timeX, timeY);
+    if (dx == 0) dt = timeY;
+    if (dy == 0) dt = timeX;
+
+    Polygon[i].nextTime = Forest->time + dt;
+    Forest->timeHeap.push(Forest->time + dt);
+}
+
+
+
+void Fire::checkDistance()
+{
+    for (int i = 0; i != Polygon.size(); i++)
+        if (Distance(Polygon[i], Polygon[i + 1]) > MAX_DISTANCE)
+        {
+            insertVertex(
+                // Insert the mid point
+                (Polygon[i].x + Polygon[i + 1].x) / 2,
+                (Polygon[i].y + Polygon[i + 1].y) / 2,
+                i + 1
+            );
+
+            // Calculation of the propagation parameter
+            Polygon[i + 1].cellIndex = Forest->findCell(Polygon[i + 1]);
+            calcPropagation(i + 1);
+            calcTime(i + 1);
+
+            // Return back to see if the 
+            // mid point inserted is at a right distance
+            i--;
+        }
+}
+
 
 
 ciclicVector<Vertex> Fire::calcDiff(const ciclicVector<Vertex> & v)
@@ -116,4 +213,29 @@ ciclicVector<Vertex> Fire::calcDiff(const ciclicVector<Vertex> & v)
     Diff[i] = (Polygon[i + 1] - Polygon[i - 1])/2;
 
     return Diff;
+}
+
+void Fire::Visualize()
+{
+    cout << '\n';
+
+    int step = GRID_SIDE/CELL_SIDE;
+    int cella;
+
+    for (int i = 0; i != Polygon.size(); i++)
+    {
+        cella = Polygon[i].cellIndex;
+
+        cout << "Vertice" << i << " = ";
+        cout << std::setprecision(4) << "(" << Polygon[i].x << ", " << Polygon[i].y << ")";
+        cout << std::setw(10);
+        cout << "Cella [" << (cella - (cella % step))/step << "][" << cella%step << "]";
+        cout << std::setw(10);
+        cout << "tSucc = " << std::setprecision(4) << std::fixed <<  Polygon[i].nextTime  << "\t";
+        cout << std::setw(10);
+        cout << "Propagazione = " << std::setprecision(4) << "(" << Polygon[i].dx << ", " << Polygon[i].dy << ")";
+        cout << std::endl;
+    }
+
+    cout << "\n\n";
 }

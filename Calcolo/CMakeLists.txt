@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(TEST VERSION 1.0.1)
 
+add_compile_definitions(
+    _USE_MATH_DEFINES
+)
+
 set(VERBOSE 1)
 
 # Aggiunta opzioni compilatore

@@ -13,6 +13,9 @@ struct Vertex
     double x;
     double y;
 
+    int cellIndex;
+    double dx, dy;
+    double nextTime;
 
     Vertex(double x = 0, double y = 0);
     Vertex(const Vertex & v);
@@ -25,9 +28,9 @@ struct Vertex
     Vertex operator/(double n) const;
 };
 
-//---------------Funzioni esterne---------------------
+//-------------- Non member functions ---------------------
 
-// Funzione per il calcolo della distanza tra due vertici
+// Function that computes the distance between two vertices
 double Distance(const Vertex & v1, const Vertex & v2);
 
 Vertex operator* (double n, const Vertex & v);
