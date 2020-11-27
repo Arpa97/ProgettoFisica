@@ -40,6 +40,7 @@ public:
 	Environment(double (*fuelPercentages)[2] = nullptr, int nDifferentFuels = 0);
 
 	//---------------Methods----------------
+	
 	//Advance the system of a specified timestep, or if not specified until the first vertex in Polygon changes cell.
 	void advance(double dt);
 	void advance();

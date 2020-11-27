@@ -28,7 +28,7 @@ Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 
 	for (int i = 0; i != step; i++)
 	{
-		grid[i] = i != step - 1 ? new Cell * [step] : new Cell * [step + 1];
+		grid[i] = new Cell * [step];
 
 		for (int j = 0; j != step; j++)
 		{
@@ -45,9 +45,7 @@ Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 			grid[i][j]->setR(U);
 		}
 	}
-
-	// Adding the fuel of type 0 at the end
-	grid[step-1][step] = new Cell(0, 0);
+	
 }
 
 
@@ -132,10 +130,10 @@ Cell * Environment::getCell(const Vertex & v)
 
 int Environment::findCell(double x, double y) const
 {
-	int step = GRID_SIDE / CELL_SIDE;
-
 	// Returning the fuel of type 0 if the vertex croos the forest
 	if (x >= GRID_SIDE || y >= GRID_SIDE || x < 0 || y < 0) return -1;		
+
+	int step = GRID_SIDE / CELL_SIDE;
 
 	int i = static_cast<int>(y / CELL_SIDE);
 	int j = static_cast<int>(x / CELL_SIDE);
