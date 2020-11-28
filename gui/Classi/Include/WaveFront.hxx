@@ -13,6 +13,7 @@
 # include "CiclicVector.hxx"
 # include "Definitions.hxx"
 
+class Environment;
 
 struct WaveFront
 {
@@ -20,7 +21,8 @@ struct WaveFront
      
     //-----------Constructors-------------
 
-    WaveFront(double x = 0, double y = 0);
+    WaveFront() {}
+    WaveFront(double x, double y);
     WaveFront(Vertex * ver, int N);
     WaveFront(const WaveFront & wf);
 
@@ -29,10 +31,6 @@ struct WaveFront
     // Method to insert a vertex in a specific position
     void insertVertex(double x, double y, int i = -1);
     void insertVertex(const Vertex & v, int i);
-
-    // Method to check the distance from two points and add another one if the distance is too small
-    // i is where to start the checking, so i can iterate the last segment
-    void checkDistance();
 
     // Method to detect collision
     bool isColliding(const Vertex & v);

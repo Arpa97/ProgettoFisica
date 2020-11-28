@@ -5,6 +5,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    connect(advancingTimer, SIGNAL(timeout()), this, SLOT(updateAdvance()));
     ui->setupUi(this);
 }
 
@@ -13,17 +14,27 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::updateAdvance(){
+    ncicli+=ADVANCE_DT;
+    Foresta.advance(ADVANCE_DT);
+    for (int i = 0; i != Foresta.wildfire.size(); i++){
+        this->printFire(Foresta.getPolygon(i));
+    }
+}
+
 void MainWindow::on_pushButton_clicked()
 {
-    ncicli+=TIMESTEP;
-    Foresta.advance();
-    this->printFire(Foresta.getPolygon(0));
+    this->updateAdvance();
 }
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    Foresta.addFire(50, 50);
-    this->printFire(Foresta.getPolygon(0));
+    int x = ui->xfire->text().toDouble();
+    int y = ui->xfire->text().toDouble();
+    Foresta.addFire(x, y);
+    for (int i = 0; i != Foresta.wildfire.size(); i++){
+        this->printFire(Foresta.getPolygon(i));
+    }
 }
 
 void MainWindow::printFire(ciclicVector<Vertex> polyFire){
@@ -34,6 +45,7 @@ void MainWindow::printFire(ciclicVector<Vertex> polyFire){
 
     for (int i=0; i<polyFire.size(); i++){
         poly << QPoint(polyFire[i].x, GRID_SIDE-polyFire[i].y);
+        //qDebug() << polyFire[i].x << polyFire[i].y;
     }
 
     painter.setBrush(Qt::red);
@@ -41,5 +53,32 @@ void MainWindow::printFire(ciclicVector<Vertex> polyFire){
     painter.drawPoints(poly);
 
     ui->label->setPixmap(QPixmap::fromImage(tmp));
-    ui->label_2->setText(QString("Ciclo: ") + QString().number(ncicli));
+    ui->label_2->setText(QString("Time: ") + QString().number(ncicli) + QString("s"));
+}
+
+void MainWindow::on_pushButton_3_clicked()
+{
+    ui->pushButton_3->setText(advancingTimer->isActive() ? "Start" : "Stop");
+    advancingTimer->isActive() ? advancingTimer->stop() : advancingTimer->start(100);
+}
+
+void MainWindow::on_pushButton_4_clicked()
+{
+    this->close();
+}
+
+void MainWindow::on_windSpeed_sliderMoved(int position)
+{
+    double newSpeed = (double)position*MAXWINDSPEED/100;
+    ui->windSpeedLabel->setText(QString("Speed: ") + QString().number(newSpeed) + QString(" m/s"));
+    Foresta.setU(newSpeed);
+    qDebug() << "winSpeed" << newSpeed;
+}
+
+void MainWindow::on_windDir_sliderMoved(int position)
+{
+    double newTheta = (double)position/100;
+    //ui->windThetaLabel->setText(QString("Angle: ") + QString(position*MAXWINDSPEED/100) + QString(" radianti"));
+    Foresta.setTheta(newTheta);
+    qDebug() << "winDir" << QString().number(newTheta);
 }

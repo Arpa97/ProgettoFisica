@@ -4,6 +4,12 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <iomanip> 
+
+using std::cout;
+using std::endl;
+
+Cell* Environment::nullFuel = new Cell(0, 0);
 
 Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 {
@@ -11,6 +17,7 @@ Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 	theta = WIND_DIRECTION;
 	M_f = MOISTURE_CONTENT;
 	Cell::FillFuelType(M_f);
+	nullFuel->setR(0);
 
 	int step = GRID_SIDE / CELL_SIDE;	
 	int fuelNumber, number;
@@ -38,43 +45,94 @@ Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 			grid[i][j]->setR(U);
 		}
 	}
+	
+}
+
+
+
+void Environment::advance(double dt)
+{
+	double dtHeap, dtMin, nextTime;
+	double tfinale = time + dt - 0.00001;
+
+	while(time < tfinale)
+	{
+		// Searching the next timestep
+		nextTime = timeHeap.top();
+		dtHeap = nextTime - time;
+		dt = tfinale - time;
+
+		if (dtHeap < dt)
+		{
+			dtMin = dtHeap;
+			timeHeap.pop();
+		}
+		else dtMin = dt;
+
+		
+		time += dtMin;
+
+		// propagation of the fire
+		for (int i = 0; i != wildfire.size(); i++)
+		{
+			wildfire[i]->Propagate(dtMin);
+		}		
+	}
+
+	std::cout << "Time : " << time << '\n';
 }
 
 
 
 void Environment::advance()
 {
+	double nextTime = timeHeap.top();
+	timeHeap.pop();
+	double dt = nextTime - time;
+	time += dt;
+
 	for (int i = 0; i != wildfire.size(); i++)
 	{
-		wildfire[i]->Propagate(TIMESTEP);
+		wildfire[i]->Propagate(dt);
 	}
-	time += TIMESTEP;
-}
 
-
-
-Cell * Environment::getCell(const Vertex & v)
-{
-	int cellIndex = findCell(v.x, v.y);
-	int step = GRID_SIDE / CELL_SIDE;
-	int j = cellIndex % step;
-	int i = (cellIndex - j) / step;
-	return grid[i][j];
+	std::cerr << "Time : " << time << '\n';
 }
 
 
 
 Cell* Environment::getCell(int cellIndex)
 {
+	if (cellIndex == -1)
+	{
+		return nullFuel;
+	}
+
 	int step = GRID_SIDE / CELL_SIDE;
 	int j = cellIndex % step;
 	int i = (cellIndex - j) / step;
 	return grid[i][j];
 }
 
+
+Cell* Environment::getCell(double x, double y)
+{
+	return getCell(findCell(x, y));
+}
+
+
+Cell * Environment::getCell(const Vertex & v)
+{
+	return getCell(findCell(v));
+}
+
+
+
 int Environment::findCell(double x, double y) const
 {
-    if (x > GRID_SIDE || y > GRID_SIDE) throw;		//Nota: cosa succede quando un vertice esce dalla griglia? occorrer� capire come gestire la cosa
+	// Returning the fuel of type 0 if the vertex croos the forest
+	if (x >= GRID_SIDE || y >= GRID_SIDE || x < 0 || y < 0) return -1;		
+
 	int step = GRID_SIDE / CELL_SIDE;
 
 	int i = static_cast<int>(y / CELL_SIDE);
@@ -82,6 +140,13 @@ int Environment::findCell(double x, double y) const
 
 	int cellIndex = step * i + j;
 	return cellIndex;
+}
+
+
+
+int Environment::findCell(const Vertex& v) const
+{
+	return findCell(v.x, v.y);
 }
 
 
@@ -108,6 +173,10 @@ void Environment::setU(double _U)
 	}
 }
 
+void Environment::setTheta(double _theta){
+	theta = _theta;
+}
+
 double Environment::getU() const
 {
 	return U;
@@ -127,4 +196,18 @@ double Environment::getM_f() const
 ciclicVector<Vertex> Environment::getPolygon(int i)
 {
 	return wildfire[i]->Polygon;
+}
+
+
+void Environment::VisualizeGrid()
+{
+	int step = GRID_SIDE/CELL_SIDE;
+
+	for(int i = 0; i != step; i++)
+	for(int j = 0; j != step; j++)
+	if(j != step - 1)
+	cout << grid[i][j]->fuelIndex;
+	else 
+	cout << grid[i][j]->fuelIndex << endl; 
+
 }
