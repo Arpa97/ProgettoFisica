@@ -55,6 +55,7 @@ public:
 	void addFire(double Xi, double Yi);
 
 	void setU(double _U);
+	void setTheta(double _theta);
 	double getU() const;
 	double getTheta() const;
 	double getM_f() const;

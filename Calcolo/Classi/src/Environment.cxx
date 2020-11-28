@@ -173,6 +173,10 @@ void Environment::setU(double _U)
 	}
 }
 
+void Environment::setTheta(double _theta){
+	theta = _theta;
+}
+
 double Environment::getU() const
 {
 	return U;
