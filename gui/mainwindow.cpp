@@ -59,7 +59,7 @@ void MainWindow::printFire(ciclicVector<Vertex> polyFire){
 void MainWindow::on_pushButton_3_clicked()
 {
     ui->pushButton_3->setText(advancingTimer->isActive() ? "Start" : "Stop");
-    advancingTimer->isActive() ? advancingTimer->stop() : advancingTimer->start(100);
+    advancingTimer->isActive() ? advancingTimer->stop() : advancingTimer->start(1000);
 }
 
 void MainWindow::on_pushButton_4_clicked()
