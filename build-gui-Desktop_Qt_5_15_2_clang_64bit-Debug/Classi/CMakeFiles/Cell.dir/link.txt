@@ -1,0 +1,2 @@
+/usr/bin/ar qc libCell.a CMakeFiles/Cell.dir/Cell_autogen/mocs_compilation.cpp.o CMakeFiles/Cell.dir/src/Cell.cxx.o
+/usr/bin/ranlib libCell.a

@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../Classi/Include/Cell.hxx
+Fuel.hxx
+../Classi/Include/Fuel.hxx
+Definitions.hxx
+../Classi/Include/Definitions.hxx
+
+../Classi/Include/Fuel.hxx
+Definitions.hxx
+../Classi/Include/Definitions.hxx
+
+../Definitions.hxx
+
+../Librerie/Include/Rothermel.hxx
+
+/Users/andreadarpa/Desktop/ProgettoFisica/ProgettoFisica/Calcolo/Classi/src/Cell.cxx
+Rothermel.hxx
+/Users/andreadarpa/Desktop/ProgettoFisica/ProgettoFisica/Calcolo/Classi/src/Rothermel.hxx
+Cell.hxx
+/Users/andreadarpa/Desktop/ProgettoFisica/ProgettoFisica/Calcolo/Classi/src/Cell.hxx
+iostream
+-
+fstream
+-
+cstring
+-
+cmath
+-
+

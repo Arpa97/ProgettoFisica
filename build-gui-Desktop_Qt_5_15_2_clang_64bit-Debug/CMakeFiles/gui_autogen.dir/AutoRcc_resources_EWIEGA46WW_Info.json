@@ -1,0 +1,23 @@
+{
+	"BUILD_DIR" : "/Users/andreadarpa/Desktop/ProgettoFisica/ProgettoFisica/build-gui-Desktop_Qt_5_15_2_clang_64bit-Debug/gui_autogen",
+	"CMAKE_BINARY_DIR" : "/Users/andreadarpa/Desktop/ProgettoFisica/ProgettoFisica/build-gui-Desktop_Qt_5_15_2_clang_64bit-Debug",
+	"CMAKE_CURRENT_BINARY_DIR" : "/Users/andreadarpa/Desktop/ProgettoFisica/ProgettoFisica/build-gui-Desktop_Qt_5_15_2_clang_64bit-Debug",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/Users/andreadarpa/Desktop/ProgettoFisica/ProgettoFisica/gui",
+	"CMAKE_SOURCE_DIR" : "/Users/andreadarpa/Desktop/ProgettoFisica/ProgettoFisica/gui",
+	"INCLUDE_DIR" : "/Users/andreadarpa/Desktop/ProgettoFisica/ProgettoFisica/build-gui-Desktop_Qt_5_15_2_clang_64bit-Debug/gui_autogen/include",
+	"INPUTS" : 
+	[
+		"/Users/andreadarpa/Desktop/ProgettoFisica/ProgettoFisica/gui/Definitions.hxx",
+		"/Users/andreadarpa/Desktop/ProgettoFisica/ProgettoFisica/gui/white.png"
+	],
+	"LOCK_FILE" : "/Users/andreadarpa/Desktop/ProgettoFisica/ProgettoFisica/build-gui-Desktop_Qt_5_15_2_clang_64bit-Debug/CMakeFiles/gui_autogen.dir/AutoRcc_resources_EWIEGA46WW_Lock.lock",
+	"MULTI_CONFIG" : false,
+	"OPTIONS" : [ "-name", "resources" ],
+	"OUTPUT_CHECKSUM" : "EWIEGA46WW",
+	"OUTPUT_NAME" : "qrc_resources.cpp",
+	"RCC_EXECUTABLE" : "/Users/andreadarpa/Qt/5.15.2/clang_64/bin/rcc",
+	"RCC_LIST_OPTIONS" : [ "--list" ],
+	"SETTINGS_FILE" : "/Users/andreadarpa/Desktop/ProgettoFisica/ProgettoFisica/build-gui-Desktop_Qt_5_15_2_clang_64bit-Debug/CMakeFiles/gui_autogen.dir/AutoRcc_resources_EWIEGA46WW_Used.txt",
+	"SOURCE" : "/Users/andreadarpa/Desktop/ProgettoFisica/ProgettoFisica/gui/resources.qrc",
+	"VERBOSITY" : 0
+}

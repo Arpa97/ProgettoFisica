@@ -67,6 +67,7 @@ void MainWindow::on_pushButton_4_clicked()
     this->close();
 }
 
+/*
 void MainWindow::on_windSpeed_sliderMoved(int position)
 {
     double newSpeed = (double)position*MAXWINDSPEED/100;
@@ -74,11 +75,21 @@ void MainWindow::on_windSpeed_sliderMoved(int position)
     Foresta.setU(newSpeed);
     qDebug() << "winSpeed" << newSpeed;
 }
-
-void MainWindow::on_windDir_sliderMoved(int position)
+*/
+void MainWindow::on_windDir_valueChanged(int position)
 {
     double newTheta = (double)position/100;
-    //ui->windThetaLabel->setText(QString("Angle: ") + QString(position*MAXWINDSPEED/100) + QString(" radianti"));
+    ui->windDirLabel->setText(QString("Angle: ") + QString().number(newTheta) + QString(" radianti"));
     Foresta.setTheta(newTheta);
     qDebug() << "winDir" << QString().number(newTheta);
+}
+
+
+
+void MainWindow::on_windSpeed_valueChanged(int value)
+{
+  double newSpeed = (double)value*MAXWINDSPEED/100;
+  ui->windSpeedLabel->setText(QString("Speed: ") + QString().number(newSpeed) + QString(" m/s"));
+  Foresta.setU(newSpeed);
+  qDebug() << "winSpeed" << newSpeed;
 }

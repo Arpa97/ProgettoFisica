@@ -1,0 +1,2 @@
+/usr/bin/ar qc libEnvironment.a CMakeFiles/Environment.dir/Environment_autogen/mocs_compilation.cpp.o CMakeFiles/Environment.dir/src/Environment.cxx.o
+/usr/bin/ranlib libEnvironment.a

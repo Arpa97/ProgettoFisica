@@ -44,7 +44,7 @@
      <rect>
       <x>20</x>
       <y>450</y>
-      <width>75</width>
+      <width>91</width>
       <height>23</height>
      </rect>
     </property>
@@ -120,9 +120,9 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>660</x>
+      <x>650</x>
       <y>380</y>
-      <width>61</width>
+      <width>71</width>
       <height>16</height>
      </rect>
     </property>
@@ -149,9 +149,9 @@
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>650</x>
+      <x>640</x>
       <y>270</y>
-      <width>81</width>
+      <width>91</width>
       <height>16</height>
      </rect>
     </property>
@@ -224,6 +224,19 @@
      <string>Speed: 0 m/s</string>
     </property>
    </widget>
+   <widget class="QLabel" name="windDirLabel">
+    <property name="geometry">
+     <rect>
+      <x>630</x>
+      <y>340</y>
+      <width>121</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Angle: 0 Radianti</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -231,7 +244,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuMainwindow">

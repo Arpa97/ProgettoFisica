@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../Classi/Include/CiclicVector.hxx
+vector
+-
+
+/Users/andreadarpa/Desktop/ProgettoFisica/ProgettoFisica/Calcolo/Classi/src/CiclicVector.cxx
+CiclicVector.hxx
+/Users/andreadarpa/Desktop/ProgettoFisica/ProgettoFisica/Calcolo/Classi/src/CiclicVector.hxx
+

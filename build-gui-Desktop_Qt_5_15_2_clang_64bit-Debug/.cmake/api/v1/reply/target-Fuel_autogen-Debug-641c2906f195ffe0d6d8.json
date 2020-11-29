@@ -1,0 +1,81 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"Classi/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 0,
+			"id" : "Rothermel::@287f3a799078567e7b96"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "Vertex::@22412f2deb00df7c9100"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "WaveFront::@22412f2deb00df7c9100"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "CiclicVector::@22412f2deb00df7c9100"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "Fire::@22412f2deb00df7c9100"
+		}
+	],
+	"id" : "Fuel_autogen::@22412f2deb00df7c9100",
+	"isGeneratorProvided" : true,
+	"name" : "Fuel_autogen",
+	"paths" : 
+	{
+		"build" : "Classi",
+		"source" : "Classi"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "/Users/andreadarpa/Desktop/ProgettoFisica/ProgettoFisica/build-gui-Desktop_Qt_5_15_2_clang_64bit-Debug/Classi/CMakeFiles/Fuel_autogen",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "/Users/andreadarpa/Desktop/ProgettoFisica/ProgettoFisica/build-gui-Desktop_Qt_5_15_2_clang_64bit-Debug/Classi/CMakeFiles/Fuel_autogen.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}

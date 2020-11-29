@@ -1,0 +1,2 @@
+/usr/bin/ar qc libVertex.a CMakeFiles/Vertex.dir/Vertex_autogen/mocs_compilation.cpp.o CMakeFiles/Vertex.dir/src/Vertex.cxx.o
+/usr/bin/ranlib libVertex.a

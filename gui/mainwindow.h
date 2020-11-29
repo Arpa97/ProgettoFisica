@@ -37,9 +37,11 @@ private slots:
 
     void on_pushButton_4_clicked();
 
-    void on_windSpeed_sliderMoved(int position);
+    //void on_windSpeed_sliderMoved(int position);
 
-    void on_windDir_sliderMoved(int position);
+    void on_windDir_valueChanged(int position);
+
+    void on_windSpeed_valueChanged(int value);
 
 private:
     Ui::MainWindow *ui;

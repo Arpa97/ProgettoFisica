@@ -1,0 +1,2 @@
+/usr/bin/ar qc libFire.a CMakeFiles/Fire.dir/Fire_autogen/mocs_compilation.cpp.o CMakeFiles/Fire.dir/src/Fire.cxx.o
+/usr/bin/ranlib libFire.a

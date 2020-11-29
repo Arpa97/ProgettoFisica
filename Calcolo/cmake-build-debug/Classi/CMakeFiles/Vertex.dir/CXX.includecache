@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../Classi/Include/Vertex.hxx
+
+/Users/andreadarpa/Desktop/ProgettoFisica/ProgettoFisica/Calcolo/Classi/src/Vertex.cxx
+Vertex.hxx
+/Users/andreadarpa/Desktop/ProgettoFisica/ProgettoFisica/Calcolo/Classi/src/Vertex.hxx
+cmath
+-
+
