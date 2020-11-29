@@ -1,2 +1,0 @@
-/usr/bin/ar qc libWaveFront.a CMakeFiles/WaveFront.dir/WaveFront_autogen/mocs_compilation.cpp.o CMakeFiles/WaveFront.dir/src/WaveFront.cxx.o
-/usr/bin/ranlib libWaveFront.a

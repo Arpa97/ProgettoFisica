@@ -1,2 +1,0 @@
-/usr/bin/ar qc libFuel.a CMakeFiles/Fuel.dir/Fuel_autogen/mocs_compilation.cpp.o CMakeFiles/Fuel.dir/src/Fuel.cxx.o
-/usr/bin/ranlib libFuel.a

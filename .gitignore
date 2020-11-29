@@ -12,5 +12,5 @@ IncendiVS.sln
 .vscode/
 build/
 CMakeLists.txt.user
-
+build*/
 out/

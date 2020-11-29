@@ -1,2 +1,0 @@
-/usr/bin/ar qc libCiclicVector.a CMakeFiles/CiclicVector.dir/CiclicVector_autogen/mocs_compilation.cpp.o CMakeFiles/CiclicVector.dir/src/CiclicVector.cxx.o
-/usr/bin/ranlib libCiclicVector.a
