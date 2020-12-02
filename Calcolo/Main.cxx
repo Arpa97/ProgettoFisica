@@ -11,20 +11,28 @@ using std::endl;
 
 int main()
 {
+    int cyclestotest = 1000;
+    
     Environment Foresta;
 
     Foresta.addFire(5, 5);
     // Foresta.wildfire[0]->Visualize();
-
-    do 
+    for (int i = 0; i < cyclestotest; i++) {
+        if (i == 500) {
+            Foresta.setU(10.0);
+            Foresta.setTheta(-2);
+        }
+        Foresta.advance();
+        Foresta.wildfire[0]->Visualize();
+    }
+    
+    /*do 
     {   
-        Foresta.advance(10);
+        Foresta.advance();
         Foresta.wildfire[0]->Visualize();
         cout << '\n' << ">>input q to stop";
     } while (cin.get() != 'q');
 
     //cout << Foresta.findCell(50, 0) << endl;
-    
-
-
+    */
 }
