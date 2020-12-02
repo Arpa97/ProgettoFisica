@@ -17,7 +17,8 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    Environment Foresta;
+    QImage original;
+    Environment *Foresta = new Environment();
     QTimer *advancingTimer = new QTimer();
     double ADVANCE_DT = 1;
     int ncicli = 0;
@@ -42,6 +43,8 @@ private slots:
     void on_windDir_valueChanged(int position);
 
     void on_windSpeed_valueChanged(int value);
+
+    void on_pushButton_5_clicked();
 
 private:
     Ui::MainWindow *ui;

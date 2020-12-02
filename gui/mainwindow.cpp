@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     connect(advancingTimer, SIGNAL(timeout()), this, SLOT(updateAdvance()));
     ui->setupUi(this);
+    original = ui->label->pixmap()->toImage();
 }
 
 MainWindow::~MainWindow()
@@ -16,9 +17,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::updateAdvance(){
     ncicli+=ADVANCE_DT;
-    Foresta.advance(ADVANCE_DT);
-    for (int i = 0; i != Foresta.wildfire.size(); i++){
-        this->printFire(Foresta.getPolygon(i));
+    Foresta->advance(ADVANCE_DT);
+    for (int i = 0; i != Foresta->wildfire.size(); i++){
+        this->printFire(Foresta->getPolygon(i));
     }
 }
 
@@ -31,14 +32,14 @@ void MainWindow::on_pushButton_2_clicked()
 {
     int x = ui->xfire->text().toDouble();
     int y = ui->yfire->text().toDouble();
-    Foresta.addFire(x, y);
-    for (int i = 0; i != Foresta.wildfire.size(); i++){
-        this->printFire(Foresta.getPolygon(i));
+    Foresta->addFire(x, y);
+    for (int i = 0; i != Foresta->wildfire.size(); i++){
+        this->printFire(Foresta->getPolygon(i));
     }
 }
 
 void MainWindow::printFire(ciclicVector<Vertex> polyFire){
-    QImage tmp = ui->label->pixmap()->toImage();
+    QImage tmp = QPixmap::fromImage(original).toImage();
     QPainter painter(&tmp);
     QPen paintpen(Qt::red);
     QPolygon poly;
@@ -72,7 +73,7 @@ void MainWindow::on_windSpeed_sliderMoved(int position)
 {
     double newSpeed = (double)position*MAXWINDSPEED/100;
     ui->windSpeedLabel->setText(QString("Speed: ") + QString().number(newSpeed) + QString(" m/s"));
-    Foresta.setU(newSpeed);
+    Foresta->setU(newSpeed);
     qDebug() << "winSpeed" << newSpeed;
 }
 */
@@ -80,16 +81,19 @@ void MainWindow::on_windDir_valueChanged(int position)
 {
     double newTheta = (double)position/100;
     ui->windDirLabel->setText(QString("Angle: ") + QString().number(newTheta) + QString(" radianti"));
-    Foresta.setTheta(newTheta);
+    Foresta->setTheta(newTheta);
     qDebug() << "winDir" << QString().number(newTheta);
 }
-
-
 
 void MainWindow::on_windSpeed_valueChanged(int value)
 {
   double newSpeed = (double)value*MAXWINDSPEED/100;
   ui->windSpeedLabel->setText(QString("Speed: ") + QString().number(newSpeed) + QString(" m/s"));
-  Foresta.setU(newSpeed);
+  Foresta->setU(newSpeed);
   qDebug() << "winSpeed" << newSpeed;
+}
+
+void MainWindow::on_pushButton_5_clicked()
+{
+    ui->label->setPixmap(QPixmap::fromImage(original));
 }

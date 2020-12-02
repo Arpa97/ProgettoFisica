@@ -8,7 +8,7 @@
 #pragma once 
 
 #define MOISTURE_CONTENT 0.1					// fraction. Not changing run-time
-#define WIND_SPEED 2.2							// m/s. Can change run-time
+#define WIND_SPEED 10							// m/s. Can change run-time
 #define WIND_DIRECTION 0					    // Clock-wise from y axis, in �
 
 #define CELL_SIDE 10							// m. Length of the cell (square) side. Cannot be chosen by user.
@@ -18,4 +18,4 @@
 #define N_FUEL_TYPES 53							// Number of different fuel types.
 #define FUEL_PATH "FuelTypes.txt"
 
-#define MAXWINDSPEED 32                         // m/s. Max wind speed
+#define MAXWINDSPEED 10                         // m/s. Max wind speed
