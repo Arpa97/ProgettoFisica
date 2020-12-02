@@ -24,6 +24,9 @@ class Environment
 	double theta;
 	double M_f;
 
+	// Methods for inizializing the times and the factor in the vertices
+	void calcTimes();
+
 public:
 
 	double time = 0;

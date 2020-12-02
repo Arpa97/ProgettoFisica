@@ -13,8 +13,8 @@ Cell* Environment::nullFuel = new Cell(0, 0);
 
 Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 {
-	U = WIND_SPEED;
-	theta = WIND_DIRECTION;
+	U = 0;
+	theta = 0;
 	M_f = MOISTURE_CONTENT;
 	Cell::FillFuelType(M_f);
 	nullFuel->setR(0);
@@ -171,10 +171,16 @@ void Environment::setU(double _U)
 			grid[i][j]->setR(U);
 		}
 	}
+
+	// Recalculate all timesteps
+	calcTimes();
 }
 
 void Environment::setTheta(double _theta){
 	theta = _theta;
+
+	// Recalculate all timesteps
+	calcTimes();
 }
 
 double Environment::getU() const
@@ -196,6 +202,22 @@ double Environment::getM_f() const
 ciclicVector<Vertex> Environment::getPolygon(int i)
 {
 	return wildfire[i]->Polygon;
+}
+
+
+void Environment::calcTimes()
+{
+	// First calcel all the old entries
+	while (!timeHeap.empty())
+	timeHeap.pop();
+	
+	// Recalculate all propagation for all vertices
+	for(int i = 0; i != wildfire.size(); i++)
+	wildfire[i]->calcPropagations();
+
+	// Recalculate the times for all vertices
+	for(int i = 0; i != wildfire.size(); i++)
+	wildfire[i]->calcTimes();
 }
 
 

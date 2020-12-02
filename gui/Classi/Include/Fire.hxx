@@ -31,6 +31,10 @@ struct Fire : public WaveFront
     // used for computing single incrementation value for dynamic timestep evaluation
     void calcPropagation(double * val, int i);
     void calcPropagation(int i);
+    
+    // Methods to initialize the propagation in all verticies, and time
+    void calcPropagations();
+    void calcTimes();
 
     void calcTime(int i);
 

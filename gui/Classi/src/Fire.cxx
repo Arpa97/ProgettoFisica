@@ -138,7 +138,17 @@ void Fire::calcPropagation(int i)
     Polygon[i].dy = num2 / den + cella->c * Ct;
 }
 
+void Fire::calcPropagations()
+{
+    for(int i = 0; i != Polygon.size(); i++)
+    this->calcPropagation(i);
+}
 
+void Fire::calcTimes()
+{
+    for(int i = 0; i != Polygon.size(); i++)
+    this->calcTime(i);
+}
 
 void Fire::calcTime(int i)
 {
@@ -158,8 +168,8 @@ void Fire::calcTime(int i)
     if (dy > 0) _i += 1;
 
     //Position of the cell borders in the direction in which the vertex is moving
-    double cellX = _j * CELL_SIDE;
-    double cellY = _i * CELL_SIDE;
+    double cellX = _j * CELL_SIDE + 0.0001;
+    double cellY = _i * CELL_SIDE + 0.0001;
 
     //Subtract a little value to make sure that the vertex changes cell and does not remain on the border
     if (dx < 0) cellX -= 0.0001;
@@ -171,6 +181,9 @@ void Fire::calcTime(int i)
     double dt = std::min(timeX, timeY);
     if (dx == 0) dt = timeY;
     if (dy == 0) dt = timeX;
+
+    // For ensure that the fire doesn't stay still
+    if(dt < 1E-6) dt = 1E-4;
 
     Polygon[i].nextTime = Forest->time + dt;
     Forest->timeHeap.push(Forest->time + dt);
