@@ -30,7 +30,7 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::on_pushButton_2_clicked()
 {
     int x = ui->xfire->text().toDouble();
-    int y = ui->xfire->text().toDouble();
+    int y = ui->yfire->text().toDouble();
     Foresta.addFire(x, y);
     for (int i = 0; i != Foresta.wildfire.size(); i++){
         this->printFire(Foresta.getPolygon(i));
