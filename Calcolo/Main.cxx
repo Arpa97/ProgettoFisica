@@ -15,14 +15,15 @@ int main()
     
     Environment Foresta;
 
-    Foresta.addFire(5, 5);
+    Foresta.addFire(50, 50);
     // Foresta.wildfire[0]->Visualize();
     for (int i = 0; i < cyclestotest; i++) {
-        if (i == 500) {
-            Foresta.setU(10.0);
+        if (i == 10 || i == 100 || i == 200) {
+            Foresta.addFire(50, i);
+            Foresta.setU((double)i/10);
             Foresta.setTheta(-2);
         }
-        Foresta.advance();
+        Foresta.advance(1);
         Foresta.wildfire[0]->Visualize();
     }
     
