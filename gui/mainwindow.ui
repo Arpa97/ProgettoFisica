@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>FireSimulator v0.1</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="label">
@@ -260,22 +260,6 @@
      <string>Clear</string>
     </property>
    </widget>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>800</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuMainwindow">
-    <property name="title">
-     <string>Mainwindow</string>
-    </property>
-   </widget>
-   <addaction name="menuMainwindow"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
