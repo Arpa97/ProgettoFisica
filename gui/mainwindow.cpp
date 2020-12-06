@@ -73,7 +73,7 @@ void MainWindow::printFire(ciclicVector<Vertex> polyFire){
     }
 
     painter.setBrush(Qt::darkRed);
-    painter.setPen(QPen(Qt::red));
+    painter.setPen(paintpen);
     //painter.drawPoints(poly);
     painter.drawPolygon(poly);
 
