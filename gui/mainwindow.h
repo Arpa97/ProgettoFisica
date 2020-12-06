@@ -18,7 +18,8 @@ class MainWindow : public QMainWindow
 
 public:
     QImage original;
-    Environment *Foresta = new Environment();
+    double (*composizione)[2] = new double[3][2] { {1, .5}, {13, .2}, {7, .3} };
+    Environment* Foresta = new Environment(composizione, 3);
     QTimer *advancingTimer = new QTimer();
     double ADVANCE_DT = 1;
     int ncicli = 0;
@@ -27,24 +28,16 @@ public:
 
 private slots:
     void on_pushButton_clicked();
-
     void on_pushButton_2_clicked();
-
     void printFire(ciclicVector<Vertex>);
-
     void on_pushButton_3_clicked();
-
     void updateAdvance();
-
     void on_pushButton_4_clicked();
-
     //void on_windSpeed_sliderMoved(int position);
-
     void on_windDir_valueChanged(int position);
-
     void on_windSpeed_valueChanged(int value);
-
     void on_pushButton_5_clicked();
+    QImage drawOriginalgrid();
 
 private:
     Ui::MainWindow *ui;

@@ -7,7 +7,30 @@ MainWindow::MainWindow(QWidget *parent)
 {
     connect(advancingTimer, SIGNAL(timeout()), this, SLOT(updateAdvance()));
     ui->setupUi(this);
-    original = ui->label->pixmap()->toImage();
+    original = drawOriginalgrid();
+}
+
+QImage MainWindow::drawOriginalgrid(){
+     QImage tmp = ui->label->pixmap(Qt::ReturnByValue).toImage();
+     QPainter painter(&tmp);
+     QPen paintpen(Qt::black);
+
+     painter.setPen(paintpen);
+     int step = GRID_SIDE / CELL_SIDE;
+     for (int i = 0; i != step; i++)
+         {
+             for (int j = 0; j != step; j++)
+             {
+                 if (Foresta->grid[i][j]->fuelIndex == 1) painter.setBrush(Qt::green);
+                 else if (Foresta->grid[i][j]->fuelIndex == 13) painter.setBrush(Qt::darkGreen);
+                 else if (Foresta->grid[i][j]->fuelIndex == 7) painter.setBrush(Qt::gray);
+                 else painter.setBrush(Qt::gray);
+                 painter.drawRect(i*CELL_SIDE, j*CELL_SIDE, CELL_SIDE, CELL_SIDE);
+             }
+         }
+
+     ui->label->setPixmap(QPixmap::fromImage(tmp));
+     return tmp;
 }
 
 MainWindow::~MainWindow()
@@ -18,7 +41,7 @@ MainWindow::~MainWindow()
 void MainWindow::updateAdvance(){
     ncicli+=ADVANCE_DT;
     Foresta->advance(ADVANCE_DT);
-    for (int i = 0; i != Foresta->wildfire.size(); i++){
+    for (unsigned long long i = 0; i != Foresta->wildfire.size(); i++){
         this->printFire(Foresta->getPolygon(i));
     }
 }
@@ -33,7 +56,7 @@ void MainWindow::on_pushButton_2_clicked()
     int x = ui->xfire->text().toDouble();
     int y = ui->yfire->text().toDouble();
     Foresta->addFire(x, y);
-    for (int i = 0; i != Foresta->wildfire.size(); i++){
+    for (unsigned long long i = 0; i != Foresta->wildfire.size(); i++){
         this->printFire(Foresta->getPolygon(i));
     }
 }
@@ -44,14 +67,15 @@ void MainWindow::printFire(ciclicVector<Vertex> polyFire){
     QPen paintpen(Qt::red);
     QPolygon poly;
 
-    for (int i=0; i<polyFire.size(); i++){
+    for (unsigned long long i=0; i<polyFire.size(); i++){
         poly << QPoint(polyFire[i].x, GRID_SIDE-polyFire[i].y);
         //qDebug() << polyFire[i].x << polyFire[i].y;
     }
 
-    painter.setBrush(Qt::red);
+    painter.setBrush(Qt::darkRed);
     painter.setPen(QPen(Qt::red));
-    painter.drawPoints(poly);
+    //painter.drawPoints(poly);
+    painter.drawPolygon(poly);
 
     ui->label->setPixmap(QPixmap::fromImage(tmp));
     ui->label_2->setText(QString("Time: ") + QString().number(ncicli) + QString("s"));
