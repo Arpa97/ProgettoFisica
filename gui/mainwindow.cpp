@@ -17,6 +17,8 @@ QImage MainWindow::drawOriginalgrid(){
 
      painter.setPen(paintpen);
      int step = GRID_SIDE / CELL_SIDE;
+     double drawSize = CELL_SIDE * ui->label->width() / GRID_SIDE;
+
      for (int i = 0; i != step; i++)
          {
              for (int j = 0; j != step; j++)
@@ -25,7 +27,7 @@ QImage MainWindow::drawOriginalgrid(){
                  else if (Foresta->grid[i][j]->fuelIndex == 13) painter.setBrush(Qt::darkGreen);
                  else if (Foresta->grid[i][j]->fuelIndex == 7) painter.setBrush(Qt::gray);
                  else painter.setBrush(Qt::gray);
-                 painter.drawRect(i*CELL_SIDE, j*CELL_SIDE, CELL_SIDE, CELL_SIDE);
+                 painter.drawRect(i * drawSize, j * drawSize, drawSize, drawSize);
              }
          }
 
@@ -67,9 +69,11 @@ void MainWindow::printFire(ciclicVector<Vertex> polyFire){
     QPen paintpen(Qt::red);
     QPolygon poly;
 
+    double rescale = ui->label->width() / (GRID_SIDE + .0);
+
     for (unsigned long long i=0; i<polyFire.size(); i++){
-        poly << QPoint(polyFire[i].x, GRID_SIDE-polyFire[i].y);
-        //qDebug() << polyFire[i].x << polyFire[i].y;
+        poly << QPoint(polyFire[i].x * rescale, (GRID_SIDE - polyFire[i].y) * rescale);
+        //qDebug() << polyFire[i].x * rescale << (GRID_SIDE - polyFire[i].y) * rescale;
     }
 
     painter.setBrush(Qt::darkRed);
@@ -84,7 +88,7 @@ void MainWindow::printFire(ciclicVector<Vertex> polyFire){
 void MainWindow::on_pushButton_3_clicked()
 {
     ui->pushButton_3->setText(advancingTimer->isActive() ? "Start" : "Stop");
-    advancingTimer->isActive() ? advancingTimer->stop() : advancingTimer->start(1000);
+    advancingTimer->isActive() ? advancingTimer->stop() : advancingTimer->start(10);
 }
 
 void MainWindow::on_pushButton_4_clicked()

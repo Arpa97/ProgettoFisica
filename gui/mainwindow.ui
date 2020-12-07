@@ -145,6 +145,9 @@
     <property name="maximum">
      <number>314</number>
     </property>
+    <property name="wrapping">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QLabel" name="label_4">
     <property name="geometry">
@@ -169,7 +172,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>50</string>
+     <string>200</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="yfire">
@@ -182,7 +185,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>50</string>
+     <string>200</string>
     </property>
    </widget>
    <widget class="QLabel" name="xfirelabel">
