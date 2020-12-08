@@ -35,7 +35,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}
 )
 # Compilazione classi/librerie
-set(Classi Vertex CiclicVector WaveFront Fire Fuel Cell Environment)
+set(Classi Vertex CiclicVector WaveFront PriorityQueue Fire Fuel Cell Environment)
 set(Librerie Rothermel)
 add_subdirectory(${PROJECT_SOURCE_DIR}/Librerie)
 link_libraries(${Librerie})

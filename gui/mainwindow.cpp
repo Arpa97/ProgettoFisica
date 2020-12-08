@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 QImage MainWindow::drawOriginalgrid(){
-     QImage tmp = ui->label->pixmap(Qt::ReturnByValue).toImage();
+     QImage tmp = ui->label->pixmap()->toImage();
      QPainter painter(&tmp);
      QPen paintpen(Qt::black);
 

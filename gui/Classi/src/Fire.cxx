@@ -205,15 +205,12 @@ void Fire::checkDistance(bool heap)
             // Calculation of the propagation parameter
             Polygon[i + 1].cellIndex = Forest->findCell(Polygon[i + 1]);
             calcPropagation(i + 1);
-            double dx1 = Polygon[i].dx;
-            double dy1 = Polygon[i].dy;
-            double dx2 = Polygon[i+2].dx;
-            double dy2 = Polygon[i+2].dy;
             calcPropagation(i);
             calcPropagation(i + 2);
-            //std::cerr << "NEW[" << Polygon[i].x << ", " << Polygon[i].y << /*", " << Polygon[i].dx << ", " << Polygon[i].dy <<*/ "]\t";
             if (heap)
             {
+                // Forest->timeHeap.deleteValue(Polygon[i].nextTime);
+                // Forest->timeHeap.deleteValue(Polygon[i+2].nextTime);
                 calcTime(i + 1);
                 calcTime(i);
                 calcTime(i + 2);

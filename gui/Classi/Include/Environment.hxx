@@ -11,9 +11,8 @@
 #include "Definitions.hxx"
 #include "Cell.hxx"
 #include "Fire.hxx"
+#include "PriorityQueue.hxx"
 
-#include <vector>
-#include <queue>
 #include <functional>
 
 class Environment
@@ -33,7 +32,7 @@ public:
 	Cell*** grid;
 	static Cell* nullFuel;
 	std::vector<Fire*> wildfire;
-	std::priority_queue<double, std::vector<double>, std::greater<double>> timeHeap;
+	PriorityQueue timeHeap;
 
 
 	//Constructor that creates a grid based on an array of couples fuelIndex-fuelPercentage (sum of all percentages must be 1)
