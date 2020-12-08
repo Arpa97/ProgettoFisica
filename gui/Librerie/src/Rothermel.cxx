@@ -39,6 +39,10 @@ double Rothermel_R0(Fuel* fuel, double _M_f)
 	epsilon = exp(-138 / SAV);
 	Q_ig = 250 + 1116 * M_f;
 
+	//static int count = 1;
+	//std::cerr << count << '\t' << I_R << '\t' << '\t' << I_R * 0.9 * 0.00508 << '\n';
+	//count++;
+
 	R0 = (I_R * csi) / (rho_b * epsilon * Q_ig);
 	//std::cerr << R0 * 0.00508 << '\n';
 	//std::cerr << fuel->fuelIndex << '\t' << R0 << '\t' << I_R << '\t' << csi << '\t' << rho_b << '\t' << epsilon << '\t' << Q_ig << '\n';

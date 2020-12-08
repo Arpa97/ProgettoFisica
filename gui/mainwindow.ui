@@ -172,7 +172,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>200</string>
+     <string>25</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="yfire">
@@ -185,7 +185,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>200</string>
+     <string>25</string>
     </property>
    </widget>
    <widget class="QLabel" name="xfirelabel">

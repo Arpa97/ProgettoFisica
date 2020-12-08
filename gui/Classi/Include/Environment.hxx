@@ -47,6 +47,7 @@ public:
 	//Advance the system of a specified timestep, or if not specified until the first vertex in Polygon changes cell.
 	void advance(double dt);
 	void advance();
+	void advance_withoutHeap();
 
 	Cell* getCell(int cellIndex);
 	Cell* getCell(double x, double y);

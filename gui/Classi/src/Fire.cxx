@@ -10,7 +10,7 @@ using std::endl;
 
 Fire::Fire(Environment * _Forest, double Xi, double Yi): Forest(_Forest)
 {
-    Polygon.resize(10);
+    Polygon.resize(8);
     
     // Creation of a little ellipse centered on the point rotated by
     // the direction of the wind
@@ -21,14 +21,16 @@ Fire::Fire(Environment * _Forest, double Xi, double Yi): Forest(_Forest)
     // Support variable for the rotation
     double x1, y1;
 
-    for(int i = 0; i != 10; i++)
+    for(int i = 0; i != 8; i++)
     {
         // Divided by 100 because the initial ellipse is needed to be small
-        x1 = cell->a * std::cos(i*M_PI/5)/GRID_SIDE;
-        y1 = cell->b * std::sin(i*M_PI/5)/GRID_SIDE;
+        //x1 = cell->a * std::cos(i*M_PI/5)/GRID_SIDE;
+        //y1 = cell->b * std::sin(i*M_PI/5)/GRID_SIDE;
+        x1 = cell->a * std::cos(i * M_PI / 4) / GRID_SIDE;
+        y1 = cell->b * std::sin(i * M_PI / 4) / GRID_SIDE;
 
-        x1 = x1 * std::cos(tetha) + y1 * std::sin(tetha);
-        y1 = y1 * std::cos(tetha) - x1 * std::sin(tetha);
+        //x1 = x1 * std::cos(tetha) + y1 * std::sin(tetha);
+        //y1 = y1 * std::cos(tetha) - x1 * std::sin(tetha);
 
         Polygon[i].x = Xi + x1;
         Polygon[i].y = Yi + y1;
@@ -37,11 +39,12 @@ Fire::Fire(Environment * _Forest, double Xi, double Yi): Forest(_Forest)
     }
 
     // Calcolation of the dynamical timestep for the initial vertex
-    for (int i = 0; i != 10; i++)
+    for (int i = 0; i != 8; i++)
     {
         calcPropagation(i);
         calcTime(i);
     }
+    
     
 }
 
@@ -71,6 +74,7 @@ void Fire::Propagate(double dt)
         if (Polygon[i].nextTime != -1 && Forest->time >= Polygon[i].nextTime)
         {
             iChange = i;
+            //std::cerr << iChange << ", ";
         }
     }
 
@@ -86,27 +90,22 @@ void Fire::Propagate(double dt)
     checkDistance();
 }
 
-
-
-void Fire::calcPropagation(double * val, int i)
+void Fire::Propagate_withoutHeap(double dt)
 {
-    Cell * cella = Forest->getCell(Polygon[i]);
+    for (int i = 0; i != Polygon.size(); i++)
+    {
+        Polygon[i].x += Polygon[i].dx * dt;
+        Polygon[i].y += Polygon[i].dy * dt;
+        Polygon[i].cellIndex = Forest->findCell(Polygon[i]);
+    }
 
-    double At, Bt, num1, num2, den;
-    double Ct = std::cos(Forest->getTheta());
-    double St = std::sin(Forest->getTheta());
-    Vertex Diff = (Polygon[i + 1] - Polygon[i - 1])/2; 
-
-    At = cella->a * (Diff.x * St + Diff.y * Ct);
-    Bt = cella->b * (Diff.y * St - Diff.x * Ct);
-
-    num1 = cella->a * At * Ct + cella->b * Bt * St;
-    num2 = cella->b * Bt * Ct - cella->a * At * St;
-
-    den = std::sqrt(At*At + Bt*Bt);
-
-    val[0] =  num1/den + cella->c * St;
-    val[1] =  num2/den + cella->c * Ct;
+    for (int i = 0; i != Polygon.size(); i++)
+    {
+        calcPropagation(i);
+        //std::cerr << std::setprecision(3) << "[" << Polygon[i].x << ", " << Polygon[i].y << ", " << Polygon[i].dx << ", " << Polygon[i].dy << "]\t";
+    }
+    //std::cerr << '\n';
+    checkDistance(false);
 }
 
 
@@ -191,7 +190,7 @@ void Fire::calcTime(int i)
 
 
 
-void Fire::checkDistance()
+void Fire::checkDistance(bool heap)
 {
     for (int i = 0; i != Polygon.size(); i++)
         if (Distance(Polygon[i], Polygon[i + 1]) > MAX_DISTANCE)
@@ -206,12 +205,25 @@ void Fire::checkDistance()
             // Calculation of the propagation parameter
             Polygon[i + 1].cellIndex = Forest->findCell(Polygon[i + 1]);
             calcPropagation(i + 1);
-            calcTime(i + 1);
+            double dx1 = Polygon[i].dx;
+            double dy1 = Polygon[i].dy;
+            double dx2 = Polygon[i+2].dx;
+            double dy2 = Polygon[i+2].dy;
+            calcPropagation(i);
+            calcPropagation(i + 2);
+            //std::cerr << "NEW[" << Polygon[i].x << ", " << Polygon[i].y << /*", " << Polygon[i].dx << ", " << Polygon[i].dy <<*/ "]\t";
+            if (heap)
+            {
+                calcTime(i + 1);
+                calcTime(i);
+                calcTime(i + 2);
+            }
 
             // Return back to see if the 
             // mid point inserted is at a right distance
             i--;
         }
+    //std::cerr << "\n\n";
 }
 
 

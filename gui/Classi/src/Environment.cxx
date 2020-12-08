@@ -22,7 +22,7 @@ Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 	int step = GRID_SIDE / CELL_SIDE;	
 	int fuelNumber, number;
 	double validator;
-	srand(static_cast<unsigned int>(std::time(NULL)));
+	//srand(static_cast<unsigned int>(std::time(NULL)));
 
 	grid = new Cell * *[step];
 
@@ -54,9 +54,12 @@ void Environment::advance(double dt)
 {
 	double dtHeap, dtMin, nextTime;
 	double tfinale = time + dt - 0.00001;
+	int numero = 0;
 
+	//std::cerr << "[";
 	while(time < tfinale)
 	{
+		numero++;
 		// Searching the next timestep
 		nextTime = timeHeap.top();
 		dtHeap = nextTime - time;
@@ -69,7 +72,6 @@ void Environment::advance(double dt)
 		}
 		else dtMin = dt;
 
-		
 		time += dtMin;
 
 		// propagation of the fire
@@ -78,8 +80,8 @@ void Environment::advance(double dt)
 			wildfire[i]->Propagate(dtMin);
 		}		
 	}
-
-	std::cout << "Time : " << time << '\n';
+	//std::cerr << '\n';
+	//std::cout << "Time : " << time << '\t' << "Avanzamenti: " << numero << "\tNumero punti:" << wildfire[0]->Polygon.size() << '\n';
 }
 
 
@@ -97,6 +99,20 @@ void Environment::advance()
 	}
 
 	std::cerr << "Time : " << time << '\n';
+}
+
+void Environment::advance_withoutHeap()
+{
+	double dt = 1;
+	time += dt;
+
+	for (int i = 0; i != wildfire.size(); i++)
+	{
+		wildfire[i]->Propagate_withoutHeap(dt);
+	}
+
+	//std::cerr << "Time : " << time << '\n';
+
 }
 
 
