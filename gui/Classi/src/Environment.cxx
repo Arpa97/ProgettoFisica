@@ -78,7 +78,10 @@ void Environment::advance(double dt)
 		for (int i = 0; i != wildfire.size(); i++)
 		{
 			wildfire[i]->Propagate(dtMin);
-		}		
+		}
+
+		for(int i = 0; i != wildfire.size(); i++)
+		wildfire[i]->checkEdges();		
 	}
 	//std::cerr << '\n';
 	//std::cout << "Time : " << time << '\t' << "Avanzamenti: " << numero << "\tNumero punti:" << wildfire[0]->Polygon.size() << '\n';

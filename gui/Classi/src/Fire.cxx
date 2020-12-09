@@ -192,8 +192,15 @@ void Fire::calcTime(int i)
 
 void Fire::checkDistance(bool heap)
 {
+    double min = 1000;
+
     for (int i = 0; i != Polygon.size(); i++)
-        if (Distance(Polygon[i], Polygon[i + 1]) > MAX_DISTANCE)
+    {
+        double d = Distance(Polygon[i], Polygon[i + 1]);
+
+        min = min > d ? d : min;
+
+        if (d > MAX_DISTANCE)
         {
             insertVertex(
                 // Insert the mid point
@@ -220,10 +227,74 @@ void Fire::checkDistance(bool heap)
             // mid point inserted is at a right distance
             i--;
         }
-    //std::cerr << "\n\n";
+    }
+
+    MinDist = min;
 }
 
+void Fire::checkEdges()
+{
+    // ALTRI TENTATIVI INUTILI
 
+    // int jMax = Polygon.size() < 7 ? 6 : 4;
+
+    // for(int i = 0; i != Polygon.size(); i++)
+    // for(int j = 1; j != jMax; j++)
+    //     if(Distance(Polygon[i-j], Polygon[i+j]) < MinDist)
+    //     {
+    //         for(int t = 0; t != j; t++)
+    //         {
+    //             Forest->timeHeap.deleteValue(Polygon[i + t].nextTime);
+    //             Polygon.erase(Polygon.begin() + i + t);
+    //             Forest->timeHeap.deleteValue(Polygon[i - t].nextTime);
+    //             Polygon.erase(Polygon.begin() + i - t);
+    //         }
+    //     }
+
+    // for(int i = 0; i < Polygon.size(); i++)
+    // {
+    //     if(
+    //         std::abs(Polygon[i-1].x - Polygon[i+1].x) < 0.1 ||
+    //         std::abs(Polygon[i-1].x - Polygon[i+1].x) < 0.1
+    //     )continue;
+
+    //     WaveFront w;
+
+    //     for(int j = 0; j < Polygon.size(); j++)
+    //     if(i != j)
+    //     w.Polygon.push_back(Polygon[j]);
+
+    //     if(w.isColliding(Polygon[i]))
+    //     {
+    //         Forest->timeHeap.deleteValue(Polygon[i].nextTime);
+    //         Polygon.erase(Polygon.begin() + i);
+    //     }
+    // }
+
+    //IDEA MIGLIORE
+
+    auto Int = findIntersection();
+
+    for(int i = 0; i != Int.size(); i++)
+    {
+        int index = Int[i].cellIndex;
+
+        insertVertex(Int[i], index);
+
+        // cout << index << endl;
+        // cout << Int[i].dx << endl;
+
+        for(int j = 0; j < Int[i].dx; j++)
+        {
+            Forest->timeHeap.deleteValue(Polygon[index+1].nextTime);
+            Polygon.erase(Polygon.begin() + index+1);
+        }
+
+        Polygon[index].cellIndex = Forest->findCell(Polygon[index]);
+        calcPropagation(index);
+        calcTime(index);
+    }
+}
 
 ciclicVector<Vertex> Fire::calcDiff(const ciclicVector<Vertex> & v)
 {

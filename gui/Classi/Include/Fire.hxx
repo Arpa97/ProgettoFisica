@@ -14,6 +14,11 @@ class Environment;
 
 struct Fire : public WaveFront
 {
+private:
+
+    double MinDist;
+
+public:
     // Pointer to the class enviroment for taking the ambiental 
     // parameter needed for calculation
     Environment * Forest;
@@ -41,6 +46,7 @@ struct Fire : public WaveFront
     // Method to check the distance from two points and add another one if the distance is too small
     // i is where to start the checking, so i can iterate the last segment
     void checkDistance(bool heap = true);
+    void checkEdges();
 
     // Method to compute the differential arrays for the Richard equation
     ciclicVector<Vertex> calcDiff(const ciclicVector<Vertex> & v);
