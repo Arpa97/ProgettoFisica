@@ -192,15 +192,9 @@ void Fire::calcTime(int i)
 
 void Fire::checkDistance(bool heap)
 {
-    double min = 1000;
-
     for (int i = 0; i != Polygon.size(); i++)
     {
-        double d = Distance(Polygon[i], Polygon[i + 1]);
-
-        min = min > d ? d : min;
-
-        if (d > MAX_DISTANCE)
+        if (Distance(Polygon[i], Polygon[i + 1]) > MAX_DISTANCE)
         {
             insertVertex(
                 // Insert the mid point
@@ -216,8 +210,8 @@ void Fire::checkDistance(bool heap)
             calcPropagation(i + 2);
             if (heap)
             {
-                // Forest->timeHeap.deleteValue(Polygon[i].nextTime);
-                // Forest->timeHeap.deleteValue(Polygon[i+2].nextTime);
+                Forest->timeHeap.deleteValue(Polygon[i].nextTime);
+                Forest->timeHeap.deleteValue(Polygon[i+2].nextTime);
                 calcTime(i + 1);
                 calcTime(i);
                 calcTime(i + 2);
@@ -228,49 +222,10 @@ void Fire::checkDistance(bool heap)
             i--;
         }
     }
-
-    MinDist = min;
 }
 
 void Fire::checkEdges()
 {
-    // ALTRI TENTATIVI INUTILI
-
-    // int jMax = Polygon.size() < 7 ? 6 : 4;
-
-    // for(int i = 0; i != Polygon.size(); i++)
-    // for(int j = 1; j != jMax; j++)
-    //     if(Distance(Polygon[i-j], Polygon[i+j]) < MinDist)
-    //     {
-    //         for(int t = 0; t != j; t++)
-    //         {
-    //             Forest->timeHeap.deleteValue(Polygon[i + t].nextTime);
-    //             Polygon.erase(Polygon.begin() + i + t);
-    //             Forest->timeHeap.deleteValue(Polygon[i - t].nextTime);
-    //             Polygon.erase(Polygon.begin() + i - t);
-    //         }
-    //     }
-
-    // for(int i = 0; i < Polygon.size(); i++)
-    // {
-    //     if(
-    //         std::abs(Polygon[i-1].x - Polygon[i+1].x) < 0.1 ||
-    //         std::abs(Polygon[i-1].x - Polygon[i+1].x) < 0.1
-    //     )continue;
-
-    //     WaveFront w;
-
-    //     for(int j = 0; j < Polygon.size(); j++)
-    //     if(i != j)
-    //     w.Polygon.push_back(Polygon[j]);
-
-    //     if(w.isColliding(Polygon[i]))
-    //     {
-    //         Forest->timeHeap.deleteValue(Polygon[i].nextTime);
-    //         Polygon.erase(Polygon.begin() + i);
-    //     }
-    // }
-
     //IDEA MIGLIORE
 
     auto Int = findIntersection();
@@ -279,16 +234,49 @@ void Fire::checkEdges()
     {
         int index = Int[i].cellIndex;
 
+        // if(Int[i].dx >2)
+        // {
+        //     cout << index << endl;
+
+        //     while (1)
+        //     {
+        //         double l = 0; 
+        //         std::cin >> l;
+        //         if(l == 1)
+        //         break;
+        //     }
+        // }
+
         insertVertex(Int[i], index);
 
         // cout << index << endl;
         // cout << Int[i].dx << endl;
 
-        for(int j = 0; j < Int[i].dx; j++)
+
+        // Qua la cosa diventa difficile, 
+        // in pratica se per sfiga becco che uno dei primi
+        // segmenti incrocia uno degli ultimi a lui non frega niente e
+        // taglia tutto il poligono. Per cui se gli esce che il numero di 
+        // roba da tagliare è più della metà taglio al contrario.
+        // Quindi elimino partendo dall'ultimo in fondo e vado avanti
+        // alla fine il punto inserito sarà il nuovo 0
+        if(Int[i].dx > Polygon.size()/2)
         {
-            Forest->timeHeap.deleteValue(Polygon[index+1].nextTime);
-            Polygon.erase(Polygon.begin() + index+1);
+            for(int j = Polygon.size() - Int[i].dx - 1; j < Polygon.size() + index; j++)
+            DeleteVertex(j);
+        
+            index = 0;
         }
+        else
+            for(int j = 0; j < Int[i].dx; j++)
+            DeleteVertex(index+1);
+
+        Forest->timeHeap.deleteValue(Polygon[index+1].nextTime);
+        Forest->timeHeap.deleteValue(Polygon[index-1].nextTime);
+        calcPropagation(index+1);
+        calcTime(index+1);
+        calcPropagation(index-1);
+        calcTime(index-1);
 
         Polygon[index].cellIndex = Forest->findCell(Polygon[index]);
         calcPropagation(index);
@@ -306,6 +294,16 @@ ciclicVector<Vertex> Fire::calcDiff(const ciclicVector<Vertex> & v)
     Diff[i] = (Polygon[i + 1] - Polygon[i - 1])/2;
 
     return Diff;
+}
+
+void Fire::DeleteVertex(int n)
+{
+    if (n < 0) n = Polygon.size() + n;
+
+    int i = n % Polygon.size();
+
+    Forest->timeHeap.deleteValue(Polygon[i].nextTime);
+    Polygon.erase(Polygon.begin() + i);
 }
 
 void Fire::Visualize()

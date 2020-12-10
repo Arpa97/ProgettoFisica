@@ -91,6 +91,7 @@ void MainWindow::printFire(ciclicVector<Vertex> polyFire){
     points.push_back(new QPoint[polyFire.size()]);
 
     for (unsigned long long i=0; i<polyFire.size(); i++){
+
         points[iteration][i] = QPoint(polyFire[i].x * rescale, (GRID_SIDE - polyFire[i].y) * rescale);
         poly << points[iteration][i];
         //qDebug() << polyFire[i].x * rescale << (GRID_SIDE - polyFire[i].y) * rescale;
@@ -106,7 +107,19 @@ void MainWindow::printFire(ciclicVector<Vertex> polyFire){
     {   
         for (int j = 1+iteration-1; j != iteration+1; j++)
         {
+            if(i == 0)
+            {
+                linepen.setColor(Qt::blue);
+                painter.setPen(linepen);
+            }
+
             painter.drawPoint(points[j][i]);
+
+            if(i == 0)
+            {
+                linepen.setColor(Qt::black);
+                painter.setPen(linepen);
+            }
         }
     }
     iteration++;

@@ -14,10 +14,6 @@ class Environment;
 
 struct Fire : public WaveFront
 {
-private:
-
-    double MinDist;
-
 public:
     // Pointer to the class enviroment for taking the ambiental 
     // parameter needed for calculation
@@ -51,6 +47,9 @@ public:
     // Method to compute the differential arrays for the Richard equation
     ciclicVector<Vertex> calcDiff(const ciclicVector<Vertex> & v);
 
-    //Method for visualize the vertex information
+    // Method for visualize the vertex information
     void Visualize();
+
+    // Method to delete verteces
+    void DeleteVertex(int n);
 };

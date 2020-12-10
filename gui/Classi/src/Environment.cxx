@@ -53,7 +53,7 @@ Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 void Environment::advance(double dt)
 {
 	double dtHeap, dtMin, nextTime;
-	double tfinale = time + dt - 0.00001;
+	double tfinale = time + dt;
 	int numero = 0;
 
 	//std::cerr << "[";
@@ -81,7 +81,9 @@ void Environment::advance(double dt)
 		}
 
 		for(int i = 0; i != wildfire.size(); i++)
-		wildfire[i]->checkEdges();		
+		wildfire[i]->checkEdges();
+
+		calcTimes();		
 	}
 	//std::cerr << '\n';
 	//std::cout << "Time : " << time << '\t' << "Avanzamenti: " << numero << "\tNumero punti:" << wildfire[0]->Polygon.size() << '\n';

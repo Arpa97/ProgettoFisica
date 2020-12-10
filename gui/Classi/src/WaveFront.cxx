@@ -78,7 +78,7 @@ ciclicVector<Vertex> WaveFront::findIntersection()
 {
     ciclicVector<Vertex> Ris;
 
-    for(int i = 0; i != Polygon.size() - 1; i++)
+    for(int i = 0; i != Polygon.size() - 2; i++)
     {
         Vertex a = Polygon[i], b = Polygon[i+1];
         double m1 = (b.y - a.y)/(b.x - a.x);
@@ -88,9 +88,12 @@ ciclicVector<Vertex> WaveFront::findIntersection()
         double ymin = a.y < b.y ? a.y : b.y;
         double ymax = a.y > b.y ? a.y : b.y;
 
-        for(int j = i+2; j < Polygon.size() - 1; j++)
+        for(int j = i+2; j < Polygon.size(); j++)
         {
             Vertex c = Polygon[j], d = Polygon[j+1];
+
+            if(a.x == d.x && a.y == d.y)
+            continue;
 
             // All the condition to skip it
 
@@ -105,6 +108,21 @@ ciclicVector<Vertex> WaveFront::findIntersection()
                             ||
                 (c.y < ymin && d.y < ymin) // Tutto giu
             )continue;
+
+            // Start computing only if the points are on the opposite
+            // sode of the segment
+
+            double ys = a.y + m1*(c.x - a.x);
+
+            bool cSottoSegmento = c.y < ys;
+
+            ys = a.y + m1*(d.x - a.x);
+
+            bool dSottoSegmento = d.y < ys;
+
+            // Se sono entrambi sotto o entrambi sopra skippo
+            if(dSottoSegmento == cSottoSegmento)
+            continue;
 
             double m2 = (d.y - c.y)/(d.x - c.x);
 
@@ -130,7 +148,7 @@ ciclicVector<Vertex> WaveFront::findIntersection()
             double y = a.y + m1*(x - a.x);
 
             if(
-                (y > y1max) || (y < y1min)
+                (y > ymax) || (y < ymin)
             )continue;
 
             // Add the point
