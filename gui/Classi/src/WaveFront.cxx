@@ -153,8 +153,12 @@ ciclicVector<Vertex> WaveFront::findIntersection()
 
             // Add the point
             Vertex Punto(x, y);
+
+            // Index of the point where the intersection is
             Punto.cellIndex = i+1;
-            Punto.dx = j-i;
+
+            // Index of the point where the intersection end
+            Punto.dx = j + 1;
 
             Ris.push_back(Punto);
         }

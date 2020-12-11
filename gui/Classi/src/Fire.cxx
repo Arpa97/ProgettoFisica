@@ -14,7 +14,6 @@ Fire::Fire(Environment * _Forest, double Xi, double Yi): Forest(_Forest)
     
     // Creation of a little ellipse centered on the point rotated by
     // the direction of the wind
-
     Cell * cell = Forest->getCell(Xi, Yi);
     double tetha = Forest->getTheta();
 
@@ -71,20 +70,20 @@ void Fire::Propagate(double dt)
         Polygon[i].y += Polygon[i].dy * dt;
 
         // Find the one that change cell exatly in that time
-        if (Polygon[i].nextTime != -1 && Forest->time >= Polygon[i].nextTime)
-        {
-            iChange = i;
-            //std::cerr << iChange << ", ";
-        }
+        // if (Polygon[i].nextTime != -1 && Forest->time >= Polygon[i].nextTime)
+        // {
+        //     iChange = i;
+        //     std::cerr << iChange << ", ";
+        // }
     }
 
     // Calculation for the one that changes cell
-    if(iChange != -1)
-    {
-        Polygon[iChange].cellIndex = Forest->findCell(Polygon[iChange]);
-        calcPropagation(iChange);
-        calcTime(iChange);
-    }
+    // if(iChange != -1)
+    // {
+    //     Polygon[iChange].cellIndex = Forest->findCell(Polygon[iChange]);
+    //     calcPropagation(iChange);
+    //     calcTime(iChange);
+    // }
 
     // Checking distance from verteces
     checkDistance();
@@ -204,18 +203,18 @@ void Fire::checkDistance(bool heap)
             );
 
             // Calculation of the propagation parameter
-            Polygon[i + 1].cellIndex = Forest->findCell(Polygon[i + 1]);
-            calcPropagation(i + 1);
-            calcPropagation(i);
-            calcPropagation(i + 2);
-            if (heap)
-            {
-                Forest->timeHeap.deleteValue(Polygon[i].nextTime);
-                Forest->timeHeap.deleteValue(Polygon[i+2].nextTime);
-                calcTime(i + 1);
-                calcTime(i);
-                calcTime(i + 2);
-            }
+            // Polygon[i + 1].cellIndex = Forest->findCell(Polygon[i + 1]);
+            // calcPropagation(i + 1);
+            // calcPropagation(i);
+            // calcPropagation(i + 2);
+            // if (heap)
+            // {
+            //     Forest->timeHeap.deleteValue(Polygon[i].nextTime);
+            //     Forest->timeHeap.deleteValue(Polygon[i+2].nextTime);
+            //     calcTime(i + 1);
+            //     calcTime(i);
+            //     calcTime(i + 2);
+            // }
 
             // Return back to see if the 
             // mid point inserted is at a right distance
@@ -260,27 +259,30 @@ void Fire::checkEdges()
         // roba da tagliare è più della metà taglio al contrario.
         // Quindi elimino partendo dall'ultimo in fondo e vado avanti
         // alla fine il punto inserito sarà il nuovo 0
-        if(Int[i].dx > Polygon.size()/2)
+        if(Int[i].dx - index > Polygon.size()/2)
         {
-            for(int j = Polygon.size() - Int[i].dx - 1; j < Polygon.size() + index; j++)
-            DeleteVertex(j);
+            for(int j = 0; j < Polygon.size() - Int[i].dx; j++)
+            DeleteVertex(Int[i].dx);
+
+            for(int j = 0; j < index; j++)
+            DeleteVertex(index - 1);
         
             index = 0;
         }
         else
-            for(int j = 0; j < Int[i].dx; j++)
+            for(int j = 0; j < Int[i].dx - index; j++)
             DeleteVertex(index+1);
 
-        Forest->timeHeap.deleteValue(Polygon[index+1].nextTime);
-        Forest->timeHeap.deleteValue(Polygon[index-1].nextTime);
-        calcPropagation(index+1);
-        calcTime(index+1);
-        calcPropagation(index-1);
-        calcTime(index-1);
+        // Forest->timeHeap.deleteValue(Polygon[index+1].nextTime);
+        // Forest->timeHeap.deleteValue(Polygon[index-1].nextTime);
+        // calcPropagation(index+1);
+        // calcTime(index+1);
+        // calcPropagation(index-1);
+        // calcTime(index-1);
 
-        Polygon[index].cellIndex = Forest->findCell(Polygon[index]);
-        calcPropagation(index);
-        calcTime(index);
+        // Polygon[index].cellIndex = Forest->findCell(Polygon[index]);
+        // calcPropagation(index);
+        // calcTime(index);
     }
 }
 
@@ -302,7 +304,7 @@ void Fire::DeleteVertex(int n)
 
     int i = n % Polygon.size();
 
-    Forest->timeHeap.deleteValue(Polygon[i].nextTime);
+    // Forest->timeHeap.deleteValue(Polygon[i].nextTime);
     Polygon.erase(Polygon.begin() + i);
 }
 

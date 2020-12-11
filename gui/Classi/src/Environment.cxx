@@ -142,7 +142,7 @@ Cell* Environment::getCell(double x, double y)
 }
 
 
-Cell * Environment::getCell(const Vertex & v)
+Cell * Environment::getCell(Vertex & v)
 {
 	return getCell(findCell(v));
 }
@@ -165,9 +165,10 @@ int Environment::findCell(double x, double y) const
 
 
 
-int Environment::findCell(const Vertex& v) const
+int Environment::findCell(Vertex& v) const
 {
-	return findCell(v.x, v.y);
+	v.cellIndex = findCell(v.x, v.y);
+	return v.cellIndex;
 }
 
 
