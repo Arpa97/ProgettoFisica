@@ -5,7 +5,8 @@
 #include <QPainter>
 #include <QDebug>
 #include <QTimer>
-
+#include <QCursor>
+#include <QMouseEvent>
 #include "Environment.hxx"
 
 QT_BEGIN_NAMESPACE
@@ -18,6 +19,7 @@ class MainWindow : public QMainWindow
 
 public:
     QImage original;
+    QCursor cursorTarget = QCursor(QPixmap(":/cursortarget.png"));
     double (*composizione)[2] = new double[3][2] { {1, .5}, {13, .2}, {7, .3} };
     Environment* Foresta = new Environment(composizione, 3);
     QTimer *advancingTimer = new QTimer();
@@ -27,6 +29,7 @@ public:
     ~MainWindow();
 
 private slots:
+    void mouseMoveEvent(QMouseEvent *event);
     void on_pushButton_clicked();
     void on_pushButton_2_clicked();
     void printFire(ciclicVector<Vertex>);
@@ -37,6 +40,7 @@ private slots:
     void on_windDir_valueChanged(int position);
     void on_windSpeed_valueChanged(int value);
     void on_pushButton_5_clicked();
+    void createNewFire(double x, double y);
     QImage drawOriginalgrid();
 
 private:

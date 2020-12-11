@@ -23,6 +23,9 @@
       <height>400</height>
      </rect>
     </property>
+    <property name="mouseTracking">
+     <bool>false</bool>
+    </property>
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>
@@ -145,9 +148,6 @@
     <property name="maximum">
      <number>314</number>
     </property>
-    <property name="wrapping">
-     <bool>true</bool>
-    </property>
    </widget>
    <widget class="QLabel" name="label_4">
     <property name="geometry">
@@ -172,7 +172,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>200</string>
+     <string>50</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="yfire">
@@ -185,7 +185,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>200</string>
+     <string>50</string>
     </property>
    </widget>
    <widget class="QLabel" name="xfirelabel">
@@ -238,16 +238,6 @@
     </property>
     <property name="text">
      <string>Angle: 0 Radianti</string>
-    </property>
-   </widget>
-   <widget class="QWidget" name="widget" native="true">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>110</y>
-      <width>120</width>
-      <height>80</height>
-     </rect>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_5">

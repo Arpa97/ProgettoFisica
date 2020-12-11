@@ -53,10 +53,27 @@ void MainWindow::on_pushButton_clicked()
     this->updateAdvance();
 }
 
+// callback onmove --> aggiorna coordinate fire
+// callback mouse pressed --> aggiunge fire e toglie mouse tracking
+
+void MainWindow::mouseMoveEvent(QMouseEvent *event){
+    qDebug() << event->pos();
+}
+
 void MainWindow::on_pushButton_2_clicked()
 {
+    // change icon
+    ui->label->setCursor(cursorTarget);
+    // activate mouse tracking
+    ui->label->setMouseTracking(true);
+
     int x = ui->xfire->text().toDouble();
     int y = ui->yfire->text().toDouble();
+    createNewFire(x, y);
+
+}
+
+void MainWindow::createNewFire(double x, double y){
     Foresta->addFire(x, y);
     for (unsigned long long i = 0; i != Foresta->wildfire.size(); i++){
         this->printFire(Foresta->getPolygon(i));
