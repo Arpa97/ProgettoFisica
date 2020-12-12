@@ -53,14 +53,9 @@ void MainWindow::on_singleAdvanceButton_clicked()
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
-    qDebug() << event->pos();
-
     int x = event->pos().x() - ui->mainPicture->x();
     int y = event->pos().y() - ui->mainPicture->y();
-    qDebug() << x << "   " << y;
-
     if (0 < x && x < ui->mainPicture->width() && 0 < y && y < ui->mainPicture->height()){
-        qDebug() << "creating fire";
         createNewFire((double)x, (double)y);
     }
 }
@@ -93,12 +88,10 @@ void MainWindow::printFires(){
 
         for (unsigned long long i=0; i<polyFire.size(); i++){
             poly << QPoint(polyFire[i].x * rescale, (GRID_SIDE - polyFire[i].y) * rescale);
-            //qDebug() << polyFire[i].x * rescale << (GRID_SIDE - polyFire[i].y) * rescale;
         }
 
         painter.setBrush(Qt::darkRed);
         painter.setPen(paintpen);
-        //painter.drawPoints(poly);
         painter.drawPolygon(poly);
      }
     ui->mainPicture->setPixmap(QPixmap::fromImage(canvas));
