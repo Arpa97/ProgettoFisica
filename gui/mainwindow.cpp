@@ -11,13 +11,13 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 QImage MainWindow::drawOriginalgrid(){
-     QImage tmp = ui->label->pixmap(Qt::ReturnByValue).toImage();
+     QImage tmp = ui->mainPicture->pixmap(Qt::ReturnByValue).toImage();
      QPainter painter(&tmp);
      QPen paintpen(Qt::black);
 
      painter.setPen(paintpen);
      int step = GRID_SIDE / CELL_SIDE;
-     double drawSize = CELL_SIDE * ui->label->width() / GRID_SIDE;
+     double drawSize = CELL_SIDE * ui->mainPicture->width() / GRID_SIDE;
 
      for (int i = 0; i != step; i++)
          {
@@ -31,7 +31,7 @@ QImage MainWindow::drawOriginalgrid(){
              }
          }
 
-     ui->label->setPixmap(QPixmap::fromImage(tmp));
+     ui->mainPicture->setPixmap(QPixmap::fromImage(tmp));
      return tmp;
 }
 
@@ -48,12 +48,12 @@ void MainWindow::updateAdvance(){
     }
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_singleAdvanceButton_clicked()
 {
     this->updateAdvance();
 }
 
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::on_addFireButton_clicked()
 {
     int x = ui->xfire->text().toDouble();
     int y = ui->yfire->text().toDouble();
@@ -69,7 +69,7 @@ void MainWindow::printFire(ciclicVector<Vertex> polyFire){
     QPen paintpen(Qt::red);
     QPolygon poly;
 
-    double rescale = ui->label->width() / (GRID_SIDE + .0);
+    double rescale = ui->mainPicture->width() / (GRID_SIDE + .0);
 
     for (unsigned long long i=0; i<polyFire.size(); i++){
         poly << QPoint(polyFire[i].x * rescale, (GRID_SIDE - polyFire[i].y) * rescale);
@@ -81,17 +81,17 @@ void MainWindow::printFire(ciclicVector<Vertex> polyFire){
     //painter.drawPoints(poly);
     painter.drawPolygon(poly);
 
-    ui->label->setPixmap(QPixmap::fromImage(tmp));
-    ui->label_2->setText(QString("Time: ") + QString().number(ncicli) + QString("s"));
+    ui->mainPicture->setPixmap(QPixmap::fromImage(tmp));
+    ui->labelInfoTime->setText(QString("Time: ") + QString().number(ncicli) + QString("s"));
 }
 
-void MainWindow::on_pushButton_3_clicked()
+void MainWindow::on_startButton_clicked()
 {
-    ui->pushButton_3->setText(advancingTimer->isActive() ? "Start" : "Stop");
+    ui->startButton->setText(advancingTimer->isActive() ? "Start" : "Stop");
     advancingTimer->isActive() ? advancingTimer->stop() : advancingTimer->start(10);
 }
 
-void MainWindow::on_pushButton_4_clicked()
+void MainWindow::on_exitButton_clicked()
 {
     this->close();
 }
@@ -121,7 +121,7 @@ void MainWindow::on_windSpeed_valueChanged(int value)
   qDebug() << "winSpeed" << newSpeed;
 }
 
-void MainWindow::on_pushButton_5_clicked()
+void MainWindow::on_clearButton_clicked()
 {
-    ui->label->setPixmap(QPixmap::fromImage(original));
+    ui->mainPicture->setPixmap(QPixmap::fromImage(original));
 }

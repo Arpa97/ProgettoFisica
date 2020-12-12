@@ -27,16 +27,16 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_pushButton_clicked();
-    void on_pushButton_2_clicked();
+    void on_singleAdvanceButton_clicked();
+    void on_addFireButton_clicked();
     void printFire(ciclicVector<Vertex>);
-    void on_pushButton_3_clicked();
+    void on_startButton_clicked();
     void updateAdvance();
-    void on_pushButton_4_clicked();
+    void on_exitButton_clicked();
     //void on_windSpeed_sliderMoved(int position);
     void on_windDir_valueChanged(int position);
     void on_windSpeed_valueChanged(int value);
-    void on_pushButton_5_clicked();
+    void on_clearButton_clicked();
     QImage drawOriginalgrid();
 
 private:
