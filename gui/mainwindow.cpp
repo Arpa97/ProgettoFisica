@@ -143,7 +143,7 @@ void MainWindow::on_pushButton_4_clicked()
 {
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
-    std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << std::endl;
+    std::cerr << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << std::endl;
     this->close();
 }
 

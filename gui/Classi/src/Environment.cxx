@@ -22,7 +22,7 @@ Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 	int step = GRID_SIDE / CELL_SIDE;	
 	int fuelNumber, number;
 	double validator;
-	//srand(static_cast<unsigned int>(std::time(NULL)));
+	srand(static_cast<unsigned int>(std::time(NULL)));
 
 	grid = new Cell * *[step];
 
@@ -80,10 +80,7 @@ void Environment::advance(double dt)
 			wildfire[i]->Propagate(dtMin);
 		}
 
-		for(int i = 0; i != wildfire.size(); i++)
-		wildfire[i]->checkEdges();
-
-		calcTimes();		
+		calcAll();		
 	}
 	//std::cerr << '\n';
 	//std::cout << "Time : " << time << '\t' << "Avanzamenti: " << numero << "\tNumero punti:" << wildfire[0]->Polygon.size() << '\n';
@@ -227,7 +224,7 @@ ciclicVector<Vertex> Environment::getPolygon(int i)
 }
 
 
-void Environment::calcTimes()
+void Environment::calcAll()
 {
 	// First calcel all the old entries
 	while (!timeHeap.empty())

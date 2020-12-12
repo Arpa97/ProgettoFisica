@@ -62,7 +62,7 @@ Fire::Fire(const Fire & f): Forest(f.Forest)
 
 void Fire::Propagate(double dt)
 {
-    int iChange = -1;
+    //int iChange = -1;
     
     for (int i = 0; i != Polygon.size(); i++)
     {
@@ -85,7 +85,8 @@ void Fire::Propagate(double dt)
     //     calcTime(iChange);
     // }
 
-    // Checking distance from verteces
+    // Checking intersection and distance from verteces
+    checkEdges();
     checkDistance();
 }
 
@@ -225,32 +226,32 @@ void Fire::checkDistance(bool heap)
 
 void Fire::checkEdges()
 {
-    //IDEA MIGLIORE
+    int index = 1;
 
-    auto Int = findIntersection();
-
-    for(int i = 0; i != Int.size(); i++)
+    while (index < Polygon.size())
     {
-        int index = Int[i].cellIndex;
+        Vertex Int = findIntersection(index - 1);
 
-        // if(Int[i].dx >2)
-        // {
-        //     cout << index << endl;
+        if (Int.cellIndex == -1) break;
 
-        //     while (1)
-        //     {
-        //         double l = 0; 
-        //         std::cin >> l;
-        //         if(l == 1)
-        //         break;
-        //     }
-        // }
+        index = Int.cellIndex;
 
-        insertVertex(Int[i], index);
+        //if (Int.dx != 0)
+        //{
+        //    cout << index << endl;
 
-        // cout << index << endl;
-        // cout << Int[i].dx << endl;
+        //    while (1)
+        //    {
+        //        double l = 0;
+        //        std::cin >> l;
+        //        if (l == 1)
+        //            break;
+        //    }
+        //}
 
+        insertVertex(Int, index);
+
+        int ncanc = Int.dx - index;
 
         // Qua la cosa diventa difficile, 
         // in pratica se per sfiga becco che uno dei primi
@@ -258,20 +259,18 @@ void Fire::checkEdges()
         // taglia tutto il poligono. Per cui se gli esce che il numero di 
         // roba da tagliare è più della metà taglio al contrario.
         // Quindi elimino partendo dall'ultimo in fondo e vado avanti
-        // alla fine il punto inserito sarà il nuovo 0
-        if(Int[i].dx - index > Polygon.size()/2)
+        if (Int.dx - index > Polygon.size() / 2)
         {
-            for(int j = 0; j < Polygon.size() - Int[i].dx; j++)
-            DeleteVertex(Int[i].dx);
-
-            for(int j = 0; j < index; j++)
-            DeleteVertex(index - 1);
-        
-            index = 0;
+            ncanc = (Polygon.size() - Int.dx) + index;
+            int temp = Int.dx;
+            Int.dx = index;
+            index = temp;
         }
-        else
-            for(int j = 0; j < Int[i].dx - index; j++)
-            DeleteVertex(index+1);
+
+        for (int j = 0; j != ncanc; j++)
+        {
+            DeleteVertex(index + 1);
+        }
 
         // Forest->timeHeap.deleteValue(Polygon[index+1].nextTime);
         // Forest->timeHeap.deleteValue(Polygon[index-1].nextTime);
@@ -279,7 +278,7 @@ void Fire::checkEdges()
         // calcTime(index+1);
         // calcPropagation(index-1);
         // calcTime(index-1);
-
+ 
         // Polygon[index].cellIndex = Forest->findCell(Polygon[index]);
         // calcPropagation(index);
         // calcTime(index);

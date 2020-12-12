@@ -24,7 +24,7 @@ class Environment
 	double M_f;
 
 	// Methods for inizializing the times and the factor in the vertices
-	void calcTimes();
+	void calcAll();
 
 public:
 

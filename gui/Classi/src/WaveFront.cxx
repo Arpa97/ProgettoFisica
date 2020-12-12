@@ -74,21 +74,22 @@ bool WaveFront::isColliding(const Vertex & v)
 }
 
 
-ciclicVector<Vertex> WaveFront::findIntersection()
+Vertex WaveFront::findIntersection(int start)
 {
-    ciclicVector<Vertex> Ris;
+    Vertex Point = Vertex(0, 0);
 
-    for(int i = 0; i != Polygon.size() - 2; i++)
+    for(int i = start; i != Polygon.size() - 2; i++)
     {
         Vertex a = Polygon[i], b = Polygon[i+1];
         double m1 = (b.y - a.y)/(b.x - a.x);
+        double q1 = a.y - m1 * a.x;
 
         double xmin = a.x < b.x ? a.x : b.x;
         double xmax = a.x > b.x ? a.x : b.x;
         double ymin = a.y < b.y ? a.y : b.y;
         double ymax = a.y > b.y ? a.y : b.y;
 
-        for(int j = i+2; j < Polygon.size(); j++)
+        for(int j = i+2; j != Polygon.size(); j++)
         {
             Vertex c = Polygon[j], d = Polygon[j+1];
 
@@ -101,22 +102,20 @@ ciclicVector<Vertex> WaveFront::findIntersection()
                 (c.x > xmax && d.x > xmax) // Tutto a destra
                             ||
                 (c.x < xmin && d.x < xmin) // Tutto a sinistra
-            )continue;
-
-            if(
+                            ||
                 (c.y > ymax && d.y > ymax) // Tutto su
                             ||
                 (c.y < ymin && d.y < ymin) // Tutto giu
             )continue;
 
             // Start computing only if the points are on the opposite
-            // sode of the segment
+            // sides of the segment
 
-            double ys = a.y + m1*(c.x - a.x);
+            double ys = m1*c.x + q1;
 
             bool cSottoSegmento = c.y < ys;
 
-            ys = a.y + m1*(d.x - a.x);
+            ys = m1 * d.x + q1;
 
             bool dSottoSegmento = d.y < ys;
 
@@ -125,6 +124,7 @@ ciclicVector<Vertex> WaveFront::findIntersection()
             continue;
 
             double m2 = (d.y - c.y)/(d.x - c.x);
+            double q2 = d.y - m2 * d.x;
 
             double diff = m1 - m2;
 
@@ -133,36 +133,36 @@ ciclicVector<Vertex> WaveFront::findIntersection()
             continue;
 
             // Find intersection
-            double x = (d.y - a.y + m1*a.x - m2*d.x)/diff;
+            double x = (q2 - q1)/diff;
 
-            double x1min = c.x < d.x ? c.x : d.x;
-            double x1max = c.x > d.x ? c.x : d.x;
-            double y1min = c.y < d.y ? c.y : d.y;
-            double y1max = c.y > d.y ? c.y : d.y;
+            //double x1min = c.x < d.x ? c.x : d.x;
+            //double x1max = c.x > d.x ? c.x : d.x;
+            //double y1min = c.y < d.y ? c.y : d.y;
+            //double y1max = c.y > d.y ? c.y : d.y;
 
             // check if the point is inside the segment
             if(
                 (x >= xmax) || (x <= xmin)
             )continue;
 
-            double y = a.y + m1*(x - a.x);
+            double y = m1*x + q1;
 
-            if(
-                (y > ymax) || (y < ymin)
-            )continue;
+            //if(
+            //    (y > ymax) || (y < ymin)
+            //)continue;
 
             // Add the point
-            Vertex Punto(x, y);
+            Point = Vertex(x, y);
 
             // Index of the point where the intersection is
-            Punto.cellIndex = i+1;
+            Point.cellIndex = i + 1;
 
             // Index of the point where the intersection end
-            Punto.dx = j + 1;
+            Point.dx = j + 1;
 
-            Ris.push_back(Punto);
+            return Point;
         }
     }
-
-    return Ris;
+    Point.cellIndex = -1;
+    return Point;
 }
