@@ -192,14 +192,14 @@ void Environment::setU(double _U)
 	}
 
 	// Recalculate all timesteps
-	calcTimes();
+	calcAll();
 }
 
 void Environment::setTheta(double _theta){
 	theta = _theta;
 
 	// Recalculate all timesteps
-	calcTimes();
+	calcAll();
 }
 
 double Environment::getU() const
@@ -227,8 +227,7 @@ ciclicVector<Vertex> Environment::getPolygon(int i)
 void Environment::calcAll()
 {
 	// First calcel all the old entries
-	while (!timeHeap.empty())
-	timeHeap.pop();
+	timeHeap = PriorityQueue();
 	
 	// Recalculate all propagation for all vertices
 	for(int i = 0; i != wildfire.size(); i++)
