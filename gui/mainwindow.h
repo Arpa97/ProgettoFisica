@@ -18,6 +18,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    double rescale;
     QImage original;
     QCursor cursorTarget = QCursor(QPixmap(":/cursortarget.png"));
     double (*composizione)[2] = new double[3][2] { {1, .5}, {13, .2}, {7, .3} };
@@ -29,10 +30,10 @@ public:
     ~MainWindow();
 
 private slots:
-    void mouseMoveEvent(QMouseEvent *event);
+    void mousePressEvent(QMouseEvent *event);
     void on_singleAdvanceButton_clicked();
     void on_addFireButton_clicked();
-    void printFire(ciclicVector<Vertex>);
+    void printFires();
     void on_startButton_clicked();
     void updateAdvance();
     void on_exitButton_clicked();
