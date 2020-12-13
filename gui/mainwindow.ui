@@ -14,7 +14,7 @@
    <string>FireSimulator v0.1</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="mainPicture">
     <property name="geometry">
      <rect>
       <x>190</x>
@@ -39,7 +39,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="singleAdvanceButton">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -52,7 +52,7 @@
      <string>Single step</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="addFireButton">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -65,7 +65,7 @@
      <string>Add fire</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_2">
+   <widget class="QLabel" name="labelInfoTime">
     <property name="geometry">
      <rect>
       <x>430</x>
@@ -78,7 +78,7 @@
      <string>Time: 0s</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_3">
+   <widget class="QPushButton" name="startButton">
     <property name="geometry">
      <rect>
       <x>190</x>
@@ -91,7 +91,7 @@
      <string>Start</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_4">
+   <widget class="QPushButton" name="exitButton">
     <property name="geometry">
      <rect>
       <x>190</x>
@@ -240,17 +240,7 @@
      <string>Angle: 0 Radianti</string>
     </property>
    </widget>
-   <widget class="QWidget" name="widget" native="true">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>110</y>
-      <width>120</width>
-      <height>80</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_5">
+   <widget class="QPushButton" name="clearButton">
     <property name="geometry">
      <rect>
       <x>30</x>
