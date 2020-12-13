@@ -1,6 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-#include <QtGlobal>
+#include <QMessageBox>
 #include <QMainWindow>
 #include <QPainter>
 #include <QDebug>
