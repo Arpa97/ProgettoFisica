@@ -116,7 +116,7 @@ void MainWindow::printFires(){
         }
     }
     ui->mainPicture->setPixmap(QPixmap::fromImage(canvas));
-    ui->labelInfoTime->setText(QString("Time: ") + QString().number(ncicli) + QString("s"));
+    ui->labelInfoTime->setText(QString("Elapsed time: ") + QString().number(ncicli) + QString("s"));
 }
 
 void MainWindow::on_startButton_clicked()
@@ -165,5 +165,5 @@ void MainWindow::on_clearButton_clicked()
     Foresta->wildfire.clear();
     //stoppare esecuzione
     ncicli=0;
-    ui->labelInfoTime->setText(QString("Time: ") + QString().number(ncicli) + QString("s"));
+    ui->labelInfoTime->setText(QString("Elapsed time: ") + QString().number(ncicli) + QString("s"));
 }
