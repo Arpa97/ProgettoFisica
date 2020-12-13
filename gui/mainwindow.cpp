@@ -53,10 +53,12 @@ void MainWindow::on_singleAdvanceButton_clicked()
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
-    int x = event->pos().x() - ui->mainPicture->x();
-    int y = event->pos().y() - ui->mainPicture->y();
-    if (0 < x && x < ui->mainPicture->width() && 0 < y && y < ui->mainPicture->height()){
-        createNewFire((double)x, (double)y);
+  if(ui->mainPicture->hasMouseTracking()){
+      int x = event->pos().x() - ui->mainPicture->x();
+      int y = event->pos().y() - ui->mainPicture->y();
+      if (0 < x && x < ui->mainPicture->width() && 0 < y && y < ui->mainPicture->height()){
+          createNewFire((double)x, (double)y);
+      }
     }
 }
 
@@ -100,8 +102,16 @@ void MainWindow::printFires(){
 
 void MainWindow::on_startButton_clicked()
 {
-    ui->startButton->setText(advancingTimer->isActive() ? "Start" : "Stop");
-    advancingTimer->isActive() ? advancingTimer->stop() : advancingTimer->start(10);
+  if (Foresta->wildfire.size()<1){
+      qWarning() << "No fire added...";
+    }
+  else{
+      ui->addFireButton->setText("Add fires");
+      ui->mainPicture->setCursor(Qt::ArrowCursor);
+      ui->mainPicture->setMouseTracking(false);
+      ui->startButton->setText(advancingTimer->isActive() ? "Start" : "Stop");
+      advancingTimer->isActive() ? advancingTimer->stop() : advancingTimer->start(10);
+    }
 }
 
 void MainWindow::on_exitButton_clicked()
@@ -128,4 +138,12 @@ void MainWindow::on_windSpeed_valueChanged(int value)
 void MainWindow::on_clearButton_clicked()
 {
     ui->mainPicture->setPixmap(QPixmap::fromImage(original));
+    //pulire vettore wildfire
+    Foresta->wildfire.clear();
+    //stoppare esecuzione
+    if (advancingTimer->isActive()){
+      ui->startButton->click();
+    }
+    ncicli=0;
+    ui->labelInfoTime->setText(QString("Time: ") + QString().number(ncicli) + QString("s"));
 }
