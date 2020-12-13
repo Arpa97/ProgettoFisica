@@ -104,7 +104,7 @@ void MainWindow::on_startButton_clicked()
 {
   if (Foresta->wildfire.size()<1){
       qWarning() << "No fire added...";
-      QMessageBox::warning(this, tr("Attention"),tr("You should add a fire before to start the simulation"));
+      QMessageBox::warning(this, tr("Attention"),tr("You should add a fire before starting the simulation"));
     }
   else{
       ui->addFireButton->setText("Add fires");
