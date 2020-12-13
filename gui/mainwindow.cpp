@@ -76,7 +76,7 @@ void MainWindow::on_addFireButton_clicked()
 }
 
 void MainWindow::createNewFire(double x, double y){
-    Foresta->addFire(x * rescale, (GRID_SIDE - y) * rescale);
+    Foresta->addFire(x/rescale,(GRID_SIDE - y/rescale));
     this->printFires();
 }
 
