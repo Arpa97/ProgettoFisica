@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(advancingTimer, SIGNAL(timeout()), this, SLOT(updateAdvance()));
     ui->setupUi(this);
     original = drawOriginalgrid();
+    rescale = ui->mainPicture->width() / (GRID_SIDE + .0);
 }
 
 QImage MainWindow::drawOriginalgrid(){
@@ -43,9 +44,7 @@ MainWindow::~MainWindow()
 void MainWindow::updateAdvance(){
     ncicli+=ADVANCE_DT;
     Foresta->advance(ADVANCE_DT);
-    for (unsigned long long i = 0; i != Foresta->wildfire.size(); i++){
-        this->printFire(Foresta->getPolygon(i));
-    }
+    this->printFires();
 }
 
 void MainWindow::on_singleAdvanceButton_clicked()
@@ -53,65 +52,86 @@ void MainWindow::on_singleAdvanceButton_clicked()
     this->updateAdvance();
 }
 
-void MainWindow::on_addFireButton_clicked()
-{
-    int x = ui->xfire->text().toDouble();
-    int y = ui->yfire->text().toDouble();
-    Foresta->addFire(x, y);
-    for (unsigned long long i = 0; i != Foresta->wildfire.size(); i++){
-        this->printFire(Foresta->getPolygon(i));
+void MainWindow::mousePressEvent(QMouseEvent *event){
+  if(ui->mainPicture->hasMouseTracking()){
+      int x = event->pos().x() - ui->mainPicture->x();
+      int y = event->pos().y() - ui->mainPicture->y();
+      if (0 < x && x < ui->mainPicture->width() && 0 < y && y < ui->mainPicture->height()){
+          createNewFire((double)x, (double)y);
+      }
     }
 }
 
-void MainWindow::printFire(ciclicVector<Vertex> polyFire){
-    QImage tmp = QPixmap::fromImage(original).toImage();
-    QPainter painter(&tmp);
-    QPen paintpen(Qt::red);
-    QPolygon poly;
-
-
-    QPen linepen(Qt::black);
-    linepen.setCapStyle(Qt::RoundCap);
-    linepen.setWidth(5);
-    QPoint* points = new QPoint[polyFire.size()];
-
-    double rescale = ui->mainPicture->width() / (GRID_SIDE + .0);
-
-    for (unsigned long long i=0; i<polyFire.size(); i++){
-        points[i] = QPoint(polyFire[i].x * rescale, (GRID_SIDE - polyFire[i].y) * rescale);
-        poly << points[i];
-        //qDebug() << polyFire[i].x * rescale << (GRID_SIDE - polyFire[i].y) * rescale;
+void MainWindow::on_addFireButton_clicked()
+{
+    if (ui->mainPicture->hasMouseTracking()){
+        ui->addFireButton->setText("Add fires");
+        ui->mainPicture->setCursor(Qt::ArrowCursor);
+        ui->mainPicture->setMouseTracking(false);
+    } else {
+        ui->addFireButton->setText("Stop adding fires");
+        ui->mainPicture->setCursor(cursorTarget);
+        ui->mainPicture->setMouseTracking(true);
     }
+}
 
-    painter.setBrush(Qt::darkRed);
-    painter.setPen(paintpen);
-    //painter.drawPoints(poly);
-    painter.drawPolygon(poly);
+void MainWindow::createNewFire(double x, double y){
+    Foresta->addFire(x/rescale,(GRID_SIDE - y/rescale));
+    this->printFires();
+}
 
+void MainWindow::printFires(){
+    QImage canvas = QPixmap::fromImage(original).toImage();
+    QPainter painter(&canvas);
+    for (unsigned long long i = 0; i != Foresta->wildfire.size(); i++){
+        ciclicVector<Vertex> polyFire = Foresta->getPolygon(i);
+        QPen paintpen(Qt::red);
+        QPolygon poly;
 
-    painter.setPen(linepen);
-    for (int i = 0; i != polyFire.size(); i++)
-    {
-        //if (i == 0)
-        //{
-        //    linepen.setColor(Qt::blue);
-        //    painter.setPen(linepen);
-        //    painter.drawPoint(points[i]);
-        //    linepen.setColor(Qt::black);
-        //    painter.setPen(linepen);
-        //    continue;
-        //}
-        painter.drawPoint(points[i]);        
+        for (unsigned long long i=0; i<polyFire.size(); i++){
+            poly << QPoint(polyFire[i].x * rescale, (GRID_SIDE - polyFire[i].y) * rescale);
+        }
+
+        painter.setBrush(Qt::darkRed);
+        painter.setPen(paintpen);
+        painter.drawPolygon(poly);
+
+        QPen linepen(Qt::black);
+        linepen.setCapStyle(Qt::RoundCap);
+        linepen.setWidth(5);
+        QPoint* points = new QPoint[polyFire.size()];
+        painter.setPen(linepen);
+        for (int i = 0; i != polyFire.size(); i++)
+        {
+            //if (i == 0)
+            //{
+            //    linepen.setColor(Qt::blue);
+            //    painter.setPen(linepen);
+            //    painter.drawPoint(points[i]);
+            //    linepen.setColor(Qt::black);
+            //    painter.setPen(linepen);
+            //    continue;
+            //}
+            painter.drawPoint(points[i]);
+        }
     }
-
-    ui->mainPicture->setPixmap(QPixmap::fromImage(tmp));
-    ui->labelInfoTime->setText(QString("Time: ") + QString().number(ncicli) + QString("s"));
+    ui->mainPicture->setPixmap(QPixmap::fromImage(canvas));
+    ui->labelInfoTime->setText(QString("Elapsed time: ") + QString().number(ncicli) + QString("s"));
 }
 
 void MainWindow::on_startButton_clicked()
 {
-    ui->startButton->setText(advancingTimer->isActive() ? "Start" : "Stop");
-    advancingTimer->isActive() ? advancingTimer->stop() : advancingTimer->start(10);
+  if (Foresta->wildfire.size()<1){
+      qWarning() << "No fire added...";
+      QMessageBox::warning(this, tr("Attention"),tr("You should add a fire before starting the simulation"));
+    }
+  else{
+      ui->addFireButton->setText("Add fires");
+      ui->mainPicture->setCursor(Qt::ArrowCursor);
+      ui->mainPicture->setMouseTracking(false);
+      ui->startButton->setText(advancingTimer->isActive() ? "Start" : "Stop");
+      advancingTimer->isActive() ? advancingTimer->stop() : advancingTimer->start(10);
+    }
 }
 
 void MainWindow::on_exitButton_clicked()
@@ -119,19 +139,10 @@ void MainWindow::on_exitButton_clicked()
     this->close();
 }
 
-/*
-void MainWindow::on_windSpeed_sliderMoved(int position)
-{
-    double newSpeed = (double)position*MAXWINDSPEED/100;
-    ui->windSpeedLabel->setText(QString("Speed: ") + QString().number(newSpeed) + QString(" m/s"));
-    Foresta->setU(newSpeed);
-    qDebug() << "winSpeed" << newSpeed;
-}
-*/
 void MainWindow::on_windDir_valueChanged(int position)
 {
     double newTheta = (double)position/100;
-    ui->windDirLabel->setText(QString("Angle: ") + QString().number(newTheta) + QString(" radianti"));
+    ui->windDirLabel->setText(QString("Angle: ") + QString().number(newTheta) + QString(" rad"));
     Foresta->setTheta(newTheta);
     qDebug() << "winDir" << QString().number(newTheta);
 }
@@ -146,5 +157,13 @@ void MainWindow::on_windSpeed_valueChanged(int value)
 
 void MainWindow::on_clearButton_clicked()
 {
+    if (advancingTimer->isActive()){
+      ui->startButton->click();
+    }
     ui->mainPicture->setPixmap(QPixmap::fromImage(original));
+    //pulire vettore wildfire
+    Foresta->wildfire.clear();
+    //stoppare esecuzione
+    ncicli=0;
+    ui->labelInfoTime->setText(QString("Elapsed time: ") + QString().number(ncicli) + QString("s"));
 }

@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>white.png</file>
         <file>Definitions.hxx</file>
+        <file>cursortarget.png</file>
     </qresource>
 </RCC>

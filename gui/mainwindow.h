@@ -1,11 +1,12 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
+#include <QMessageBox>
 #include <QMainWindow>
 #include <QPainter>
 #include <QDebug>
 #include <QTimer>
-
+#include <QCursor>
+#include <QMouseEvent>
 #include "Environment.hxx"
 
 QT_BEGIN_NAMESPACE
@@ -17,7 +18,9 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    double rescale;
     QImage original;
+    QCursor cursorTarget = QCursor(QPixmap(":/cursortarget.png"));
     double (*composizione)[2] = new double[3][2] { {1, .5}, {13, .2}, {7, .3} };
     Environment* Foresta = new Environment(composizione, 3);
     //Environment* Foresta = new Environment();
@@ -28,15 +31,17 @@ public:
     ~MainWindow();
 
 private slots:
+    void mousePressEvent(QMouseEvent *event);
     void on_singleAdvanceButton_clicked();
     void on_addFireButton_clicked();
-    void printFire(ciclicVector<Vertex>);
+    void printFires();
     void on_startButton_clicked();
     void updateAdvance();
     void on_exitButton_clicked();
     //void on_windSpeed_sliderMoved(int position);
     void on_windDir_valueChanged(int position);
     void on_windSpeed_valueChanged(int value);
+    void createNewFire(double x, double y);
     void on_clearButton_clicked();
     QImage drawOriginalgrid();
 
