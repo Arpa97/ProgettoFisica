@@ -23,6 +23,7 @@ public:
     QCursor cursorTarget = QCursor(QPixmap(":/cursortarget.png"));
     double (*composizione)[2] = new double[3][2] { {1, .5}, {13, .2}, {7, .3} };
     Environment* Foresta = new Environment(composizione, 3);
+    //Environment* Foresta = new Environment();
     QTimer *advancingTimer = new QTimer();
     double ADVANCE_DT = 1;
     int ncicli = 0;

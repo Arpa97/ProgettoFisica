@@ -14,6 +14,7 @@ class Environment;
 
 struct Fire : public WaveFront
 {
+public:
     // Pointer to the class enviroment for taking the ambiental 
     // parameter needed for calculation
     Environment * Forest;
@@ -25,11 +26,11 @@ struct Fire : public WaveFront
 
     // Method for the spread of fire based Huygens principle
     void Propagate(double dt);
+    void Propagate_withoutHeap(double dt);
 
     // Method to compute the increment in position of a particular vertex
     // the resul is stored in val and the vertex is told by the index i
     // used for computing single incrementation value for dynamic timestep evaluation
-    void calcPropagation(double * val, int i);
     void calcPropagation(int i);
     
     // Methods to initialize the propagation in all verticies, and time
@@ -40,11 +41,16 @@ struct Fire : public WaveFront
 
     // Method to check the distance from two points and add another one if the distance is too small
     // i is where to start the checking, so i can iterate the last segment
-    void checkDistance();
+    void checkDistance(bool heap = true);
+    void checkEdges();
+    void checkBorder();
 
     // Method to compute the differential arrays for the Richard equation
     ciclicVector<Vertex> calcDiff(const ciclicVector<Vertex> & v);
 
-    //Method for visualize the vertex information
+    // Method for visualize the vertex information
     void Visualize();
+
+    // Method to delete verteces
+    void DeleteVertex(int n);
 };

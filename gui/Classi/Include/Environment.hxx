@@ -11,9 +11,8 @@
 #include "Definitions.hxx"
 #include "Cell.hxx"
 #include "Fire.hxx"
+#include "PriorityQueue.hxx"
 
-#include <vector>
-#include <queue>
 #include <functional>
 
 class Environment
@@ -25,7 +24,7 @@ class Environment
 	double M_f;
 
 	// Methods for inizializing the times and the factor in the vertices
-	void calcTimes();
+	void calcAll();
 
 public:
 
@@ -33,7 +32,7 @@ public:
 	Cell*** grid;
 	static Cell* nullFuel;
 	std::vector<Fire*> wildfire;
-	std::priority_queue<double, std::vector<double>, std::greater<double>> timeHeap;
+	PriorityQueue timeHeap;
 
 
 	//Constructor that creates a grid based on an array of couples fuelIndex-fuelPercentage (sum of all percentages must be 1)
@@ -47,12 +46,13 @@ public:
 	//Advance the system of a specified timestep, or if not specified until the first vertex in Polygon changes cell.
 	void advance(double dt);
 	void advance();
+	void advance_withoutHeap();
 
 	Cell* getCell(int cellIndex);
 	Cell* getCell(double x, double y);
-	Cell* getCell(const Vertex & v);
-	int findCell(double x, double y) const;
-	int findCell(const Vertex& v) const;
+	Cell* getCell(Vertex & v);
+	int findCell(double& x, double& y);
+	int findCell(Vertex& v);
 
 	// Used to add a fire in a specific point defined by xi e yi
 	void addFire(double Xi, double Yi);

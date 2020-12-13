@@ -10,25 +10,26 @@ using std::endl;
 
 Fire::Fire(Environment * _Forest, double Xi, double Yi): Forest(_Forest)
 {
-    Polygon.resize(10);
+    Polygon.resize(8);
     
     // Creation of a little ellipse centered on the point rotated by
     // the direction of the wind
-
     Cell * cell = Forest->getCell(Xi, Yi);
     double tetha = Forest->getTheta();
 
     // Support variable for the rotation
     double x1, y1;
 
-    for(int i = 0; i != 10; i++)
+    for(int i = 0; i != 8; i++)
     {
         // Divided by 100 because the initial ellipse is needed to be small
-        x1 = cell->a * std::cos(i*M_PI/5)/GRID_SIDE;
-        y1 = cell->b * std::sin(i*M_PI/5)/GRID_SIDE;
+        //x1 = cell->a * std::cos(i*M_PI/5)/GRID_SIDE;
+        //y1 = cell->b * std::sin(i*M_PI/5)/GRID_SIDE;
+        x1 = cell->a * std::cos(i * M_PI / 4) / GRID_SIDE;
+        y1 = cell->b * std::sin(i * M_PI / 4) / GRID_SIDE;
 
-        x1 = x1 * std::cos(tetha) + y1 * std::sin(tetha);
-        y1 = y1 * std::cos(tetha) - x1 * std::sin(tetha);
+        //x1 = x1 * std::cos(tetha) + y1 * std::sin(tetha);
+        //y1 = y1 * std::cos(tetha) - x1 * std::sin(tetha);
 
         Polygon[i].x = Xi + x1;
         Polygon[i].y = Yi + y1;
@@ -37,11 +38,12 @@ Fire::Fire(Environment * _Forest, double Xi, double Yi): Forest(_Forest)
     }
 
     // Calcolation of the dynamical timestep for the initial vertex
-    for (int i = 0; i != 10; i++)
+    for (int i = 0; i != 8; i++)
     {
         calcPropagation(i);
         calcTime(i);
     }
+    
     
 }
 
@@ -60,7 +62,7 @@ Fire::Fire(const Fire & f): Forest(f.Forest)
 
 void Fire::Propagate(double dt)
 {
-    int iChange = -1;
+    //int iChange = -1;
     
     for (int i = 0; i != Polygon.size(); i++)
     {
@@ -68,45 +70,43 @@ void Fire::Propagate(double dt)
         Polygon[i].y += Polygon[i].dy * dt;
 
         // Find the one that change cell exatly in that time
-        if (Polygon[i].nextTime != -1 && Forest->time >= Polygon[i].nextTime)
-        {
-            iChange = i;
-        }
+        // if (Polygon[i].nextTime != -1 && Forest->time >= Polygon[i].nextTime)
+        // {
+        //     iChange = i;
+        //     std::cerr << iChange << ", ";
+        // }
     }
 
     // Calculation for the one that changes cell
-    if(iChange != -1)
-    {
-        Polygon[iChange].cellIndex = Forest->findCell(Polygon[iChange]);
-        calcPropagation(iChange);
-        calcTime(iChange);
-    }
+    // if(iChange != -1)
+    // {
+    //     Polygon[iChange].cellIndex = Forest->findCell(Polygon[iChange]);
+    //     calcPropagation(iChange);
+    //     calcTime(iChange);
+    // }
 
-    // Checking distance from verteces
+    // Checking intersection and distance from verteces
+    checkEdges();
     checkDistance();
+    checkBorder();
 }
 
-
-
-void Fire::calcPropagation(double * val, int i)
+void Fire::Propagate_withoutHeap(double dt)
 {
-    Cell * cella = Forest->getCell(Polygon[i]);
+    for (int i = 0; i != Polygon.size(); i++)
+    {
+        Polygon[i].x += Polygon[i].dx * dt;
+        Polygon[i].y += Polygon[i].dy * dt;
+        Polygon[i].cellIndex = Forest->findCell(Polygon[i]);
+    }
 
-    double At, Bt, num1, num2, den;
-    double Ct = std::cos(Forest->getTheta());
-    double St = std::sin(Forest->getTheta());
-    Vertex Diff = (Polygon[i + 1] - Polygon[i - 1])/2; 
-
-    At = cella->a * (Diff.x * St + Diff.y * Ct);
-    Bt = cella->b * (Diff.y * St - Diff.x * Ct);
-
-    num1 = cella->a * At * Ct + cella->b * Bt * St;
-    num2 = cella->b * Bt * Ct - cella->a * At * St;
-
-    den = std::sqrt(At*At + Bt*Bt);
-
-    val[0] =  num1/den + cella->c * St;
-    val[1] =  num2/den + cella->c * Ct;
+    for (int i = 0; i != Polygon.size(); i++)
+    {
+        calcPropagation(i);
+        //std::cerr << std::setprecision(3) << "[" << Polygon[i].x << ", " << Polygon[i].y << ", " << Polygon[i].dx << ", " << Polygon[i].dy << "]\t";
+    }
+    //std::cerr << '\n';
+    checkDistance(false);
 }
 
 
@@ -191,9 +191,12 @@ void Fire::calcTime(int i)
 
 
 
-void Fire::checkDistance()
+void Fire::checkDistance(bool heap)
 {
     for (int i = 0; i != Polygon.size(); i++)
+    {
+        if (Polygon[i].cellIndex == -1 && Polygon[i + 1].cellIndex == -1) continue;
+
         if (Distance(Polygon[i], Polygon[i + 1]) > MAX_DISTANCE)
         {
             insertVertex(
@@ -204,17 +207,137 @@ void Fire::checkDistance()
             );
 
             // Calculation of the propagation parameter
-            Polygon[i + 1].cellIndex = Forest->findCell(Polygon[i + 1]);
-            calcPropagation(i + 1);
-            calcTime(i + 1);
+            // Polygon[i + 1].cellIndex = Forest->findCell(Polygon[i + 1]);
+            // calcPropagation(i + 1);
+            // calcPropagation(i);
+            // calcPropagation(i + 2);
+            // if (heap)
+            // {
+            //     Forest->timeHeap.deleteValue(Polygon[i].nextTime);
+            //     Forest->timeHeap.deleteValue(Polygon[i+2].nextTime);
+            //     calcTime(i + 1);
+            //     calcTime(i);
+            //     calcTime(i + 2);
+            // }
 
             // Return back to see if the 
             // mid point inserted is at a right distance
             i--;
         }
+    }
+}
+
+void Fire::checkEdges()
+{
+    int index = 1;
+
+    while (index < Polygon.size())
+    {
+        Vertex Int = findIntersection(index - 1);
+
+        if (Int.cellIndex == -1) break;
+
+        index = Int.cellIndex;
+
+        //if (Int.dx != 0)
+        //{
+        //    cout << index << '\t' << Int.dx << '\t' << Polygon.size() << endl;
+
+        //    while (1)
+        //    {
+        //        double l = 0;
+        //        std::cin >> l;
+        //        if (l == 1)
+        //            break;
+        //    }
+        //}
+
+        if (Int.x == Polygon[index].x && Int.y == Polygon[index].dy) continue;
+
+        insertVertex(Int, index);
+
+        int ncanc = Int.dx - index;
+
+        // Qua la cosa diventa difficile, 
+        // in pratica se per sfiga becco che uno dei primi
+        // segmenti incrocia uno degli ultimi a lui non frega niente e
+        // taglia tutto il poligono. Per cui se gli esce che il numero di 
+        // roba da tagliare è più della metà taglio al contrario.
+        // Quindi elimino partendo dall'ultimo in fondo e vado avanti
+        if (Int.dx - index > Polygon.size() / 2)
+        {
+            ncanc = (Polygon.size() - Int.dx) + index;
+            int temp = Int.dx;
+            Int.dx = index;
+            index = temp - 1;
+        }
+
+        for (int j = 0; j != ncanc; j++)
+        {
+            DeleteVertex(index + 1);
+        }
+
+        // Forest->timeHeap.deleteValue(Polygon[index+1].nextTime);
+        // Forest->timeHeap.deleteValue(Polygon[index-1].nextTime);
+        // calcPropagation(index+1);
+        // calcTime(index+1);
+        // calcPropagation(index-1);
+        // calcTime(index-1);
+ 
+        // Polygon[index].cellIndex = Forest->findCell(Polygon[index]);
+        // calcPropagation(index);
+        // calcTime(index);
+    }
 }
 
 
+void Fire::checkBorder()
+{
+    for (int i = 0; i < Polygon.size(); i++)
+    {
+
+        if(Polygon[i].cellIndex != -1 || Polygon[i+1].cellIndex != -1 || Polygon[i+2].cellIndex != -1)
+        {
+            continue;
+        }
+
+        double min, max;
+        Vertex ris1, ris2;
+
+        if (Polygon[i].x == Polygon[i + 1].x && Polygon[i].x == Polygon[i + 2].x)/* ||
+             (Polygon[i].x <= 0 && Polygon[i+1].x <= 0 && Polygon[i+2].x <= 0))*/
+        {
+
+            ris1.x = ris2.x = Polygon[i].x /*> 0 ? Polygon[i].x : 0*/;
+            min = std::min({ Polygon[i].y , Polygon[i + 1].y , Polygon[i + 2].y });
+            max = std::max({ Polygon[i].y , Polygon[i + 1].y , Polygon[i + 2].y });
+            
+            ris1.y = (ris1.x == 0) ? max : min;
+            ris2.y = (ris2.x == 0) ? min : max;
+
+
+        }
+        else if (Polygon[i].y == Polygon[i + 1].y && Polygon[i].y == Polygon[i + 2].y) /*||
+                 (Polygon[i].y <= 0 && Polygon[i + 1].y <= 0 && Polygon[i + 2].y <= 0))*/
+        {
+            ris1.y = ris2.y = Polygon[i].y /*> 0 ? Polygon[i].y : 0*/;
+            min = std::min({ Polygon[i].x , Polygon[i + 1].x , Polygon[i + 2].x });
+            max = std::max({ Polygon[i].x , Polygon[i + 1].x , Polygon[i + 2].x });
+
+            ris1.x = (ris1.y == 0) ? min : max;
+            ris2.x = (ris2.y == 0) ? max : min;
+        }
+        else continue;
+
+        ris1.cellIndex = ris2.cellIndex = -1;
+        ris1.dx = ris1.dy = ris2.dx = ris2.dy = 0;
+       
+        Polygon[i] = ris1;
+        Polygon[i + 2] = ris2;
+        Polygon.erase(Polygon.begin() + (i + 1) % Polygon.size());
+
+    }
+}
 
 ciclicVector<Vertex> Fire::calcDiff(const ciclicVector<Vertex> & v)
 {
@@ -226,6 +349,16 @@ ciclicVector<Vertex> Fire::calcDiff(const ciclicVector<Vertex> & v)
     Diff[i] = (Polygon[i + 1] - Polygon[i - 1])/2;
 
     return Diff;
+}
+
+void Fire::DeleteVertex(int n)
+{
+    if (n < 0) n = Polygon.size() + n;
+
+    int i = n % Polygon.size();
+
+    // Forest->timeHeap.deleteValue(Polygon[i].nextTime);
+    Polygon.erase(Polygon.begin() + i);
 }
 
 void Fire::Visualize()

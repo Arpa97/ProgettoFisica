@@ -95,7 +95,26 @@ void MainWindow::printFires(){
         painter.setBrush(Qt::darkRed);
         painter.setPen(paintpen);
         painter.drawPolygon(poly);
-     }
+
+        QPen linepen(Qt::black);
+        linepen.setCapStyle(Qt::RoundCap);
+        linepen.setWidth(5);
+        QPoint* points = new QPoint[polyFire.size()];
+        painter.setPen(linepen);
+        for (int i = 0; i != polyFire.size(); i++)
+        {
+            //if (i == 0)
+            //{
+            //    linepen.setColor(Qt::blue);
+            //    painter.setPen(linepen);
+            //    painter.drawPoint(points[i]);
+            //    linepen.setColor(Qt::black);
+            //    painter.setPen(linepen);
+            //    continue;
+            //}
+            painter.drawPoint(points[i]);
+        }
+    }
     ui->mainPicture->setPixmap(QPixmap::fromImage(canvas));
     ui->labelInfoTime->setText(QString("Time: ") + QString().number(ncicli) + QString("s"));
 }

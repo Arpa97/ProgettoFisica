@@ -34,4 +34,6 @@ struct WaveFront
 
     // Method to detect collision
     bool isColliding(const Vertex & v);
+
+    Vertex findIntersection(int start = 0);
 };
