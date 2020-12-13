@@ -51,8 +51,8 @@ public:
 	Cell* getCell(int cellIndex);
 	Cell* getCell(double x, double y);
 	Cell* getCell(Vertex & v);
-	int findCell(double x, double y) const;
-	int findCell(Vertex& v) const;
+	int findCell(double& x, double& y);
+	int findCell(Vertex& v);
 
 	// Used to add a fire in a specific point defined by xi e yi
 	void addFire(double Xi, double Yi);

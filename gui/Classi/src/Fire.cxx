@@ -88,6 +88,7 @@ void Fire::Propagate(double dt)
     // Checking intersection and distance from verteces
     checkEdges();
     checkDistance();
+    checkBorder();
 }
 
 void Fire::Propagate_withoutHeap(double dt)
@@ -194,6 +195,8 @@ void Fire::checkDistance(bool heap)
 {
     for (int i = 0; i != Polygon.size(); i++)
     {
+        if (Polygon[i].cellIndex == -1 && Polygon[i + 1].cellIndex == -1) continue;
+
         if (Distance(Polygon[i], Polygon[i + 1]) > MAX_DISTANCE)
         {
             insertVertex(
@@ -238,7 +241,7 @@ void Fire::checkEdges()
 
         //if (Int.dx != 0)
         //{
-        //    cout << index << endl;
+        //    cout << index << '\t' << Int.dx << '\t' << Polygon.size() << endl;
 
         //    while (1)
         //    {
@@ -248,6 +251,8 @@ void Fire::checkEdges()
         //            break;
         //    }
         //}
+
+        if (Int.x == Polygon[index].x && Int.y == Polygon[index].dy) continue;
 
         insertVertex(Int, index);
 
@@ -264,7 +269,7 @@ void Fire::checkEdges()
             ncanc = (Polygon.size() - Int.dx) + index;
             int temp = Int.dx;
             Int.dx = index;
-            index = temp;
+            index = temp - 1;
         }
 
         for (int j = 0; j != ncanc; j++)
@@ -282,6 +287,55 @@ void Fire::checkEdges()
         // Polygon[index].cellIndex = Forest->findCell(Polygon[index]);
         // calcPropagation(index);
         // calcTime(index);
+    }
+}
+
+
+void Fire::checkBorder()
+{
+    for (int i = 0; i < Polygon.size(); i++)
+    {
+
+        if(Polygon[i].cellIndex != -1 || Polygon[i+1].cellIndex != -1 || Polygon[i+2].cellIndex != -1)
+        {
+            continue;
+        }
+
+        double min, max;
+        Vertex ris1, ris2;
+
+        if (Polygon[i].x == Polygon[i + 1].x && Polygon[i].x == Polygon[i + 2].x)/* ||
+             (Polygon[i].x <= 0 && Polygon[i+1].x <= 0 && Polygon[i+2].x <= 0))*/
+        {
+
+            ris1.x = ris2.x = Polygon[i].x /*> 0 ? Polygon[i].x : 0*/;
+            min = std::min({ Polygon[i].y , Polygon[i + 1].y , Polygon[i + 2].y });
+            max = std::max({ Polygon[i].y , Polygon[i + 1].y , Polygon[i + 2].y });
+            
+            ris1.y = (ris1.x == 0) ? max : min;
+            ris2.y = (ris2.x == 0) ? min : max;
+
+
+        }
+        else if (Polygon[i].y == Polygon[i + 1].y && Polygon[i].y == Polygon[i + 2].y) /*||
+                 (Polygon[i].y <= 0 && Polygon[i + 1].y <= 0 && Polygon[i + 2].y <= 0))*/
+        {
+            ris1.y = ris2.y = Polygon[i].y /*> 0 ? Polygon[i].y : 0*/;
+            min = std::min({ Polygon[i].x , Polygon[i + 1].x , Polygon[i + 2].x });
+            max = std::max({ Polygon[i].x , Polygon[i + 1].x , Polygon[i + 2].x });
+
+            ris1.x = (ris1.y == 0) ? min : max;
+            ris2.x = (ris2.y == 0) ? max : min;
+        }
+        else continue;
+
+        ris1.cellIndex = ris2.cellIndex = -1;
+        ris1.dx = ris1.dy = ris2.dx = ris2.dy = 0;
+       
+        Polygon[i] = ris1;
+        Polygon[i + 2] = ris2;
+        Polygon.erase(Polygon.begin() + (i + 1) % Polygon.size());
+
     }
 }
 

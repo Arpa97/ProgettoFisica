@@ -23,6 +23,7 @@ Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 	int fuelNumber, number;
 	double validator;
 	srand(static_cast<unsigned int>(std::time(NULL)));
+	//srand(0);
 
 	grid = new Cell * *[step];
 
@@ -59,6 +60,12 @@ void Environment::advance(double dt)
 	//std::cerr << "[";
 	while(time < tfinale)
 	{
+		if (timeHeap.empty())
+		{
+			wildfire[0]->checkBorder();
+			break;
+		}
+
 		numero++;
 		// Searching the next timestep
 		nextTime = timeHeap.top();
@@ -90,17 +97,17 @@ void Environment::advance(double dt)
 
 void Environment::advance()
 {
-	double nextTime = timeHeap.top();
-	timeHeap.pop();
-	double dt = nextTime - time;
-	time += dt;
+	//double nextTime = timeHeap.top();
+	//timeHeap.pop();
+	//double dt = nextTime - time;
+	//time += dt;
 
-	for (int i = 0; i != wildfire.size(); i++)
-	{
-		wildfire[i]->Propagate(dt);
-	}
+	//for (int i = 0; i != wildfire.size(); i++)
+	//{
+	//	wildfire[i]->Propagate(dt);
+	//}
 
-	std::cerr << "Time : " << time << '\n';
+	//std::cerr << "Time : " << time << '\n';
 }
 
 void Environment::advance_withoutHeap()
@@ -146,10 +153,34 @@ Cell * Environment::getCell(Vertex & v)
 
 
 
-int Environment::findCell(double x, double y) const
+int Environment::findCell(double& x, double& y)
 {
 	// Returning the fuel of type 0 if the vertex croos the forest
-	if (x >= GRID_SIDE || y >= GRID_SIDE || x < 0 || y < 0) return -1;		
+	if (x == GRID_SIDE || y == GRID_SIDE || x == 0 || y == 0)
+	{
+		return -1;
+	}
+	
+	if (x < 0) 
+	{
+		x = 0;
+		return -1;
+	}
+	if (y < 0)
+	{
+		y = 0;
+		return -1;
+	}
+	if (x > GRID_SIDE)
+	{
+		x = GRID_SIDE;
+		return -1;
+	}
+	if (y > GRID_SIDE)
+	{
+		y = GRID_SIDE;
+		return -1;
+	}
 
 	int step = GRID_SIDE / CELL_SIDE;
 
@@ -162,7 +193,7 @@ int Environment::findCell(double x, double y) const
 
 
 
-int Environment::findCell(Vertex& v) const
+int Environment::findCell(Vertex& v)
 {
 	v.cellIndex = findCell(v.x, v.y);
 	return v.cellIndex;

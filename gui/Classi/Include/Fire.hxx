@@ -43,6 +43,7 @@ public:
     // i is where to start the checking, so i can iterate the last segment
     void checkDistance(bool heap = true);
     void checkEdges();
+    void checkBorder();
 
     // Method to compute the differential arrays for the Richard equation
     ciclicVector<Vertex> calcDiff(const ciclicVector<Vertex> & v);

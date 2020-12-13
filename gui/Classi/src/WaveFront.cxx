@@ -89,79 +89,127 @@ Vertex WaveFront::findIntersection(int start)
         double ymin = a.y < b.y ? a.y : b.y;
         double ymax = a.y > b.y ? a.y : b.y;
 
-        for(int j = i+2; j != Polygon.size(); j++)
-        {
-            Vertex c = Polygon[j], d = Polygon[j+1];
 
-            if(a.x == d.x && a.y == d.y)
-            continue;
+        if(a.x != b.x)
+            for (int j = i + 2; j != Polygon.size(); j++)
+            {
+                Vertex c = Polygon[j], d = Polygon[j + 1];
 
-            // All the condition to skip it
+                if (a.x == d.x && a.y == d.y)
+                    continue;
 
-            if(
-                (c.x > xmax && d.x > xmax) // Tutto a destra
-                            ||
-                (c.x < xmin && d.x < xmin) // Tutto a sinistra
-                            ||
-                (c.y > ymax && d.y > ymax) // Tutto su
-                            ||
-                (c.y < ymin && d.y < ymin) // Tutto giu
-            )continue;
+                // All the condition to skip it
 
-            // Start computing only if the points are on the opposite
-            // sides of the segment
+                if (
+                    (c.x > xmax && d.x > xmax) // Tutto a destra
+                    ||
+                    (c.x < xmin && d.x < xmin) // Tutto a sinistra
+                    ||
+                    (c.y > ymax && d.y > ymax) // Tutto su
+                    ||
+                    (c.y < ymin && d.y < ymin) // Tutto giu
+                    )continue;
 
-            double ys = m1*c.x + q1;
+                // Start computing only if the points are on the opposite
+                // sides of the segment
 
-            bool cSottoSegmento = c.y < ys;
+                double ys = m1 * c.x + q1;
 
-            ys = m1 * d.x + q1;
+                bool cSottoSegmento = c.y < ys;
 
-            bool dSottoSegmento = d.y < ys;
+                ys = m1 * d.x + q1;
 
-            // Se sono entrambi sotto o entrambi sopra skippo
-            if(dSottoSegmento == cSottoSegmento)
-            continue;
+                bool dSottoSegmento = d.y < ys;
 
-            double m2 = (d.y - c.y)/(d.x - c.x);
-            double q2 = d.y - m2 * d.x;
+                // Se sono entrambi sotto o entrambi sopra skippo
+                if (dSottoSegmento == cSottoSegmento)
+                    continue;
 
-            double diff = m1 - m2;
+                double m2 = (d.y - c.y) / (d.x - c.x);
+                double q2 = d.y - m2 * d.x;
 
-            // If lines are parallel skip this stage
-            if(std::abs(diff) < 0.0001)
-            continue;
+                double diff = m1 - m2;
 
-            // Find intersection
-            double x = (q2 - q1)/diff;
+                // If lines are parallel skip this stage
+                if (std::abs(diff) < 0.0001)
+                    continue;
 
-            //double x1min = c.x < d.x ? c.x : d.x;
-            //double x1max = c.x > d.x ? c.x : d.x;
-            //double y1min = c.y < d.y ? c.y : d.y;
-            //double y1max = c.y > d.y ? c.y : d.y;
+                // Find intersection
+                double x = (q2 - q1) / diff;
 
-            // check if the point is inside the segment
-            if(
-                (x >= xmax) || (x <= xmin)
-            )continue;
+                //double x1min = c.x < d.x ? c.x : d.x;
+                //double x1max = c.x > d.x ? c.x : d.x;
+                //double y1min = c.y < d.y ? c.y : d.y;
+                //double y1max = c.y > d.y ? c.y : d.y;
 
-            double y = m1*x + q1;
+                // check if the point is inside the segment
+                if (
+                    (x >= xmax) || (x <= xmin)
+                    )continue;
 
-            //if(
-            //    (y > ymax) || (y < ymin)
-            //)continue;
+                double y = m1 * x + q1;
 
-            // Add the point
-            Point = Vertex(x, y);
 
-            // Index of the point where the intersection is
-            Point.cellIndex = i + 1;
+                if (x < -50 || x > 5000 || y < -50 || y > 5000) throw;
 
-            // Index of the point where the intersection end
-            Point.dx = j + 1;
+                // Add the point
+                Point = Vertex(x, y);
+                // Index of the point where the intersection is
+                Point.cellIndex = i + 1;
 
-            return Point;
-        }
+                // Index of the point where the intersection end
+                Point.dx = j + 1;
+
+                return Point;
+            }
+       
+        //if a.x == b.x (points on the border)line is of the type x=k
+        else
+            for (int j = i + 2; j != Polygon.size(); j++)
+            {
+                Vertex c = Polygon[j], d = Polygon[j + 1];
+
+                //Skip segments on the border too 
+                if (c.x == d.x) continue;
+
+                if (a.x == d.x && a.y == d.y) continue;
+
+                if (
+                    (c.x > a.x && d.x > a.x) // Tutto a destra
+                    ||
+                    (c.x < a.x && d.x < a.x) // Tutto a sinistra
+                    ||
+                    (c.y > ymax && d.y > ymax) // Tutto su
+                    ||
+                    (c.y < ymin && d.y < ymin) // Tutto giu
+                    )continue;
+
+                double m2 = (d.y - c.y) / (d.x - c.x);
+                double q2 = d.y - m2 * d.x;
+
+                // Find intersection
+                double x = a.x;
+                double y = m2 * x + q2;
+
+                std::cerr << x << ' ' << y << '\n';
+
+                if(
+                    (y > ymax) || (y < ymin)
+                )continue;
+
+                if (x < -50 || x > 5000 || y < -50 || y > 5000) throw;
+
+                // Add the point
+                Point = Vertex(x, y);
+
+                // Index of the point where the intersection is
+                Point.cellIndex = i + 1;
+
+                // Index of the point where the intersection end
+                Point.dx = j + 1;
+
+                return Point;
+            }
     }
     Point.cellIndex = -1;
     return Point;
