@@ -138,13 +138,13 @@ void MainWindow::on_windSpeed_valueChanged(int value)
 
 void MainWindow::on_clearButton_clicked()
 {
+    if (advancingTimer->isActive()){
+      ui->startButton->click();
+    }
     ui->mainPicture->setPixmap(QPixmap::fromImage(original));
     //pulire vettore wildfire
     Foresta->wildfire.clear();
     //stoppare esecuzione
-    if (advancingTimer->isActive()){
-      ui->startButton->click();
-    }
     ncicli=0;
     ui->labelInfoTime->setText(QString("Time: ") + QString().number(ncicli) + QString("s"));
 }
