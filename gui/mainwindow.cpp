@@ -69,10 +69,17 @@ void MainWindow::printFire(ciclicVector<Vertex> polyFire){
     QPen paintpen(Qt::red);
     QPolygon poly;
 
+
+    QPen linepen(Qt::black);
+    linepen.setCapStyle(Qt::RoundCap);
+    linepen.setWidth(5);
+    QPoint* points = new QPoint[polyFire.size()];
+
     double rescale = ui->mainPicture->width() / (GRID_SIDE + .0);
 
     for (unsigned long long i=0; i<polyFire.size(); i++){
-        poly << QPoint(polyFire[i].x * rescale, (GRID_SIDE - polyFire[i].y) * rescale);
+        points[i] = QPoint(polyFire[i].x * rescale, (GRID_SIDE - polyFire[i].y) * rescale);
+        poly << points[i];
         //qDebug() << polyFire[i].x * rescale << (GRID_SIDE - polyFire[i].y) * rescale;
     }
 
@@ -80,6 +87,22 @@ void MainWindow::printFire(ciclicVector<Vertex> polyFire){
     painter.setPen(paintpen);
     //painter.drawPoints(poly);
     painter.drawPolygon(poly);
+
+
+    painter.setPen(linepen);
+    for (int i = 0; i != polyFire.size(); i++)
+    {
+        //if (i == 0)
+        //{
+        //    linepen.setColor(Qt::blue);
+        //    painter.setPen(linepen);
+        //    painter.drawPoint(points[i]);
+        //    linepen.setColor(Qt::black);
+        //    painter.setPen(linepen);
+        //    continue;
+        //}
+        painter.drawPoint(points[i]);        
+    }
 
     ui->mainPicture->setPixmap(QPixmap::fromImage(tmp));
     ui->labelInfoTime->setText(QString("Time: ") + QString().number(ncicli) + QString("s"));

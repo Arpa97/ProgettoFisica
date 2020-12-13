@@ -191,7 +191,7 @@ Vertex WaveFront::findIntersection(int start)
                 double x = a.x;
                 double y = m2 * x + q2;
 
-                std::cerr << x << ' ' << y << '\n';
+                //std::cerr << x << ' ' << y << '\n';
 
                 if(
                     (y > ymax) || (y < ymin)
