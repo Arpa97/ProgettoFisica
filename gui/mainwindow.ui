@@ -33,7 +33,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>:/white.png</pixmap>
+     <pixmap resource="resources.qrc">:/white.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -150,11 +150,18 @@
     <widget class="QLabel" name="label_5">
      <property name="geometry">
       <rect>
-       <x>50</x>
+       <x>30</x>
        <y>10</y>
-       <width>91</width>
-       <height>16</height>
+       <width>111</width>
+       <height>20</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
      </property>
      <property name="text">
       <string>Wind controls</string>
@@ -165,12 +172,12 @@
       <rect>
        <x>40</x>
        <y>120</y>
-       <width>121</width>
+       <width>61</width>
        <height>16</height>
       </rect>
      </property>
      <property name="text">
-      <string>Angle: 0 Radianti</string>
+      <string>Angle: 0 rad</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_4">
@@ -256,6 +263,8 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -142,7 +142,7 @@ void MainWindow::on_exitButton_clicked()
 void MainWindow::on_windDir_valueChanged(int position)
 {
     double newTheta = (double)position/100;
-    ui->windDirLabel->setText(QString("Angle: ") + QString().number(newTheta) + QString(" radianti"));
+    ui->windDirLabel->setText(QString("Angle: ") + QString().number(newTheta) + QString(" rad"));
     Foresta->setTheta(newTheta);
     qDebug() << "winDir" << QString().number(newTheta);
 }
