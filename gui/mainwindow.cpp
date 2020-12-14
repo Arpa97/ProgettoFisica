@@ -7,6 +7,13 @@ MainWindow::MainWindow(QWidget *parent)
 {
     connect(advancingTimer, SIGNAL(timeout()), this, SLOT(updateAdvance()));
     ui->setupUi(this);
+
+    if (MULTIPLE_FUELS) {
+        double (*composizione)[2] = new double[3][2] { {1, .5}, {13, .2}, {7, .3} };
+        Foresta = new Environment(composizione, 3);
+    }else {
+        Foresta = new Environment();
+    }
     original = drawOriginalgrid();
     rescale = ui->mainPicture->width() / (GRID_SIDE + .0);
 }

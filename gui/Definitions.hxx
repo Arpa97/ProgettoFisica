@@ -19,3 +19,4 @@
 #define FUEL_PATH "FuelTypes.txt"
 
 #define MAXWINDSPEED 10                         // m/s. Max wind speed
+#define MULTIPLE_FUELS true                     // boolean. If true, create a forest with multiple fuels.
