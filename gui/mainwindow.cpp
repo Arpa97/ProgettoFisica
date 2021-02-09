@@ -95,8 +95,12 @@ void MainWindow::printFires(){
         QPen paintpen(Qt::red);
         QPolygon poly;
 
+        
+        QPoint* points = new QPoint[polyFire.size()];
+
         for (unsigned long long i=0; i<polyFire.size(); i++){
-            poly << QPoint(polyFire[i].x * rescale, (GRID_SIDE - polyFire[i].y) * rescale);
+            points[i] = QPoint(polyFire[i].x * rescale, (GRID_SIDE - polyFire[i].y) * rescale);
+            poly << points[i];
         }
 
         painter.setBrush(Qt::darkRed);
@@ -104,9 +108,9 @@ void MainWindow::printFires(){
         painter.drawPolygon(poly);
 
         QPen linepen(Qt::black);
-        linepen.setCapStyle(Qt::RoundCap);
-        linepen.setWidth(5);
-        QPoint* points = new QPoint[polyFire.size()];
+        linepen.setCapStyle(Qt::SquareCap);
+        linepen.setWidth(8);
+        
         painter.setPen(linepen);
         for (int i = 0; i != polyFire.size(); i++)
         {
@@ -137,7 +141,7 @@ void MainWindow::on_startButton_clicked()
       ui->mainPicture->setCursor(Qt::ArrowCursor);
       ui->mainPicture->setMouseTracking(false);
       ui->startButton->setText(advancingTimer->isActive() ? "Start" : "Stop");
-      advancingTimer->isActive() ? advancingTimer->stop() : advancingTimer->start(10);
+      advancingTimer->isActive() ? advancingTimer->stop() : advancingTimer->start();
     }
 }
 
