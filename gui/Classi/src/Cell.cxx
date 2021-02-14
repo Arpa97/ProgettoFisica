@@ -53,7 +53,7 @@ void Cell::FillFuelType(double M_f)
 
 void Cell::setR(double U)
 {
-	if (fuelIndex == -1)
+	if (fuelIndex == 0)
 	{
 		R = 0;
 		return;

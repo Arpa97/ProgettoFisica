@@ -83,6 +83,13 @@ void MainWindow::on_addFireButton_clicked()
 }
 
 void MainWindow::createNewFire(double x, double y){
+    if (FIXED_FIRE)
+    {
+        //x = rescale * GRID_SIDE / 2;
+        //y = rescale * GRID_SIDE / 2;
+        x = rescale*5;
+        y = rescale*5;
+    }
     Foresta->addFire(x/rescale,(GRID_SIDE - y/rescale));
     this->printFires();
 }

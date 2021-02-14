@@ -18,11 +18,15 @@ Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 	M_f = MOISTURE_CONTENT;
 	Cell::FillFuelType(M_f);
 	nullFuel->setR(0);
+	Fire::setEnvironment(this);
 
 	int step = GRID_SIDE / CELL_SIDE;	
 	int fuelNumber, number;
 	double validator;
-	srand(static_cast<unsigned int>(std::time(NULL)));
+	if (RANDOM)
+	{
+		srand(static_cast<unsigned int>(std::time(NULL)));
+	}
 	//srand(0);
 
 	grid = new Cell * *[step];
@@ -57,7 +61,6 @@ void Environment::advance(double dt)
 	double tfinale = time + dt;
 	int numero = 0;
 
-	//std::cerr << "[";
 	while(time < tfinale)
 	{
 		if (timeHeap.empty())
@@ -89,8 +92,6 @@ void Environment::advance(double dt)
 
 		calcAll();		
 	}
-	//std::cerr << '\n';
-	//std::cout << "Time : " << time << '\t' << "Avanzamenti: " << numero << "\tNumero punti:" << wildfire[0]->Polygon.size() << '\n';
 }
 
 
@@ -107,7 +108,6 @@ void Environment::advance()
 	//	wildfire[i]->Propagate(dt);
 	//}
 
-	//std::cerr << "Time : " << time << '\n';
 }
 
 void Environment::advance_withoutHeap()
@@ -119,8 +119,6 @@ void Environment::advance_withoutHeap()
 	{
 		wildfire[i]->Propagate_withoutHeap(dt);
 	}
-
-	//std::cerr << "Time : " << time << '\n';
 
 }
 
@@ -160,27 +158,6 @@ int Environment::findCell(double& x, double& y)
 	{
 		return -1;
 	}
-	
-	if (x < 0) 
-	{
-		x = 0;
-		return -1;
-	}
-	if (y < 0)
-	{
-		y = 0;
-		return -1;
-	}
-	if (x > GRID_SIDE)
-	{
-		x = GRID_SIDE;
-		return -1;
-	}
-	if (y > GRID_SIDE)
-	{
-		y = GRID_SIDE;
-		return -1;
-	}
 
 	int step = GRID_SIDE / CELL_SIDE;
 
@@ -204,7 +181,7 @@ int Environment::findCell(Vertex& v)
 void Environment::addFire(double Xi, double Yi)
 {
 	wildfire.push_back(
-		new Fire(this, Xi, Yi)
+		new Fire(Xi, Yi)
 	);
 }
 
@@ -257,12 +234,12 @@ ciclicVector<Vertex> Environment::getPolygon(int i)
 
 void Environment::calcAll()
 {
-	// First calcel all the old entries
+	// First cancel all the old entries
 	timeHeap = PriorityQueue();
 	
 	// Recalculate all propagation for all vertices
 	for(int i = 0; i != wildfire.size(); i++)
-	wildfire[i]->calcPropagations();
+	wildfire[i]->calcVelocities();
 
 	// Recalculate the times for all vertices
 	for(int i = 0; i != wildfire.size(); i++)

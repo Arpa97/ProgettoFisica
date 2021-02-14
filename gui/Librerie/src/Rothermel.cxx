@@ -17,7 +17,6 @@ double Rothermel_R0(Fuel* fuel, double _M_f)
 	double delta = fuel->delta;
 	double M_x = fuel->M_x;
 	double M_f = _M_f;
-	//std::cerr << h << '\t' << S_T << '\t' << S_e << '\t' << rho_p << '\t' << w_0 << '\t' << SAV << '\t' << delta << '\t' << M_x << '\t' << M_f << '\n';
 
 	double R0, I_R, csi, rho_b, epsilon, Q_ig;
 	double lambda, lambda_max, beta_op, beta, w_n, eta_M, eta_s;
@@ -39,14 +38,7 @@ double Rothermel_R0(Fuel* fuel, double _M_f)
 	epsilon = exp(-138 / SAV);
 	Q_ig = 250 + 1116 * M_f;
 
-	//static int count = 1;
-	//std::cerr << count << '\t' << I_R << '\t' << '\t' << I_R * 0.9 * 0.00508 << '\n';
-	//count++;
-
 	R0 = (I_R * csi) / (rho_b * epsilon * Q_ig);
-	//std::cerr << R0 * 0.00508 << '\n';
-	//std::cerr << fuel->fuelIndex << '\t' << R0 << '\t' << I_R << '\t' << csi << '\t' << rho_b << '\t' << epsilon << '\t' << Q_ig << '\n';
-	//std::cerr << rho_b << '\t' << beta/beta_op << '\n';
 	return R0;
 }
 
@@ -68,7 +60,6 @@ double Rothermel_WindFactor(Fuel* fuel, double U)
 	E = 0.715 * exp(-3.59e-4 * SAV);
 
 	double phi_w = C * pow(U, B) * pow(beta / beta_op, -E);
-	//std::cerr << phi_w << '\n';
 	return phi_w;
 }
 

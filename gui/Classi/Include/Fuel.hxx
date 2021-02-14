@@ -23,7 +23,7 @@ struct Fuel
 	const double delta;
 	const double M_x;
 
-	//Reduced rate of speed, calculated only via fuel parameters and moisture content. 
+	//Reduced rate of spread, calculated only via fuel parameters and moisture content. 
 	double R0;
 
 	//-----------Constructors-------------
