@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Definitions.hxx"
+#include <vector>
 
 struct Fuel
 {
@@ -18,8 +19,8 @@ struct Fuel
 	static constexpr double S_e = 0.010;
 	static constexpr double rho_p = 32;
 
-	const double w_0;
-	const double SAV;
+	std::vector<double>* w_0;
+	const std::vector<double>* SAV;
 	const double delta;
 	const double M_x;
 
@@ -27,7 +28,7 @@ struct Fuel
 	double R0;
 
 	//-----------Constructors-------------
-	Fuel(double _w_0, double _SAV, double _delta, double _M_x) : w_0(_w_0), SAV(_SAV), delta (_delta), M_x(_M_x) {}
+	Fuel(std::vector<double>* _w_0, std::vector<double>* _SAV, double _delta, double _M_x) : w_0(_w_0), SAV(_SAV), delta (_delta), M_x(_M_x) {}
 
 	//-----------Methods-------------
 	//Compute R0 (reduced R, cannot change run-time) given the moisture content and the fuel proprieties.

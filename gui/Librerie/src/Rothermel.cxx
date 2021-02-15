@@ -12,8 +12,8 @@ double Rothermel_R0(Fuel* fuel, double _M_f)
 	double S_T = fuel->S_T;
 	double S_e = fuel->S_e;
 	double rho_p = fuel->rho_p;
-	double w_0 = fuel->w_0;
-	double SAV = fuel->SAV;
+	double w_0 = fuel->w_0[0][0];
+	double SAV = fuel->SAV[0][0];
 	double delta = fuel->delta;
 	double M_x = fuel->M_x;
 	double M_f = _M_f;
@@ -46,8 +46,8 @@ double Rothermel_R0(Fuel* fuel, double _M_f)
 double Rothermel_WindFactor(Fuel* fuel, double U)
 {
 	double rho_p = fuel->rho_p;
-	double w_0 = fuel->w_0; 
-	double SAV = fuel->SAV;
+	double w_0 = fuel->w_0[0][0]; 
+	double SAV = fuel->SAV[0][0];
 	double delta = fuel->delta;
 	double beta, beta_op, rho_b, B, C, E;
 	U /= 0.00508;
@@ -67,7 +67,7 @@ double Rothermel_WindFactor(Fuel* fuel, double U)
 double Rothermel_SlopeFactor(Fuel* fuel, double tan_phi)
 {
 	double rho_p = fuel->rho_p;
-	double w_0 = fuel->w_0;
+	double w_0 = fuel->w_0[0][0];
 	double delta = fuel->delta;
 	double rho_b, beta;
 

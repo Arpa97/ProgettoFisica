@@ -40,7 +40,7 @@ void Cell::FillFuelType(double M_f)
 		fcin >> M_x;
 		M_x /= 100;
 
-		FuelType[i] = new Fuel(w_0, SAV,  delta, M_x);
+		FuelType[i] = new Fuel(w_0, SAV, delta, M_x);
 		FuelType[i]->setR0(M_f);
 	}
 
