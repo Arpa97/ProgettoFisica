@@ -13,7 +13,7 @@
 
 struct Cell 
 {
-	int fuelIndex;
+	int fuelIndex, fuelNumber;
 	double height;
 
 	double R;
@@ -24,8 +24,7 @@ struct Cell
 	//Nota: si potrebbe anche rendere un vector e fare uno static AddFuelType, ma non credo abbiamo interesse di aggiungere Fuel personalizzati.
 
 	//-----------Constructors-------------
-	Cell(int _fuelIndex, double _height = 0) : fuelIndex(_fuelIndex), height(_height) {}
-
+	Cell(int _fuelNumber, double _height = 0);
 
 	//-----------Methods-------------
 	static void FillFuelType(double M_f);

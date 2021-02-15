@@ -7,14 +7,14 @@ using std::exp;
 using std::pow;
 using std::vector;
 
-double Rothermel2_R0(Fuel* fuel, double _M_f, double* params)
+double Rothermel2_R0(Fuel* fuel, double _M_f)
 {
 	double h = fuel->h;
 	double S_T = fuel->S_T;
 	double S_e = fuel->S_e;
 	double rho_p = fuel->rho_p;
-	vector<double>* w_0 = fuel->w_0;
-	const vector<double>* SAV = fuel->SAV;
+	vector<vector<double>> w_0 = fuel->w_0;
+	const vector<vector<double>> SAV = fuel->SAV;
 	double delta = fuel->delta;
 	
 	double M_x[2];
@@ -31,14 +31,25 @@ double Rothermel2_R0(Fuel* fuel, double _M_f, double* params)
 	double W, M_f_dead;
 
 	size_t sizes[2]{ w_0[0].size(), w_0[1].size() };	//live and dead fuels have a different number of size classes
+
+	//Filling M_f. In this version all fuels have the same moisture content
 	for (int i = 0; i < 2; i++)
 	{
 		M_f[i] = vector<double>(sizes[i]);
 		for (int j = 0; j < sizes[i]; j++)
 		{
-			M_f[i][j] = _M_f;					//in this version all fuels have the same moisture content
+			M_f[i][j] = _M_f;					
 		}
 	}
+
+	//Conversion due to curing for dynamical models
+	if (fuel->type == 'D')
+	{
+		double T = -1.11 * M_f[1][0] + 1.33;
+		w_0[0][3] = T * w_0[1][0];
+		w_0[1][0] = w_0[1][0] - T * w_0[1][0];
+	}
+
 
 	A_T = 0;
 	for (int i = 0; i < 2; i++)
@@ -59,11 +70,18 @@ double Rothermel2_R0(Fuel* fuel, double _M_f, double* params)
 		f2[i] = vector<double>(sizes[i]);
 		for (int j = 0; j < sizes[i]; j++)
 		{
-			f2[i][j] = A2[i][j] / A1[i];
+			if (A1[i] != 0)
+			{
+				f2[i][j] = A2[i][j] / A1[i];
+			}
+			else
+			{
+				f2[i][j] = 0;
+			}
 		}
 	}
 
-	double g_subclass[2][6];
+	double g_subclass[2][6] = { {0,0,0,0,0}, {0,0,0,0,0} };
 	for (int i = 0; i < 2; i++)
 	{
 		g[i] = vector<double>(sizes[i]);
@@ -156,7 +174,15 @@ double Rothermel2_R0(Fuel* fuel, double _M_f, double* params)
 
 	for (int i = 0; i < 2; i++)
 	{
-		eta_s[i] = 0.174 * pow(S_e1[i], -0.19);
+		if (S_e1[i] != 0)
+		{
+			eta_s[i] = 0.174 * pow(S_e1[i], -0.19);
+		}
+		else
+		{
+			eta_s[i] = 0;
+		}
+
 		r_M[i] = M_f1[i] / M_x[i];
 		eta_M[i] = 1 - 2.59 * r_M[i] + 5.11 * pow(r_M[i], 2) - 3.52 * pow(r_M[i], 3);
 	}
@@ -204,36 +230,24 @@ double Rothermel2_R0(Fuel* fuel, double _M_f, double* params)
 		}
 	}
 
-	if (params != nullptr)
-	{
-		params[0] = beta;
-		params[1] = beta_op;
-		params[2] = sigma;
-		params[3] = I_R;
-	}
+	fuel->params[0] = beta;
+	fuel->params[1] = beta_op;
+	fuel->params[2] = sigma;
+	fuel->params[3] = I_R;
 
 	R0 = I_R * csi / sink;
 	return R0;
 }
 
 
-double Rothermel2_WindFactor(Fuel* fuel, double U, double _M_f)
+double Rothermel2_WindFactor(Fuel* fuel, double U)
 {
-	static double beta, beta_op, sigma, I_R;
-	static bool first = true;
+	double beta = fuel->params[0];
+	double beta_op = fuel->params[1];
+	double sigma = fuel->params[2];
+	double I_R = fuel->params[3];
 	double B, C, E;
 	U /= 0.00508;
-
-	if (first)
-	{
-		first = false;
-		double* params = new double[4];
-		Rothermel2_R0(fuel, _M_f, params);
-		beta = params[0];
-		beta_op = params[1];
-		sigma = params[2];
-		I_R = params[3];
-	}
 
 	B = 0.02526 * pow(sigma, 0.54);
 	C = 7.47 * exp(-0.133 * pow(sigma, 0.55));
@@ -252,18 +266,9 @@ double Rothermel2_WindFactor(Fuel* fuel, double U, double _M_f)
 }
 
 
-double Rothermel2_SlopeFactor(Fuel* fuel, double tan_phi, double _M_f)
+double Rothermel2_SlopeFactor(Fuel* fuel, double tan_phi)
 {
-	static double beta;
-	static bool first = true;
-
-	if (first)
-	{
-		first = false;
-		double* params = new double[4];
-		Rothermel2_R0(fuel, _M_f, params);
-		beta = params[0];
-	}
+	double beta = fuel->params[0];
 
 	double phi_s = 5.275 * pow(beta, -0.3) * pow(tan_phi, 2);
 	return phi_s;

@@ -31,9 +31,9 @@ QImage MainWindow::drawOriginalgrid(){
          {
              for (int j = 0; j != step; j++)
              {
-                 if (Foresta->grid[i][j]->fuelIndex == 1) painter.setBrush(Qt::green);
-                 else if (Foresta->grid[i][j]->fuelIndex == 13) painter.setBrush(Qt::darkGreen);
-                 else if (Foresta->grid[i][j]->fuelIndex == 7) painter.setBrush(Qt::gray);
+                 if (Foresta->grid[i][j]->fuelNumber == 1) painter.setBrush(Qt::green);
+                 else if (Foresta->grid[i][j]->fuelNumber == 13) painter.setBrush(Qt::darkGreen);
+                 else if (Foresta->grid[i][j]->fuelNumber == 7) painter.setBrush(Qt::gray);
                  else painter.setBrush(Qt::gray);
                  painter.drawRect(i * drawSize, j * drawSize, drawSize, drawSize);
              }

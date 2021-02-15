@@ -16,11 +16,11 @@
 
 struct Fuel;
 
-double Rothermel2_R0(Fuel* fuel, double _M_f, double* params = nullptr);
+double Rothermel2_R0(Fuel* fuel, double _M_f);
 
-double Rothermel2_WindFactor(Fuel* fuel, double U, double _M_f);
+double Rothermel2_WindFactor(Fuel* fuel, double U);
 
-double Rothermel2_SlopeFactor(Fuel* fuel, double tan_phi, double _M_f);
+double Rothermel2_SlopeFactor(Fuel* fuel, double tan_phi);
 
 double Rothermel2_R(double R0, double phi_w, double phi_s = 0);
 
