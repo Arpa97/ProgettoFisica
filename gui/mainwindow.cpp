@@ -14,8 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
     }else {
         Foresta = new Environment();
     }
-    original = drawOriginalgrid();
     rescale = ui->mainPicture->width() / (GRID_SIDE + .0);
+    original = drawOriginalgrid();
 }
 
 QImage MainWindow::drawOriginalgrid(){
@@ -25,7 +25,7 @@ QImage MainWindow::drawOriginalgrid(){
 
      painter.setPen(paintpen);
      int step = GRID_SIDE / CELL_SIDE;
-     double drawSize = CELL_SIDE * ui->mainPicture->width() / GRID_SIDE;
+     double drawSize = CELL_SIDE * rescale;
 
      for (int i = 0; i != step; i++)
          {
