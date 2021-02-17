@@ -45,7 +45,19 @@ double Rothermel2_R0(Fuel* fuel, double _M_f)
 	//Conversion due to curing for dynamical models
 	if (fuel->type == 'D')
 	{
-		double T = -1.11 * M_f[1][0] + 1.33;
+		double T;
+		if (M_f[1][0] < 0.3)
+		{
+			T = 1;
+		}
+		else if (M_f[1][0] > 1.2)
+		{
+			T = 0;
+		}
+		else
+		{
+			double T = -1.11 * M_f[1][0] + 1.33;
+		}
 		w_0[0][3] = T * w_0[1][0];
 		w_0[1][0] = w_0[1][0] - T * w_0[1][0];
 	}
