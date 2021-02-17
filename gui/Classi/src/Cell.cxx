@@ -113,14 +113,15 @@ void Cell::setR(double U)
 
 	double R0 = FuelType[fuelIndex]->R0;
 	double phi_w = FuelType[fuelIndex]->getWindFactor(U);
+	double phi_s = FuelType[fuelIndex]->getSlopeFactor(std::tan(TOPOGRAPHIC_SLOPE));
 
 	if (HETEROGENEOUS_FUEL)
 	{
-		R = Rothermel2_R(R0, phi_w);
+		R = Rothermel2_R(R0, phi_w, phi_s);
 	}
 	else
 	{
-		R = Rothermel_R(R0, phi_w);
+		R = Rothermel_R(R0, phi_w, phi_s);
 	}
 	R *= 0.00508;							//Conversion: 1 ft/min = 0.00508 m/s
 	updateEllipseParams(U);
