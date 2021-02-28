@@ -63,7 +63,7 @@ public:
 	double getM_f() const;
 
 	// Method for heigth computing
-	void addMountain(Vertex & pos, double lar);
+	void addMountain(double h, Vertex & pos, double lar);
 
 	// Methods for getting the polygon of a specific fire in the index i
 	ciclicVector<Vertex> getPolygon(int i);

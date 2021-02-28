@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "Vertex.hxx"
 #include "Fuel.hxx"
 #include "Definitions.hxx"
 

@@ -259,7 +259,7 @@ void Environment::VisualizeGrid()
 	cout << grid[i][j]->fuelIndex << endl; 
 }
 
-void Environment::addMountain(Vertex & pos, double lar)
+void Environment::addMountain(double h, Vertex & pos, double lar)
 {
 	int step = GRID_SIDE/CELL_SIDE;
 	double x0, y0, x1, y1;
@@ -277,14 +277,20 @@ void Environment::addMountain(Vertex & pos, double lar)
 		y1 = CELL_SIDE*(j+1) - pos.y;
 
 		// Compute of the heigth at cell borders
-		h0 = std::exp( -(x0*x0 + y0/y0)/sigma);
-		h1 = std::exp( -(x0*x0 + y1/y1)/sigma);
-		h2 = std::exp( -(x1*x1 + y0/y0)/sigma);
-		h3 = std::exp( -(x1*x1 + y1/y1)/sigma);
+		h0 = h*std::exp( -(x0*x0 + y0*y0)/sigma);
+		h1 = h*std::exp( -(x0*x0 + y1*y1)/sigma);
+		h2 = h*std::exp( -(x1*x1 + y0*y0)/sigma);
+		h3 = h*std::exp( -(x1*x1 + y1*y1)/sigma);
+
+		// cout << h0 << ", " << h1 << ", " << h2 << ", " << h3 << endl;
 
 		// Adding the heigth mean and the derivative value in every cell
-		grid[i][j]->height += (h0 + h1 + h2 + h3)/4;
-		grid[i][j]->AspVect.x += (h0 + h1 - h2 - h3)/(4*CELL_SIDE);
-		grid[i][j]->AspVect.y += (h3 + h1 - h0 - h2)/(4*CELL_SIDE);
+		grid[j][i]->height += (h0 + h1 + h2 + h3)/4;
+		grid[j][i]->AspVect.x += (h0 + h1 - h2 - h3)/(4*CELL_SIDE);
+		grid[j][i]->AspVect.y += (h3 + h1 - h0 - h2)/(4*CELL_SIDE);
+
+		grid[j][i]->setR(U);
 	}
+
+	calcAll();
 }

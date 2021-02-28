@@ -8,6 +8,8 @@
 #include <cmath>
 
 using std::vector;
+using std::cout;
+using std::endl;
 
 Fuel* Cell::FuelType[N_FUEL_TYPES + 1];
 
@@ -113,7 +115,12 @@ void Cell::setR(double U)
 
 	double R0 = FuelType[fuelIndex]->R0;
 	double phi_w = FuelType[fuelIndex]->getWindFactor(U);
-	double phi_s = FuelType[fuelIndex]->getSlopeFactor(std::tan(TOPOGRAPHIC_SLOPE));
+	double phi_s = FuelType[fuelIndex]->getSlopeFactor(
+		std::sqrt(AspVect.x*AspVect.x + AspVect.y*AspVect.y)
+		);
+	
+	// if(AspVect.x != 0)
+	// cout << "Vettore dell'aspect = (" << AspVect.x << ", " << AspVect.y << ")" << endl;
 
 	if (HETEROGENEOUS_FUEL)
 	{

@@ -27,8 +27,8 @@ Fire::Fire(double Xi, double Yi)
         // Divided by 100 because the initial ellipse is needed to be small
         //x1 = cell->a * std::cos(i*M_PI/5)/GRID_SIDE;
         //y1 = cell->b * std::sin(i*M_PI/5)/GRID_SIDE;
-        x1 = cell->a * std::cos(i * M_PI / 4) / GRID_SIDE;
-        y1 = cell->b * std::sin(i * M_PI / 4) / GRID_SIDE;
+        x1 = std::cos(i * M_PI / 4) / GRID_SIDE;
+        y1 = std::sin(i * M_PI / 4) / GRID_SIDE;
 
         //x1 = x1 * std::cos(tetha) + y1 * std::sin(tetha);
         //y1 = y1 * std::cos(tetha) - x1 * std::sin(tetha);
@@ -160,9 +160,32 @@ void Fire::calcVelocity(int i)
         return;
     }
 
+
+    double aspect = M_PI_2;
+    if(std::abs(cella->AspVect.y) > 1E-7)
+    aspect = std::atan(cella->AspVect.x/cella->AspVect.y);
+
+    double tanSlo = std::sqrt(cella->AspVect.x*cella->AspVect.x + cella->AspVect.y*cella->AspVect.y);
+    double C = 7.47 * exp(-0.133 * pow(cella->FuelType[cella->fuelIndex]->params[2], 0.55));
+    double A = 5.275 * pow(cella->FuelType[cella->fuelIndex]->params[0], -0.3);
+    double B = 0.02526 * pow(cella->FuelType[cella->fuelIndex]->params[2], 0.54);
+    double theta = Forest->getTheta();
+
+    double MaxDirX, MaxDirY;
+
+    MaxDirX = C*std::pow(Forest->getU(), B)*std::sin(theta - aspect);
+    MaxDirY = C*std::pow(Forest->getU(), B)*std::cos(theta - aspect) + A*tanSlo*tanSlo;
+
+    if(std::abs(MaxDirY) > 1E-7)
+    theta = std::atan(MaxDirX/MaxDirY) - aspect - M_PI_2;
+    else 
+    theta = -aspect-M_PI_2;
+
+    cout << theta << endl;
+
     double At, Bt, num1, num2, den;
-    double Ct = std::cos(Forest->getTheta());
-    double St = std::sin(Forest->getTheta());
+    double Ct = std::cos(theta);
+    double St = std::sin(theta);
     Vertex diff = (Polygon[i + 1] - Polygon[i - 1]) / 2;
 
 
