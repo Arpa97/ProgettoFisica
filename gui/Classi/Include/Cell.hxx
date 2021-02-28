@@ -15,6 +15,7 @@ struct Cell
 {
 	int fuelIndex, fuelNumber;
 	double height;
+	Vertex AspVect;
 
 	double R;
 	double a, b, c;

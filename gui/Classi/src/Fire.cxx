@@ -165,15 +165,6 @@ void Fire::calcVelocity(int i)
     double St = std::sin(Forest->getTheta());
     Vertex diff = (Polygon[i + 1] - Polygon[i - 1]) / 2;
 
-    //Transformation from horizontal to surface plane
-    double slope = TOPOGRAPHIC_SLOPE;
-    double aspect = TOPOGRAPHIC_ASPECT;
-    double alpha = std::atan(diff.y / diff.x);
-    double delta = std::atan(std::tan(aspect - alpha) / std::cos(slope));
-    double D = std::pow(std::pow(diff.x, 2) + std::pow(diff.y, 2), 0.5) * std::cos(delta) * (1 - std::cos(slope));
-    diff.x += D * std::sin(aspect);
-    diff.y += D * std::cos(aspect);
-
 
     At = cella->a * (diff.x * St + diff.y * Ct);
     Bt = cella->b * (diff.y * St - diff.x * Ct);
@@ -188,11 +179,6 @@ void Fire::calcVelocity(int i)
 
     double Xt = num1 / den + cella->c * St;
     double Yt = num2 / den + cella->c * Ct;
-
-    //Transformation from surface to horizontal plane
-    double Dr = std::pow(std::pow(Xt, 2) + std::pow(Yt, 2), 2) * std::cos(aspect - std::atan(Yt / Xt)) * (1 - std::cos(slope));
-    Xt += Dr * std::sin(aspect);
-    Yt += Dr * std::cos(aspect);
 
     Polygon[i].dx = Xt;
     Polygon[i].dy = Yt;

@@ -257,5 +257,34 @@ void Environment::VisualizeGrid()
 	cout << grid[i][j]->fuelIndex;
 	else 
 	cout << grid[i][j]->fuelIndex << endl; 
+}
 
+void Environment::addMountain(Vertex & pos, double lar)
+{
+	int step = GRID_SIDE/CELL_SIDE;
+	double x0, y0, x1, y1;
+	double h0, h1, h2, h3;
+	double sigma = 2*lar;
+
+	for(int i = 0; i != step; i++)
+	for(int j = 0; j != step; j++)
+	{
+		// Compute the vertex coordinate of the cell 
+		// rescalated for using in the heigth function
+		x0 = CELL_SIDE*i - pos.x;
+		y0 = CELL_SIDE*j - pos.y;
+		x1 = CELL_SIDE*(i+1) - pos.x;
+		y1 = CELL_SIDE*(j+1) - pos.y;
+
+		// Compute of the heigth at cell borders
+		h0 = std::exp( -(x0*x0 + y0/y0)/sigma);
+		h1 = std::exp( -(x0*x0 + y1/y1)/sigma);
+		h2 = std::exp( -(x1*x1 + y0/y0)/sigma);
+		h3 = std::exp( -(x1*x1 + y1/y1)/sigma);
+
+		// Adding the heigth mean and the derivative value in every cell
+		grid[i][j]->height += (h0 + h1 + h2 + h3)/4;
+		grid[i][j]->AspVect.x += (h0 + h1 - h2 - h3)/(4*CELL_SIDE);
+		grid[i][j]->AspVect.y += (h3 + h1 - h0 - h2)/(4*CELL_SIDE);
+	}
 }
