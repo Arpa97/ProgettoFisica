@@ -25,6 +25,7 @@ struct Cell
 
 	//-----------Constructors-------------
 	Cell(int _fuelNumber, double _height = 0);
+	Cell(Cell& c);
 
 	//-----------Methods-------------
 	static void FillFuelType(double M_f);

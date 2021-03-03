@@ -35,7 +35,7 @@ QImage MainWindow::drawOriginalgrid(){
                  else if (Foresta->grid[i][j]->fuelNumber == 13) painter.setBrush(Qt::darkGreen);
                  else if (Foresta->grid[i][j]->fuelNumber == 7) painter.setBrush(Qt::gray);
                  else painter.setBrush(Qt::gray);
-                 painter.drawRect(i * drawSize, j * drawSize, drawSize, drawSize);
+                 painter.drawRect(i * drawSize, (GRID_SIDE * rescale) - (j + 1) * drawSize, drawSize, drawSize);
              }
          }
 
@@ -90,7 +90,7 @@ void MainWindow::createNewFire(double x, double y){
         x = rescale*5;
         y = rescale*5;
     }
-    Foresta->addFire(x/rescale,(GRID_SIDE - y/rescale));
+    Foresta->addFire(x / rescale, (GRID_SIDE - y / rescale));
     this->printFires();
 }
 
