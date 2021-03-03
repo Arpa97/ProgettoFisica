@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Definitions.hxx"
+#include <vector>
 
 struct Fuel
 {
@@ -18,16 +19,19 @@ struct Fuel
 	static constexpr double S_e = 0.010;
 	static constexpr double rho_p = 32;
 
-	const double w_0;
-	const double SAV;
+	std::vector<std::vector<double>> w_0;
+	const std::vector<std::vector<double>> SAV;
 	const double delta;
 	const double M_x;
+	const char type;
 
-	//Reduced rate of speed, calculated only via fuel parameters and moisture content. 
+	//Reduced rate of spread, calculated only via fuel parameters and moisture content. 
 	double R0;
+	double params[4];
 
 	//-----------Constructors-------------
-	Fuel(double _w_0, double _SAV, double _delta, double _M_x) : w_0(_w_0), SAV(_SAV), delta (_delta), M_x(_M_x) {}
+	Fuel(std::vector<std::vector<double>> _w_0, std::vector<std::vector<double>> _SAV, double _delta, double _M_x, char _type)
+		: w_0(_w_0), SAV(_SAV), delta (_delta), M_x(_M_x), type(_type) {}
 
 	//-----------Methods-------------
 	//Compute R0 (reduced R, cannot change run-time) given the moisture content and the fuel proprieties.

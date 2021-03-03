@@ -18,11 +18,15 @@ Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 	M_f = MOISTURE_CONTENT;
 	Cell::FillFuelType(M_f);
 	nullFuel->setR(0);
+	Fire::setEnvironment(this);
 
 	int step = GRID_SIDE / CELL_SIDE;	
 	int fuelNumber, number;
 	double validator;
-	srand(static_cast<unsigned int>(std::time(NULL)));
+	if (RANDOM)
+	{
+		srand(static_cast<unsigned int>(std::time(NULL)));
+	}
 	//srand(0);
 
 	grid = new Cell * *[step];
@@ -45,8 +49,7 @@ Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 			grid[i][j] = new Cell(fuelNumber, 0);
 			grid[i][j]->setR(U);
 		}
-	}
-	
+	}	
 }
 
 
@@ -57,7 +60,6 @@ void Environment::advance(double dt)
 	double tfinale = time + dt;
 	int numero = 0;
 
-	//std::cerr << "[";
 	while(time < tfinale)
 	{
 		if (timeHeap.empty())
@@ -89,8 +91,6 @@ void Environment::advance(double dt)
 
 		calcAll();		
 	}
-	//std::cerr << '\n';
-	//std::cout << "Time : " << time << '\t' << "Avanzamenti: " << numero << "\tNumero punti:" << wildfire[0]->Polygon.size() << '\n';
 }
 
 
@@ -107,7 +107,6 @@ void Environment::advance()
 	//	wildfire[i]->Propagate(dt);
 	//}
 
-	//std::cerr << "Time : " << time << '\n';
 }
 
 void Environment::advance_withoutHeap()
@@ -120,10 +119,7 @@ void Environment::advance_withoutHeap()
 		wildfire[i]->Propagate_withoutHeap(dt);
 	}
 
-	//std::cerr << "Time : " << time << '\n';
-
 }
-
 
 
 Cell* Environment::getCell(int cellIndex)
@@ -139,59 +135,32 @@ Cell* Environment::getCell(int cellIndex)
 	return grid[i][j];
 }
 
-
 Cell* Environment::getCell(double x, double y)
 {
 	return getCell(findCell(x, y));
 }
-
 
 Cell * Environment::getCell(Vertex & v)
 {
 	return getCell(findCell(v));
 }
 
-
-
 int Environment::findCell(double& x, double& y)
 {
-	// Returning the fuel of type 0 if the vertex croos the forest
+	// Returning the fuel of type 0 if the vertex cross the forest
 	if (x == GRID_SIDE || y == GRID_SIDE || x == 0 || y == 0)
 	{
-		return -1;
-	}
-	
-	if (x < 0) 
-	{
-		x = 0;
-		return -1;
-	}
-	if (y < 0)
-	{
-		y = 0;
-		return -1;
-	}
-	if (x > GRID_SIDE)
-	{
-		x = GRID_SIDE;
-		return -1;
-	}
-	if (y > GRID_SIDE)
-	{
-		y = GRID_SIDE;
 		return -1;
 	}
 
 	int step = GRID_SIDE / CELL_SIDE;
 
-	int i = static_cast<int>(y / CELL_SIDE);
-	int j = static_cast<int>(x / CELL_SIDE);
+	int i = static_cast<int>(x / CELL_SIDE);
+	int j = static_cast<int>(y / CELL_SIDE);
 
 	int cellIndex = step * i + j;
 	return cellIndex;
 }
-
-
 
 int Environment::findCell(Vertex& v)
 {
@@ -200,14 +169,12 @@ int Environment::findCell(Vertex& v)
 }
 
 
-
 void Environment::addFire(double Xi, double Yi)
 {
 	wildfire.push_back(
-		new Fire(this, Xi, Yi)
+		new Fire(Xi, Yi)
 	);
 }
-
 
 
 void Environment::setU(double _U)
@@ -257,12 +224,12 @@ ciclicVector<Vertex> Environment::getPolygon(int i)
 
 void Environment::calcAll()
 {
-	// First calcel all the old entries
+	// First cancel all the old entries
 	timeHeap = PriorityQueue();
 	
 	// Recalculate all propagation for all vertices
 	for(int i = 0; i != wildfire.size(); i++)
-	wildfire[i]->calcPropagations();
+	wildfire[i]->calcVelocities();
 
 	// Recalculate the times for all vertices
 	for(int i = 0; i != wildfire.size(); i++)

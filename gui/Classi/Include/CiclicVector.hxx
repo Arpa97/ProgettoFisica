@@ -13,6 +13,7 @@ template<typename T>
 struct ciclicVector : public std::vector<T>
 {
     ciclicVector(int N): std::vector<T>(N) {}
+    ciclicVector(size_t N) : std::vector<T>(N) {}
     ciclicVector() : std::vector<T>() {}
 
     //-------------Methods--------------
@@ -22,7 +23,7 @@ struct ciclicVector : public std::vector<T>
     {
         auto it = this->begin();
 
-        if (n < 0) n = this->size() + n;
+        if (n < 0) n = (int)this->size() + n;
 
         return *(it + n % this->size());
     }
@@ -31,7 +32,7 @@ struct ciclicVector : public std::vector<T>
     {
         auto it = this->begin();
 
-        if (n < 0) n = this->size() + n;
+        if (n < 0) n = (int)this->size() + n;
 
         return *(it + n % this->size());
     }

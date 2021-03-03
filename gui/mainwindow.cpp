@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 QImage MainWindow::drawOriginalgrid(){
-     QImage tmp = ui->mainPicture->pixmap(Qt::ReturnByValue).toImage();
+     QImage tmp = ui->mainPicture->pixmap()->toImage();
      QPainter painter(&tmp);
      QPen paintpen(Qt::black);
 
@@ -31,11 +31,11 @@ QImage MainWindow::drawOriginalgrid(){
          {
              for (int j = 0; j != step; j++)
              {
-                 if (Foresta->grid[i][j]->fuelIndex == 1) painter.setBrush(Qt::green);
-                 else if (Foresta->grid[i][j]->fuelIndex == 13) painter.setBrush(Qt::darkGreen);
-                 else if (Foresta->grid[i][j]->fuelIndex == 7) painter.setBrush(Qt::gray);
+                 if (Foresta->grid[i][j]->fuelNumber == 1) painter.setBrush(Qt::green);
+                 else if (Foresta->grid[i][j]->fuelNumber == 13) painter.setBrush(Qt::darkGreen);
+                 else if (Foresta->grid[i][j]->fuelNumber == 7) painter.setBrush(Qt::gray);
                  else painter.setBrush(Qt::gray);
-                 painter.drawRect(i * drawSize, j * drawSize, drawSize, drawSize);
+                 painter.drawRect(i * drawSize, (GRID_SIDE * rescale) - (j + 1) * drawSize, drawSize, drawSize);
              }
          }
 
@@ -83,7 +83,14 @@ void MainWindow::on_addFireButton_clicked()
 }
 
 void MainWindow::createNewFire(double x, double y){
-    Foresta->addFire(x/rescale,(GRID_SIDE - y/rescale));
+    if (FIXED_FIRE)
+    {
+        //x = rescale * GRID_SIDE / 2;
+        //y = rescale * GRID_SIDE / 2;
+        x = rescale*5;
+        y = rescale*5;
+    }
+    Foresta->addFire(x / rescale, (GRID_SIDE - y / rescale));
     this->printFires();
 }
 

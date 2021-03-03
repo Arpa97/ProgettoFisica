@@ -125,42 +125,59 @@ Vertex WaveFront::findIntersection(int start)
                 if (dSottoSegmento == cSottoSegmento)
                     continue;
 
-                double m2 = (d.y - c.y) / (d.x - c.x);
-                double q2 = d.y - m2 * d.x;
+                if (c.x == d.x)
+                {
+                    double x = c.x;
+                    double y = m1 * x + q1;
 
-                double diff = m1 - m2;
+                    // Add the point
+                    Point = Vertex(x, y);
 
-                // If lines are parallel skip this stage
-                if (std::abs(diff) < 0.0001)
-                    continue;
+                    // Index of the point where the intersection is
+                    Point.cellIndex = i + 1;
 
-                // Find intersection
-                double x = (q2 - q1) / diff;
+                    // Index of the point where the intersection end
+                    Point.dx = j + 1;
 
-                //double x1min = c.x < d.x ? c.x : d.x;
-                //double x1max = c.x > d.x ? c.x : d.x;
-                //double y1min = c.y < d.y ? c.y : d.y;
-                //double y1max = c.y > d.y ? c.y : d.y;
+                    return Point;
+                }
 
-                // check if the point is inside the segment
-                if (
-                    (x >= xmax) || (x <= xmin)
-                    )continue;
+                else
+                {
+                    double m2 = (d.y - c.y) / (d.x - c.x);
+                    double q2 = d.y - m2 * d.x;
 
-                double y = m1 * x + q1;
+                    double diff = m1 - m2;
 
+                    // If lines are parallel skip this stage
+                    if (std::abs(diff) < 0.0001)
+                        continue;
 
-                if (x < -50 || x > 5000 || y < -50 || y > 5000) throw;
+                    // Find intersection
+                    double x = (q2 - q1) / diff;
 
-                // Add the point
-                Point = Vertex(x, y);
-                // Index of the point where the intersection is
-                Point.cellIndex = i + 1;
+                    //double x1min = c.x < d.x ? c.x : d.x;
+                    //double x1max = c.x > d.x ? c.x : d.x;
+                    //double y1min = c.y < d.y ? c.y : d.y;
+                    //double y1max = c.y > d.y ? c.y : d.y;
 
-                // Index of the point where the intersection end
-                Point.dx = j + 1;
+                    // check if the point is inside the segment
+                    if (
+                        (x >= xmax) || (x <= xmin)
+                        )continue;
 
-                return Point;
+                    double y = m1 * x + q1;
+
+                    // Add the point
+                    Point = Vertex(x, y);
+                    // Index of the point where the intersection is
+                    Point.cellIndex = i + 1;
+
+                    // Index of the point where the intersection end
+                    Point.dx = j + 1;
+
+                    return Point;
+                }
             }
        
         //if a.x == b.x (points on the border)line is of the type x=k
@@ -191,13 +208,9 @@ Vertex WaveFront::findIntersection(int start)
                 double x = a.x;
                 double y = m2 * x + q2;
 
-                //std::cerr << x << ' ' << y << '\n';
-
                 if(
                     (y > ymax) || (y < ymin)
                 )continue;
-
-                if (x < -50 || x > 5000 || y < -50 || y > 5000) throw;
 
                 // Add the point
                 Point = Vertex(x, y);

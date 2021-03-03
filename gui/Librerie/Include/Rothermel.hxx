@@ -1,6 +1,6 @@
 /*****************************************************************************************************
  *
- * Function that compute the rate of speed (RoS or R) of a 
+ * Function that compute the rate of spread (RoS or R) of a 
  * surface fire for a specific type of fuel, based on the
  * Rothermel spread model.
  * 
