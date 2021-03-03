@@ -233,12 +233,12 @@ void Fire::calcTime(int i)
     int step = GRID_SIDE / CELL_SIDE;
     int _j = Polygon[i].cellIndex % step;
     int _i = (Polygon[i].cellIndex - _j) / step;
-    if (dx > 0) _j += 1;
-    if (dy > 0) _i += 1;
+    if (dx > 0) _i += 1;
+    if (dy > 0) _j += 1;
 
     //Position of the cell borders in the direction in which the vertex is moving
-    double cellX = _j * CELL_SIDE + 0.0001;
-    double cellY = _i * CELL_SIDE + 0.0001;
+    double cellX = _i * CELL_SIDE + 0.0001;
+    double cellY = _j * CELL_SIDE + 0.0001;
 
     //Subtract a little value to make sure that the vertex changes cell and does not remain on the border
     if (dx < 0) cellX -= 0.0001;

@@ -46,6 +46,17 @@ Cell::Cell(int _fuelNumber, double _height) : fuelNumber(_fuelNumber), height(_h
 	}
 }
 
+Cell::Cell(Cell&& c)
+{
+	fuelIndex = c.fuelIndex;
+	fuelNumber = c.fuelNumber;
+	height = c.height;
+	R = c.R;
+	a = c.a;
+	b = c.b;
+	c = c.c;
+}
+
 
 void Cell::FillFuelType(double M_f)
 {

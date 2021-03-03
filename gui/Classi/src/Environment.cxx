@@ -49,8 +49,7 @@ Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 			grid[i][j] = new Cell(fuelNumber, 0);
 			grid[i][j]->setR(U);
 		}
-	}
-	
+	}	
 }
 
 
@@ -123,7 +122,6 @@ void Environment::advance_withoutHeap()
 }
 
 
-
 Cell* Environment::getCell(int cellIndex)
 {
 	if (cellIndex == -1)
@@ -137,23 +135,19 @@ Cell* Environment::getCell(int cellIndex)
 	return grid[i][j];
 }
 
-
 Cell* Environment::getCell(double x, double y)
 {
 	return getCell(findCell(x, y));
 }
-
 
 Cell * Environment::getCell(Vertex & v)
 {
 	return getCell(findCell(v));
 }
 
-
-
 int Environment::findCell(double& x, double& y)
 {
-	// Returning the fuel of type 0 if the vertex croos the forest
+	// Returning the fuel of type 0 if the vertex cross the forest
 	if (x == GRID_SIDE || y == GRID_SIDE || x == 0 || y == 0)
 	{
 		return -1;
@@ -161,14 +155,12 @@ int Environment::findCell(double& x, double& y)
 
 	int step = GRID_SIDE / CELL_SIDE;
 
-	int i = static_cast<int>(y / CELL_SIDE);
-	int j = static_cast<int>(x / CELL_SIDE);
+	int i = static_cast<int>(x / CELL_SIDE);
+	int j = static_cast<int>(y / CELL_SIDE);
 
 	int cellIndex = step * i + j;
 	return cellIndex;
 }
-
-
 
 int Environment::findCell(Vertex& v)
 {
@@ -177,14 +169,12 @@ int Environment::findCell(Vertex& v)
 }
 
 
-
 void Environment::addFire(double Xi, double Yi)
 {
 	wildfire.push_back(
 		new Fire(Xi, Yi)
 	);
 }
-
 
 
 void Environment::setU(double _U)
