@@ -44,7 +44,7 @@ Cell::Cell(int _fuelNumber, double _height) : fuelNumber(_fuelNumber), height(_h
 	}
 }
 
-Cell::Cell(Cell&& c)
+Cell::Cell(Cell& c)
 {
 	fuelIndex = c.fuelIndex;
 	fuelNumber = c.fuelNumber;
