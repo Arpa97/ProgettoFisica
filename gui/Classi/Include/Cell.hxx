@@ -16,7 +16,7 @@ struct Cell
 {
 	int fuelIndex, fuelNumber;
 	double height;
-	Vertex AspVect;
+	double slope[2];
 
 	// Parameters for the advance method
 	double R, maxTheta;

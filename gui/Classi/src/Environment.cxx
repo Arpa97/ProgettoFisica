@@ -283,8 +283,8 @@ void Environment::addMountain(double h, Vertex & pos, double lar)
 
 		// Adding the heigth mean and the derivative value in every cell
 		grid[i][j]->height += (h0 + h1 + h2 + h3)/4;
-		grid[i][j]->AspVect.x += (h0 + h1 - h2 - h3)/(2*CELL_SIDE);
-		grid[i][j]->AspVect.y += (h0 + h2 - h1 - h3)/(2*CELL_SIDE);
+		grid[i][j]->slope[0] += (h0 + h1 - h2 - h3)/(2*CELL_SIDE);
+		grid[i][j]->slope[1] += (h0 + h2 - h1 - h3)/(2*CELL_SIDE);
 
 		grid[i][j]->setR(U, theta);
 	}
