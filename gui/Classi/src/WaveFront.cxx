@@ -10,6 +10,7 @@ WaveFront::WaveFront(double x, double y): Polygon(1)
 {
     Polygon[0].x = x, 
     Polygon[0].y = y;
+    area = 0;
 }
 
 WaveFront::WaveFront(Vertex * ver, int N): Polygon(N) 
@@ -18,9 +19,10 @@ WaveFront::WaveFront(Vertex * ver, int N): Polygon(N)
     {
         Polygon[i] = ver[i];
     }
+    area = 0;
 }
 
-WaveFront::WaveFront(const WaveFront & wf): Polygon(wf.Polygon) {}
+WaveFront::WaveFront(const WaveFront & wf): Polygon(wf.Polygon), area(wf.area) {}
 
 
 //--------------Methods-----------------
@@ -226,4 +228,14 @@ Vertex WaveFront::findIntersection(int start)
     }
     Point.cellIndex = -1;
     return Point;
+}
+
+void WaveFront::calcArea()
+{
+    area = 0;
+    for (int i = 1; i <= Polygon.size(); i++)
+    {
+        area += Polygon[i].x * (Polygon[i + 1].y - Polygon[i - 1].y);
+    }
+    area /= 2;
 }
