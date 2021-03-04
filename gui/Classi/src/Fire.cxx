@@ -101,6 +101,7 @@ void Fire::Propagate(double dt)
     checkEdges();
     checkDistance();
     checkBorder();
+    calcArea();
 }
 
 void Fire::Propagate_withoutHeap(double dt)
