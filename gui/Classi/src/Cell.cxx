@@ -116,7 +116,7 @@ void Cell::FillFuelType(double M_f)
 
 
 
-void Cell::setR(double U)
+void Cell::setR(double U, double theta)
 {
 	if (fuelIndex == 0)
 	{
@@ -124,24 +124,26 @@ void Cell::setR(double U)
 		return;
 	}
 
-	double R0 = FuelType[fuelIndex]->R0;
-	double phi_w = FuelType[fuelIndex]->getWindFactor(U);
-	double phi_s = FuelType[fuelIndex]->getSlopeFactor(
-		std::sqrt(AspVect.x*AspVect.x + AspVect.y*AspVect.y)
-		);
-	
-	// if(AspVect.x != 0)
-	// cout << "Vettore dell'aspect = (" << AspVect.x << ", " << AspVect.y << ")" << endl;
+	// Putting the wind angle in the direction where it came for convention
+	theta += M_PI; 
 
-	if (HETEROGENEOUS_FUEL)
-	{
-		R = Rothermel2_R(R0, phi_w, phi_s);
-	}
-	else
-	{
-		R = Rothermel_R(R0, phi_w, phi_s);
-	}
-	R *= 0.00508;							//Conversion: 1 ft/min = 0.00508 m/s
+	// Computing max direction
+	double R0 = FuelType[fuelIndex]->R0;
+	double aspect = std::atan2(AspVect.x, AspVect.y);
+	double tanSlo = std::sqrt(AspVect.x*AspVect.x + AspVect.y*AspVect.y);
+    double C = 7.47 * exp(-0.133 * pow(FuelType[fuelIndex]->params[2], 0.55));
+    double A = 5.275 * pow(FuelType[fuelIndex]->params[0], -0.3);
+    double B = 0.02526 * pow(FuelType[fuelIndex]->params[2], 0.54);
+	
+	double MaxDirX, MaxDirY;
+
+	MaxDirX = C*std::pow(U, B)*std::sin(theta - aspect);
+    MaxDirY = C*std::pow(U, B)*std::cos(theta - aspect) + A*tanSlo*tanSlo;
+
+	// storing the max direction angle and ros
+	maxTheta = std::atan2(MaxDirX, MaxDirY) + aspect + M_PI;
+	R = R0*(1 + std::sqrt(std::pow(MaxDirX, 2) + std::pow(MaxDirY, 2))) * 0.00508;
+
 	updateEllipseParams(U);
 }
 

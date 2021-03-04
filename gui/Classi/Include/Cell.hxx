@@ -18,7 +18,8 @@ struct Cell
 	double height;
 	Vertex AspVect;
 
-	double R;
+	// Parameters for the advance method
+	double R, maxTheta;
 	double a, b, c;
 
 	// The +1 is for counting the ground with R = 0
@@ -31,7 +32,7 @@ struct Cell
 
 	//-----------Methods-------------
 	static void FillFuelType(double M_f);
-	void setR(double U);
+	void setR(double U, double theta = 0);
 	void updateEllipseParams(double U);
 
 };

@@ -47,7 +47,7 @@ Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 			} while (validator > fuelPercentages[number][1]);
 
 			grid[i][j] = new Cell(fuelNumber, 0);
-			grid[i][j]->setR(U);
+			grid[i][j]->setR(U, theta);
 		}
 	}	
 }
@@ -185,7 +185,7 @@ void Environment::setU(double _U)
 	{
 		for (int j = 0; j != step; j++)
 		{
-			grid[i][j]->setR(U);
+			grid[i][j]->setR(U, theta);
 		}
 	}
 
@@ -195,6 +195,15 @@ void Environment::setU(double _U)
 
 void Environment::setTheta(double _theta){
 	theta = _theta;
+
+	int step = GRID_SIDE / CELL_SIDE;
+	for (int i = 0; i != step; i++)
+	{
+		for (int j = 0; j != step; j++)
+		{
+			grid[i][j]->setR(U, theta);
+		}
+	}
 
 	// Recalculate all timesteps
 	calcAll();
@@ -272,14 +281,12 @@ void Environment::addMountain(double h, Vertex & pos, double lar)
 		h2 = h*std::exp( -(x1*x1 + y0*y0)/sigma);
 		h3 = h*std::exp( -(x1*x1 + y1*y1)/sigma);
 
-		// cout << h0 << ", " << h1 << ", " << h2 << ", " << h3 << endl;
-
 		// Adding the heigth mean and the derivative value in every cell
 		grid[i][j]->height += (h0 + h1 + h2 + h3)/4;
 		grid[i][j]->AspVect.x += (h0 + h1 - h2 - h3)/(2*CELL_SIDE);
 		grid[i][j]->AspVect.y += (h0 + h2 - h1 - h3)/(2*CELL_SIDE);
 
-		grid[i][j]->setR(U);
+		grid[i][j]->setR(U, theta);
 	}
 
 	calcAll();
