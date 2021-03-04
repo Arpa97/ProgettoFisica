@@ -160,32 +160,50 @@ void Fire::calcVelocity(int i)
         return;
     }
 
-
-    double aspect = M_PI_2;
-    if(std::abs(cella->AspVect.y) > 1E-7)
-    aspect = std::atan(cella->AspVect.x/cella->AspVect.y);
-
+    double aspect;
+    //if (std::abs(cella->AspVect.y) > 1E-7)
+    //{
+    //    aspect = std::atan(cella->AspVect.x / cella->AspVect.y);
+    //}
+    //else if (cella->AspVect.x > 0)
+    //{
+    //    aspect = -M_PI_2;
+    //}
+    //else
+    //{
+    //    aspect = M_PI_2;
+    //}
+    aspect = std::atan2(cella->AspVect.x, cella->AspVect.y);
+    
     double tanSlo = std::sqrt(cella->AspVect.x*cella->AspVect.x + cella->AspVect.y*cella->AspVect.y);
     double C = 7.47 * exp(-0.133 * pow(cella->FuelType[cella->fuelIndex]->params[2], 0.55));
     double A = 5.275 * pow(cella->FuelType[cella->fuelIndex]->params[0], -0.3);
     double B = 0.02526 * pow(cella->FuelType[cella->fuelIndex]->params[2], 0.54);
-    double theta = Forest->getTheta();
+    double U = Forest->getU();
+    double theta = -Forest->getTheta();     //convention: theta point the direction from which the wind is coming
 
     double MaxDirX, MaxDirY;
+    double maxtheta;
 
-    MaxDirX = C*std::pow(Forest->getU(), B)*std::sin(theta - aspect);
-    MaxDirY = C*std::pow(Forest->getU(), B)*std::cos(theta - aspect) + A*tanSlo*tanSlo;
+    MaxDirX = C*std::pow(U, B)*std::sin(theta - aspect);
+    MaxDirY = C*std::pow(U, B)*std::cos(theta - aspect) + A*tanSlo*tanSlo;
 
-    if(std::abs(MaxDirY) > 1E-7)
-    theta = std::atan(MaxDirX/MaxDirY) - aspect - M_PI_2;
-    else 
-    theta = -aspect-M_PI_2;
+    //if(std::abs(MaxDirY) > 1E-7)
+    //theta = std::atan(MaxDirX/MaxDirY) - aspect - M_PI_2;
+    //else 
+    //theta = -aspect-M_PI_2;
 
-    cout << theta << endl;
+    //atan2 per individuare il quadrante giusto. l'angolo in output da atan2 è l'angolo rispetto all'asse u (la y) crescente in senso orario. 
+    //bisogna poi ribaltarlo per ottenere l'angolo (della direzione massima in cui tira, senza -) rispetto a y
+    maxtheta = std::atan2(MaxDirX, MaxDirY) + aspect - M_PI;
+
+    //cout << theta << endl;
+    cella->R = cella->FuelType[cella->fuelIndex]->R0 * (1 + std::sqrt(std::pow(MaxDirX, 2) + std::pow(MaxDirY, 2))) * 0.00508;
+    cella->updateEllipseParams(U);
 
     double At, Bt, num1, num2, den;
-    double Ct = std::cos(theta);
-    double St = std::sin(theta);
+    double Ct = std::cos(maxtheta);
+    double St = std::sin(maxtheta);
     Vertex diff = (Polygon[i + 1] - Polygon[i - 1]) / 2;
 
 
@@ -196,7 +214,7 @@ void Fire::calcVelocity(int i)
     num2 = cella->b * Bt * Ct - cella->a * At * St;
 
     den = std::sqrt(At * At + Bt * Bt);
-
+    
     if (num1 / den + cella->c * St > 1e3 || num1 / den + cella->c * St < -1 || num2 / den + cella->c * Ct >1e3 || num2 / den + cella->c * Ct < -1)
         throw;
 

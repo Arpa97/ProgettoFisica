@@ -275,11 +275,11 @@ void Environment::addMountain(double h, Vertex & pos, double lar)
 		// cout << h0 << ", " << h1 << ", " << h2 << ", " << h3 << endl;
 
 		// Adding the heigth mean and the derivative value in every cell
-		grid[j][i]->height += (h0 + h1 + h2 + h3)/4;
-		grid[j][i]->AspVect.x += (h0 + h1 - h2 - h3)/(4*CELL_SIDE);
-		grid[j][i]->AspVect.y += (h3 + h1 - h0 - h2)/(4*CELL_SIDE);
+		grid[i][j]->height += (h0 + h1 + h2 + h3)/4;
+		grid[i][j]->AspVect.x += (h0 + h1 - h2 - h3)/(2*CELL_SIDE);
+		grid[i][j]->AspVect.y += (h0 + h2 - h1 - h3)/(2*CELL_SIDE);
 
-		grid[j][i]->setR(U);
+		grid[i][j]->setR(U);
 	}
 
 	calcAll();

@@ -10,7 +10,7 @@
 #define MOISTURE_CONTENT 0.1					// fraction. Not changing run-time
 
 #define CELL_SIDE 10							// m. Length of the cell (square) side. Cannot be chosen by user.
-#define GRID_SIDE 100							// m. Length of the grid size. Must be a multiple of CELL_SIDE. Can be chosen by user.
+#define GRID_SIDE 400							// m. Length of the grid size. Must be a multiple of CELL_SIDE. Can be chosen by user.
 #define MAX_DISTANCE 5							// m. Maximum distance between two vertices of the fire polygon.
 
 #define N_FUEL_TYPES 53							// Number of different fuel types.

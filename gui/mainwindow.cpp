@@ -17,10 +17,10 @@ MainWindow::MainWindow(QWidget *parent)
     rescale = ui->mainPicture->width() / (GRID_SIDE + .0);
     original = drawOriginalgrid();
 
-    Vertex pos(50, 30), pos1(50, 70);
+    Vertex pos(75, 75), pos1(50, 70);
 
-    Foresta->addMountain(10, pos, 100);
-    Foresta->addMountain(10, pos1, 100);
+    Foresta->addMountain(10, pos, 1000);
+    //Foresta->addMountain(10, pos1, 100);
 }
 
 QImage MainWindow::drawOriginalgrid(){
