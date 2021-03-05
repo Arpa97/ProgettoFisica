@@ -12,12 +12,13 @@ MainWindow::MainWindow(QWidget *parent)
         double (*composizione)[2] = new double[3][2] { {1, .5}, {13, .2}, {7, .3} };
         Foresta = new Environment(composizione, 3);
     }else {
-        Foresta = new Environment();
+        Foresta = new Environment(nullptr);
     }
     rescale = ui->mainPicture->width() / (GRID_SIDE + .0);
     original = drawOriginalgrid();
 
-    Vertex pos(75, 75), pos1(50, 70);
+    double pos[2]{ 75, 75 }, 
+        pos1[2]{ 50, 70 };
 
     Foresta->addMountain(10, pos, 1000);
     //Foresta->addMountain(10, pos1, 100);
@@ -57,7 +58,7 @@ void MainWindow::updateAdvance(){
     ncicli+=ADVANCE_DT;
     Foresta->advance(ADVANCE_DT);
     this->printFires();
-    qDebug() << Foresta->wildfire[0]->area;
+    //qDebug() << Foresta->wildfire[0]->area;
 }
 
 void MainWindow::on_singleAdvanceButton_clicked()

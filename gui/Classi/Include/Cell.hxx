@@ -35,4 +35,5 @@ struct Cell
 	void setR(double U, double theta = 0);
 	void updateEllipseParams(double U);
 
+	int numberToIndex(int fuelNumber);
 };

@@ -27,7 +27,6 @@ Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 	{
 		srand(static_cast<unsigned int>(std::time(NULL)));
 	}
-	//srand(0);
 
 	grid = new Cell * *[step];
 
@@ -51,7 +50,6 @@ Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 		}
 	}	
 }
-
 
 
 void Environment::advance(double dt)
@@ -258,7 +256,7 @@ void Environment::VisualizeGrid()
 	cout << grid[i][j]->fuelIndex << endl; 
 }
 
-void Environment::addMountain(double h, Vertex & pos, double lar)
+void Environment::addMountain(double h, double pos[2], double lar)
 {
 	int step = GRID_SIDE/CELL_SIDE;
 	double x0, y0, x1, y1;
@@ -270,10 +268,10 @@ void Environment::addMountain(double h, Vertex & pos, double lar)
 	{
 		// Compute the vertex coordinate of the cell 
 		// rescalated for using in the heigth function
-		x0 = CELL_SIDE*i - pos.x;
-		y0 = CELL_SIDE*j - pos.y;
-		x1 = CELL_SIDE*(i+1) - pos.x;
-		y1 = CELL_SIDE*(j+1) - pos.y;
+		x0 = CELL_SIDE*i - pos[0];
+		y0 = CELL_SIDE*j - pos[1];
+		x1 = CELL_SIDE*(i+1) - pos[0];
+		y1 = CELL_SIDE*(j+1) - pos[1];
 
 		// Compute of the heigth at cell borders
 		h0 = h*std::exp( -(x0*x0 + y0*y0)/sigma);
@@ -292,10 +290,11 @@ void Environment::addMountain(double h, Vertex & pos, double lar)
 	calcAll();
 }
 
-void Environment::setCellType(Vertex &pos, int type)
+void Environment::setCellType(double& x, double& y, int fNumber)
 {
-	Cell * cella = getCell(pos);
+	Cell* cella = getCell(x, y);
 
-	cella->fuelIndex = type;
+	cella->fuelNumber = fNumber;
+	cella->fuelIndex = cella->numberToIndex(fNumber);
 	cella->setR(U, theta);
 }

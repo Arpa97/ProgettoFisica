@@ -16,34 +16,7 @@ Fuel* Cell::FuelType[N_FUEL_TYPES + 1];
 
 Cell::Cell(int _fuelNumber, double _height) : fuelNumber(_fuelNumber), height(_height) 
 {
-	if (fuelNumber < 100)
-	{
-		fuelIndex = fuelNumber;
-	}
-	else if (fuelNumber < 110)
-	{
-		fuelIndex = fuelNumber - 88;
-	}
-	else if (fuelNumber < 125)
-	{
-		fuelIndex = fuelNumber - 99;
-	}
-	else if (fuelNumber < 150)
-	{
-		fuelIndex = fuelNumber - 115;
-	}
-	else if (fuelNumber < 170)
-	{
-		fuelIndex = fuelNumber - 126;
-	}
-	else if (fuelNumber < 190)
-	{
-		fuelIndex = fuelNumber - 141;
-	}
-	else
-	{
-		fuelIndex = fuelNumber - 152;
-	}
+	fuelIndex = numberToIndex(fuelNumber);
 	slope[0] = 0;
 	slope[1] = 0;
 }
@@ -59,6 +32,41 @@ Cell::Cell(Cell& c)
 	slope[0] = c.slope[0];
 	slope[1] = c.slope[1];
 	this->c = c.c;
+}
+
+int Cell::numberToIndex(int fuelNumber)
+{
+	int fIndex;
+
+	if (fuelNumber < 100)
+	{
+		fIndex = fuelNumber;
+	}
+	else if (fuelNumber < 110)
+	{
+		fIndex = fuelNumber - 88;
+	}
+	else if (fuelNumber < 125)
+	{
+		fIndex = fuelNumber - 99;
+	}
+	else if (fuelNumber < 150)
+	{
+		fIndex = fuelNumber - 115;
+	}
+	else if (fuelNumber < 170)
+	{
+		fIndex = fuelNumber - 126;
+	}
+	else if (fuelNumber < 190)
+	{
+		fIndex = fuelNumber - 141;
+	}
+	else
+	{
+		fIndex = fuelNumber - 152;
+	}
+	return fIndex;
 }
 
 
@@ -117,7 +125,6 @@ void Cell::FillFuelType(double M_f)
 	FuelType[0] = new Fuel({}, {}, 0, 0, 'S');
 	FuelType[0]->R0 = 0;
 }
-
 
 
 void Cell::setR(double U, double theta)
