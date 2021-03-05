@@ -44,6 +44,8 @@ Cell::Cell(int _fuelNumber, double _height) : fuelNumber(_fuelNumber), height(_h
 	{
 		fuelIndex = fuelNumber - 152;
 	}
+	slope[0] = 0;
+	slope[1] = 0;
 }
 
 Cell::Cell(Cell& c)
@@ -54,7 +56,9 @@ Cell::Cell(Cell& c)
 	R = c.R;
 	a = c.a;
 	b = c.b;
-	c = c.c;
+	slope[0] = c.slope[0];
+	slope[1] = c.slope[1];
+	this->c = c.c;
 }
 
 
@@ -125,20 +129,21 @@ void Cell::setR(double U, double theta)
 	}
 
 	// Putting the wind angle in the direction where it came for convention
-	theta += M_PI; 
+	theta += M_PI;
+	double Uft = U / 0.00508;
 
 	// Computing max direction
 	double R0 = FuelType[fuelIndex]->R0;
-	double aspect = std::atan2(AspVect.x, AspVect.y);
-	double tanSlo = std::sqrt(AspVect.x*AspVect.x + AspVect.y*AspVect.y);
+	double aspect = std::atan2(slope[0], slope[1]);
+	double tanSlo = std::sqrt(slope[0]*slope[0] + slope[1]*slope[1]);
     double C = 7.47 * exp(-0.133 * pow(FuelType[fuelIndex]->params[2], 0.55));
     double A = 5.275 * pow(FuelType[fuelIndex]->params[0], -0.3);
     double B = 0.02526 * pow(FuelType[fuelIndex]->params[2], 0.54);
 	
 	double MaxDirX, MaxDirY;
 
-	MaxDirX = C*std::pow(U, B)*std::sin(theta - aspect);
-    MaxDirY = C*std::pow(U, B)*std::cos(theta - aspect) + A*tanSlo*tanSlo;
+	MaxDirX = C*std::pow(Uft, B)*std::sin(theta - aspect);
+    MaxDirY = C*std::pow(Uft, B)*std::cos(theta - aspect) + A*tanSlo*tanSlo;
 
 	// storing the max direction angle and ros
 	maxTheta = std::atan2(MaxDirX, MaxDirY) + aspect + M_PI;
