@@ -291,3 +291,11 @@ void Environment::addMountain(double h, Vertex & pos, double lar)
 
 	calcAll();
 }
+
+void Environment::setCellType(Vertex &pos, int type)
+{
+	Cell * cella = getCell(pos);
+
+	cella->fuelIndex = type;
+	cella->setR(U, theta);
+}

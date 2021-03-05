@@ -56,11 +56,15 @@ public:
 	// Used to add a fire in a specific point defined by xi e yi
 	void addFire(double Xi, double Yi);
 
+	// Methods for the wind setting and getting
 	void setU(double _U);
 	void setTheta(double _theta);
 	double getU() const;
 	double getTheta() const;
 	double getM_f() const;
+
+	// Method to set the type of a cell
+	void setCellType(Vertex &pos, int type);
 
 	// Method for heigth computing
 	void addMountain(double h, Vertex & pos, double lar);
