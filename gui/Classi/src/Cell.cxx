@@ -69,17 +69,6 @@ int Cell::numberToIndex(int fuelNumber)
 	return fIndex;
 }
 
-Cell::Cell(Cell& c)
-{
-	fuelIndex = c.fuelIndex;
-	fuelNumber = c.fuelNumber;
-	height = c.height;
-	R = c.R;
-	a = c.a;
-	b = c.b;
-	c = c.c;
-}
-
 
 void Cell::FillFuelType(double M_f)
 {
