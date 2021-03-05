@@ -38,7 +38,7 @@ public:
 	//Constructor that creates a grid based on an array of couples fuelIndex-fuelPercentage (sum of all percentages must be 1)
 	//Nota: bozza eventualmente da buttare a seconda di come si deciderà gestire la variabilità dei fuel, 
 	//e può essere reso un std::array in modo da contenere l'informazione sulla size 
-	Environment(double (*fuelPercentages)[2] = nullptr, int nDifferentFuels = 0);
+	Environment(double (*fuelPercentages)[2], int nDifferentFuels = 0);
 
 	//---------------Methods----------------
 	
@@ -56,11 +56,18 @@ public:
 	// Used to add a fire in a specific point defined by xi e yi
 	void addFire(double Xi, double Yi);
 
+	// Methods for the wind setting and getting
 	void setU(double _U);
 	void setTheta(double _theta);
 	double getU() const;
 	double getTheta() const;
 	double getM_f() const;
+
+	// Method to set the type of a cell
+	void setCellType(double& x, double &y, int fNumber);
+
+	// Method for heigth computing
+	void addMountain(double h, double pos[2], double lar);
 
 	// Methods for getting the polygon of a specific fire in the index i
 	ciclicVector<Vertex> getPolygon(int i);

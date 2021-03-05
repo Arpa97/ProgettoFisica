@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "Vertex.hxx"
 #include "Fuel.hxx"
 #include "Definitions.hxx"
 
@@ -15,8 +16,10 @@ struct Cell
 {
 	int fuelIndex, fuelNumber;
 	double height;
+	double slope[2];
 
-	double R;
+	// Parameters for the advance method
+	double R, maxTheta;
 	double a, b, c;
 
 	// The +1 is for counting the ground with R = 0
@@ -29,7 +32,8 @@ struct Cell
 
 	//-----------Methods-------------
 	static void FillFuelType(double M_f);
-	void setR(double U);
+	void setR(double U, double theta = 0);
 	void updateEllipseParams(double U);
 
+	int numberToIndex(int fuelNumber);
 };

@@ -27,8 +27,8 @@ Fire::Fire(double Xi, double Yi)
         // Divided by 100 because the initial ellipse is needed to be small
         //x1 = cell->a * std::cos(i*M_PI/5)/GRID_SIDE;
         //y1 = cell->b * std::sin(i*M_PI/5)/GRID_SIDE;
-        x1 = cell->a * std::cos(i * M_PI / 4) / GRID_SIDE;
-        y1 = cell->b * std::sin(i * M_PI / 4) / GRID_SIDE;
+        x1 = std::cos(i * M_PI / 4) / GRID_SIDE;
+        y1 = std::sin(i * M_PI / 4) / GRID_SIDE;
 
         //x1 = x1 * std::cos(tetha) + y1 * std::sin(tetha);
         //y1 = y1 * std::cos(tetha) - x1 * std::sin(tetha);
@@ -121,6 +121,35 @@ void Fire::Propagate_withoutHeap(double dt)
 }
 
 
+//void Fire::calcVelocity(int i)
+//{
+//    Cell* cella = Forest->getCell(Polygon[i]);
+//
+//    if (cella == Forest->nullFuel)
+//    {
+//        Polygon[i].dx = Polygon[i].dy = 0;
+//        return;
+//    }
+//
+//    double At, Bt, num1, num2, den;
+//    double Ct = std::cos(Forest->getTheta());
+//    double St = std::sin(Forest->getTheta());
+//    Vertex Diff = (Polygon[i + 1] - Polygon[i - 1]) / 2;
+//
+//    At = cella->a * (Diff.x * St + Diff.y * Ct);
+//    Bt = cella->b * (Diff.y * St - Diff.x * Ct);
+//
+//    num1 = cella->a * At * Ct + cella->b * Bt * St;
+//    num2 = cella->b * Bt * Ct - cella->a * At * St;
+//
+//    den = std::sqrt(At * At + Bt * Bt);
+//
+//    if (num1 / den + cella->c * St > 1e3 || num1 / den + cella->c * St < -1 || num2 / den + cella->c * Ct >1e3 || num2 / den + cella->c * Ct < -1)
+//        throw;
+//
+//    Polygon[i].dx = num1 / den + cella->c * St;
+//    Polygon[i].dy = num2 / den + cella->c * Ct;
+//}
 
 void Fire::calcVelocity(int i)
 {
@@ -133,23 +162,27 @@ void Fire::calcVelocity(int i)
     }
 
     double At, Bt, num1, num2, den;
-    double Ct = std::cos(Forest->getTheta());
-    double St = std::sin(Forest->getTheta());
-    Vertex Diff = (Polygon[i + 1] - Polygon[i - 1]) / 2;
+    double Ct = std::cos(cella->maxTheta);
+    double St = std::sin(cella->maxTheta);
+    Vertex diff = (Polygon[i + 1] - Polygon[i - 1]) / 2;
 
-    At = cella->a * (Diff.x * St + Diff.y * Ct);
-    Bt = cella->b * (Diff.y * St - Diff.x * Ct);
+
+    At = cella->a * (diff.x * St + diff.y * Ct);
+    Bt = cella->b * (diff.y * St - diff.x * Ct);
 
     num1 = cella->a * At * Ct + cella->b * Bt * St;
     num2 = cella->b * Bt * Ct - cella->a * At * St;
 
     den = std::sqrt(At * At + Bt * Bt);
-
+    
     if (num1 / den + cella->c * St > 1e3 || num1 / den + cella->c * St < -1 || num2 / den + cella->c * Ct >1e3 || num2 / den + cella->c * Ct < -1)
         throw;
 
-    Polygon[i].dx = num1 / den + cella->c * St;
-    Polygon[i].dy = num2 / den + cella->c * Ct;
+    double Xt = num1 / den + cella->c * St;
+    double Yt = num2 / den + cella->c * Ct;
+
+    Polygon[i].dx = Xt;
+    Polygon[i].dy = Yt;
 }
 
 void Fire::calcVelocities()

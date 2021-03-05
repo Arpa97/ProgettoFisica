@@ -27,7 +27,6 @@ Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 	{
 		srand(static_cast<unsigned int>(std::time(NULL)));
 	}
-	//srand(0);
 
 	grid = new Cell * *[step];
 
@@ -47,11 +46,10 @@ Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 			} while (validator > fuelPercentages[number][1]);
 
 			grid[i][j] = new Cell(fuelNumber, 0);
-			grid[i][j]->setR(U);
+			grid[i][j]->setR(U, theta);
 		}
 	}	
 }
-
 
 
 void Environment::advance(double dt)
@@ -185,7 +183,7 @@ void Environment::setU(double _U)
 	{
 		for (int j = 0; j != step; j++)
 		{
-			grid[i][j]->setR(U);
+			grid[i][j]->setR(U, theta);
 		}
 	}
 
@@ -195,6 +193,15 @@ void Environment::setU(double _U)
 
 void Environment::setTheta(double _theta){
 	theta = _theta;
+
+	int step = GRID_SIDE / CELL_SIDE;
+	for (int i = 0; i != step; i++)
+	{
+		for (int j = 0; j != step; j++)
+		{
+			grid[i][j]->setR(U, theta);
+		}
+	}
 
 	// Recalculate all timesteps
 	calcAll();
@@ -247,5 +254,47 @@ void Environment::VisualizeGrid()
 	cout << grid[i][j]->fuelIndex;
 	else 
 	cout << grid[i][j]->fuelIndex << endl; 
+}
 
+void Environment::addMountain(double h, double pos[2], double lar)
+{
+	int step = GRID_SIDE/CELL_SIDE;
+	double x0, y0, x1, y1;
+	double h0, h1, h2, h3;
+	double sigma = 2*lar;
+
+	for(int i = 0; i != step; i++)
+	for(int j = 0; j != step; j++)
+	{
+		// Compute the vertex coordinate of the cell 
+		// rescalated for using in the heigth function
+		x0 = CELL_SIDE*i - pos[0];
+		y0 = CELL_SIDE*j - pos[1];
+		x1 = CELL_SIDE*(i+1) - pos[0];
+		y1 = CELL_SIDE*(j+1) - pos[1];
+
+		// Compute of the heigth at cell borders
+		h0 = h*std::exp( -(x0*x0 + y0*y0)/sigma);
+		h1 = h*std::exp( -(x0*x0 + y1*y1)/sigma);
+		h2 = h*std::exp( -(x1*x1 + y0*y0)/sigma);
+		h3 = h*std::exp( -(x1*x1 + y1*y1)/sigma);
+
+		// Adding the heigth mean and the derivative value in every cell
+		grid[i][j]->height += (h0 + h1 + h2 + h3)/4;
+		grid[i][j]->slope[0] += (h0 + h1 - h2 - h3)/(2*CELL_SIDE);
+		grid[i][j]->slope[1] += (h0 + h2 - h1 - h3)/(2*CELL_SIDE);
+
+		grid[i][j]->setR(U, theta);
+	}
+
+	calcAll();
+}
+
+void Environment::setCellType(double& x, double& y, int fNumber)
+{
+	Cell* cella = getCell(x, y);
+
+	cella->fuelNumber = fNumber;
+	cella->fuelIndex = cella->numberToIndex(fNumber);
+	cella->setR(U, theta);
 }

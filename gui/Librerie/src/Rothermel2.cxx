@@ -7,7 +7,7 @@ using std::exp;
 using std::pow;
 using std::vector;
 
-double Rothermel2_R0(Fuel* fuel, double _M_f)
+double Rothermel2_R0(Fuel* fuel, double _M_f)	//in ft/min
 {
 	double h = fuel->h;
 	double S_T = fuel->S_T;
@@ -286,7 +286,7 @@ double Rothermel2_SlopeFactor(Fuel* fuel, double tan_phi)
 	return phi_s;
 }
 
-
+//in ft/min
 double Rothermel2_R(double R0, double phi_w, double phi_s)
 {
 	double R = R0 * (1 + phi_w + phi_s);
