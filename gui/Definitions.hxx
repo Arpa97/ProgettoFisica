@@ -17,7 +17,6 @@
 #define FUEL_PATH "FuelTypes.txt"
 
 #define MAXWINDSPEED 10                         // m/s. Max wind speed
-#define MULTIPLE_FUELS false                     // If true, create a forest with multiple fuels.
 #define RANDOM true								// If true, srand is called
 #define FIXED_FIRE false						// If true, fire is created always at the center of the grid
 #define HETEROGENEOUS_FUEL true					// If true, Rothermel2 is used

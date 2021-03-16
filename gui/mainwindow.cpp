@@ -8,20 +8,32 @@ MainWindow::MainWindow(QWidget *parent)
     connect(advancingTimer, SIGNAL(timeout()), this, SLOT(updateAdvance()));
     ui->setupUi(this);
 
-    if (MULTIPLE_FUELS) {
-        double (*composizione)[2] = new double[3][2] { {1, .5}, {13, .2}, {7, .3} };
-        Foresta = new Environment(composizione, 3);
-    }else {
-        Foresta = new Environment(nullptr);
-    }
+    buildForest();
+
     rescale = ui->mainPicture->width() / (GRID_SIDE + .0);
     original = drawOriginalgrid();
 
-    double pos[2]{ 75, 75 }, 
-        pos1[2]{ 50, 70 };
+    //double pos[2]{ 75, 75 }, pos1[2]{ 50, 70 };
 
-    Foresta->addMountain(10, pos, 1000);
+    //Foresta->addMountain(10, pos, 1000);
     //Foresta->addMountain(10, pos1, 100);
+}
+
+void MainWindow::buildForest(){
+    std::vector<std::vector<double>> composizione;
+    QList<QListWidgetItem*> fuelsList = ui->fuelList->findItems("*", Qt::MatchWildcard);
+    if (fuelsList.isEmpty()){
+        Foresta = new Environment(composizione);
+    }
+    else {
+        int differentFuels = fuelsList.size();
+        double fraction = 1.0/differentFuels;
+        for(int i = 0; i < differentFuels; i++){
+            std::vector<double> toadd = {fuelsList.takeFirst()->text().toDouble(), fraction};
+            composizione.push_back(toadd);
+        }
+        Foresta = new Environment(composizione);
+    }
 }
 
 QImage MainWindow::drawOriginalgrid(){
@@ -38,8 +50,8 @@ QImage MainWindow::drawOriginalgrid(){
              for (int j = 0; j != step; j++)
              {
                  if (Foresta->grid[i][j]->fuelNumber == 1) painter.setBrush(Qt::green);
-                 else if (Foresta->grid[i][j]->fuelNumber == 13) painter.setBrush(Qt::darkGreen);
-                 else if (Foresta->grid[i][j]->fuelNumber == 7) painter.setBrush(Qt::gray);
+                 else if (Foresta->grid[i][j]->fuelNumber == 2) painter.setBrush(Qt::darkGreen);
+                 else if (Foresta->grid[i][j]->fuelNumber == 3) painter.setBrush(Qt::gray);
                  else painter.setBrush(Qt::gray);
                  painter.drawRect(i * drawSize, (GRID_SIDE * rescale) - (j + 1) * drawSize, drawSize, drawSize);
              }
@@ -108,7 +120,6 @@ void MainWindow::printFires(){
         ciclicVector<Vertex> polyFire = Foresta->getPolygon(i);
         QPen paintpen(Qt::red);
         QPolygon poly;
-
         
         QPoint* points = new QPoint[polyFire.size()];
 
@@ -191,4 +202,30 @@ void MainWindow::on_clearButton_clicked()
     //stoppare esecuzione
     ncicli=0;
     ui->labelInfoTime->setText(QString("Elapsed time: ") + QString().number(ncicli) + QString("s"));
+}
+
+void MainWindow::on_addFuel_clicked()
+{
+    QString selectedFuel = ui->fuelSelection->currentText();
+    QList<QListWidgetItem*> items = ui->fuelList->findItems(selectedFuel, Qt::MatchExactly);
+    if (items.isEmpty()){
+        ui->fuelList->addItem(selectedFuel);
+    }
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    QString selectedFuel = ui->fuelSelection->currentText();
+    QList<QListWidgetItem*> items = ui->fuelList->findItems(selectedFuel, Qt::MatchExactly);
+    while (!items.isEmpty()){
+        ui->fuelList->takeItem(ui->fuelList->row(items.takeFirst()));
+    }
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    buildForest();
+
+    rescale = ui->mainPicture->width() / (GRID_SIDE + .0);
+    original = drawOriginalgrid();
 }

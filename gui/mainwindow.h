@@ -42,6 +42,12 @@ private slots:
     void createNewFire(double x, double y);
     void on_clearButton_clicked();
     QImage drawOriginalgrid();
+    void buildForest();
+    void on_addFuel_clicked();
+
+    void on_pushButton_clicked();
+
+    void on_pushButton_2_clicked();
 
 private:
     Ui::MainWindow *ui;
