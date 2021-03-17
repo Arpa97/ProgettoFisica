@@ -93,24 +93,49 @@ void MainWindow::on_singleAdvanceButton_clicked()
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
   if(ui->mainPicture->hasMouseTracking()){
-      int x = event->pos().x() - ui->mainPicture->x();
-      int y = event->pos().y() - ui->mainPicture->y();
-      if (0 < x && x < ui->mainPicture->width() && 0 < y && y < ui->mainPicture->height()){
-          createNewFire((double)x, (double)y);
+      if(addingFires){
+          int x = event->pos().x() - ui->mainPicture->x();
+          int y = event->pos().y() - ui->mainPicture->y();
+          if (0 < x && x < ui->mainPicture->width() && 0 < y && y < ui->mainPicture->height()){
+              createNewFire((double)x, (double)y);
+          }
       }
-    }
+       else if(drawingFuels){
+              double fuelNumber;
+              int x = event->pos().x() - ui->mainPicture->x();
+              int y = event->pos().y() - ui->mainPicture->y();
+              if (0 < x && x < ui->mainPicture->width() && 0 < y && y < ui->mainPicture->height()){
+                  //drawfuel
+                  qDebug() << QString().number(x);
+                  qDebug() << QString().number(y);
+                  QListWidgetItem* current = ui->fuelList->currentItem();
+                  if(current){
+                    fuelNumber = current->text().toDouble();
+                    qDebug() << ui->fuelList->currentItem()->text();
+                    original = drawOriginalgrid();
+                  }
+              }
+          }
+   }
 }
 
 void MainWindow::on_addFireButton_clicked()
 {
+
     if (ui->mainPicture->hasMouseTracking()){
-        ui->addFireButton->setText("Add fires");
-        ui->mainPicture->setCursor(Qt::ArrowCursor);
-        ui->mainPicture->setMouseTracking(false);
+        if (addingFires){
+            ui->addFireButton->setText("Add fires");
+            ui->mainPicture->setCursor(Qt::ArrowCursor);
+            ui->mainPicture->setMouseTracking(false);
+            ui->drawFuelButton->setDisabled(false);
+            addingFires = false;
+        }
     } else {
         ui->addFireButton->setText("Stop adding fires");
         ui->mainPicture->setCursor(cursorTarget);
         ui->mainPicture->setMouseTracking(true);
+        ui->drawFuelButton->setDisabled(true);
+        addingFires = true;
     }
 }
 
@@ -250,8 +275,22 @@ void MainWindow::on_horizontalSlider_valueChanged(int value)
     advancingTimer->setInterval(1000/value);
     qDebug() << "simSpeed" << value;
 }
-
-void MainWindow::on_pushButton_3_clicked()
+void MainWindow::on_drawFuelButton_clicked()
 {
 
+    if (ui->mainPicture->hasMouseTracking()){
+        if (drawingFuels){
+            ui->drawFuelButton->setText("Draw selected fuel");
+            ui->addFireButton->setDisabled(false);
+            ui->mainPicture->setCursor(Qt::ArrowCursor);
+            ui->mainPicture->setMouseTracking(false);
+            drawingFuels = false;
+        }
+    } else {
+        ui->drawFuelButton->setText("Stop drawing fuels");
+        ui->mainPicture->setCursor(Qt::UpArrowCursor);
+        ui->mainPicture->setMouseTracking(true);
+        ui->addFireButton->setDisabled(true);
+        drawingFuels = true;
+    }
 }

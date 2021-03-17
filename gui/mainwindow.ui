@@ -412,7 +412,7 @@
       <string>Remove Fuel</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_3">
+    <widget class="QPushButton" name="drawFuelButton">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -422,7 +422,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Draw selected</string>
+      <string>Draw selected fuel</string>
      </property>
     </widget>
    </widget>
