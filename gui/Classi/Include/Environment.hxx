@@ -70,6 +70,8 @@ public:
 	// Methods for getting the polygon of a specific fire in the index i
 	ciclicVector<Vertex> getPolygon(int i);
 
+	double getBurnedArea();
+
 	//Method to visualize the grid
 	void VisualizeGrid();
 };

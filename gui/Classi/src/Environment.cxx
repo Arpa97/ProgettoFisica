@@ -300,3 +300,13 @@ void Environment::setCellType(double& x, double& y, int fNumber)
 	cella->fuelIndex = cella->numberToIndex(fNumber);
 	cella->setR(U, theta);
 }
+
+double Environment::getBurnedArea()
+{
+	double totarea = 0;
+	for (auto &fire : wildfire)
+	{
+		totarea += fire->area;
+	}
+	return totarea;
+}
