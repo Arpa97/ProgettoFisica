@@ -102,21 +102,18 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
       }
        else if(drawingFuels){
               double fuelNumber;
-              int x = event->pos().x() - ui->mainPicture->x();
-              int y = event->pos().y() - ui->mainPicture->y();
+              double x = event->pos().x() - ui->mainPicture->x();
+              double y = event->pos().y() - ui->mainPicture->y();
               if (0 < x && x < ui->mainPicture->width() && 0 < y && y < ui->mainPicture->height()){
-                  //drawfuel
-                  qDebug() << QString().number(x);
-                  qDebug() << QString().number(y);
                   QListWidgetItem* current = ui->fuelList->currentItem();
                   if(current){
-                    fuelNumber = current->text().toDouble();
-                    qDebug() << ui->fuelList->currentItem()->text();
+                    fuelNumber = current->text().toInt();
+                    Foresta->setCellType(x / rescale, (GRID_SIDE - y / rescale), fuelNumber);
                     original = drawOriginalgrid();
                   }
               }
           }
-   }
+    }
 }
 
 void MainWindow::on_addFireButton_clicked()

@@ -62,7 +62,7 @@ public:
 	double getM_f() const;
 
 	// Method to set the type of a cell
-	void setCellType(double& x, double &y, int fNumber);
+    void setCellType(double x, double y, int fNumber);
 
 	// Method for heigth computing
 	void addMountain(double h, double pos[2], double lar);

@@ -292,7 +292,7 @@ void Environment::addMountain(double h, double pos[2], double lar)
 	calcAll();
 }
 
-void Environment::setCellType(double& x, double& y, int fNumber)
+void Environment::setCellType(double x, double y, int fNumber)
 {
 	Cell* cella = getCell(x, y);
 
