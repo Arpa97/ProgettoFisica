@@ -223,8 +223,8 @@ void MainWindow::on_addFuel_clicked()
     QList<QListWidgetItem*> items = ui->fuelList->findItems(selectedFuel, Qt::MatchExactly);
     if (items.isEmpty()){
         ui->fuelList->addItem(selectedFuel);
+        buildAndDraw();
     }
-    buildAndDraw();
 }
 
 void MainWindow::on_pushButton_clicked()
