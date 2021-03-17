@@ -6,6 +6,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     connect(advancingTimer, SIGNAL(timeout()), this, SLOT(updateAdvance()));
+    advancingTimer->setInterval(1000); // starting timer with 1 sec delay
+
     ui->setupUi(this);
 
     buildForest();
@@ -228,4 +230,11 @@ void MainWindow::on_pushButton_2_clicked()
 
     rescale = ui->mainPicture->width() / (GRID_SIDE + .0);
     original = drawOriginalgrid();
+}
+
+void MainWindow::on_horizontalSlider_valueChanged(int value)
+{
+    ui->simulationSpeedLabel->setText(QString("Simulation: ") + QString().number(value) + QString("x"));
+    advancingTimer->setInterval(1000/value);
+    qDebug() << "simSpeed" << value;
 }
