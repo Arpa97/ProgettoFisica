@@ -10,15 +10,18 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
 
-    buildForest();
-
-    rescale = ui->mainPicture->width() / (GRID_SIDE + .0);
-    original = drawOriginalgrid();
+    buildAndDraw();
 
     //double pos[2]{ 75, 75 }, pos1[2]{ 50, 70 };
 
     //Foresta->addMountain(10, pos, 1000);
     //Foresta->addMountain(10, pos1, 100);
+}
+
+void MainWindow::buildAndDraw(){
+    buildForest();
+    rescale = ui->mainPicture->width() / (GRID_SIDE + .0);
+    original = drawOriginalgrid();
 }
 
 void MainWindow::buildForest(){
@@ -38,6 +41,17 @@ void MainWindow::buildForest(){
     }
 }
 
+QColor MainWindow::getBrushColor(int fuelNumber){
+    switch (fuelNumber) {
+        case 1: return Qt::green;
+        case 2: return Qt::darkGreen;
+        case 3: return Qt::gray;
+        case 4: return Qt::darkGray;
+        case 5: return Qt::lightGray;
+        default: return Qt::black;
+    }
+}
+
 QImage MainWindow::drawOriginalgrid(){
      QImage tmp = ui->mainPicture->pixmap()->toImage();
      QPainter painter(&tmp);
@@ -51,10 +65,7 @@ QImage MainWindow::drawOriginalgrid(){
          {
              for (int j = 0; j != step; j++)
              {
-                 if (Foresta->grid[i][j]->fuelNumber == 1) painter.setBrush(Qt::green);
-                 else if (Foresta->grid[i][j]->fuelNumber == 2) painter.setBrush(Qt::darkGreen);
-                 else if (Foresta->grid[i][j]->fuelNumber == 3) painter.setBrush(Qt::gray);
-                 else painter.setBrush(Qt::gray);
+                 painter.setBrush(getBrushColor(Foresta->grid[i][j]->fuelNumber));
                  painter.drawRect(i * drawSize, (GRID_SIDE * rescale) - (j + 1) * drawSize, drawSize, drawSize);
              }
          }
@@ -213,23 +224,24 @@ void MainWindow::on_addFuel_clicked()
     if (items.isEmpty()){
         ui->fuelList->addItem(selectedFuel);
     }
+    buildAndDraw();
 }
 
 void MainWindow::on_pushButton_clicked()
 {
     QString selectedFuel = ui->fuelSelection->currentText();
     QList<QListWidgetItem*> items = ui->fuelList->findItems(selectedFuel, Qt::MatchExactly);
-    while (!items.isEmpty()){
-        ui->fuelList->takeItem(ui->fuelList->row(items.takeFirst()));
+    if (!items.isEmpty()) {
+        while (!items.isEmpty()){
+            ui->fuelList->takeItem(ui->fuelList->row(items.takeFirst()));
+        }
+        buildAndDraw();
     }
 }
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    buildForest();
-
-    rescale = ui->mainPicture->width() / (GRID_SIDE + .0);
-    original = drawOriginalgrid();
+    buildAndDraw();
 }
 
 void MainWindow::on_horizontalSlider_valueChanged(int value)
@@ -237,4 +249,9 @@ void MainWindow::on_horizontalSlider_valueChanged(int value)
     ui->simulationSpeedLabel->setText(QString("Simulation: ") + QString().number(value) + QString("x"));
     advancingTimer->setInterval(1000/value);
     qDebug() << "simSpeed" << value;
+}
+
+void MainWindow::on_pushButton_3_clicked()
+{
+
 }
