@@ -80,7 +80,7 @@ Vertex WaveFront::findIntersection(int start)
 {
     Vertex Point = Vertex(0, 0);
 
-    for(int i = start; i != Polygon.size() - 2; i++)
+    for(int i = start; i < Polygon.size(); i++)
     {
         Vertex a = Polygon[i], b = Polygon[i+1];
         double m1 = (b.y - a.y)/(b.x - a.x);
@@ -93,8 +93,10 @@ Vertex WaveFront::findIntersection(int start)
 
 
         if(a.x != b.x)
-            for (int j = i + 2; j != Polygon.size(); j++)
+            for (int t = 0; t < std::min(10, (int)Polygon.size() - 2); t++)
             {
+                int j = (i + 2 + t) % Polygon.size();
+
                 Vertex c = Polygon[j], d = Polygon[j + 1];
 
                 if (a.x == d.x && a.y == d.y)
@@ -184,8 +186,10 @@ Vertex WaveFront::findIntersection(int start)
        
         //if a.x == b.x (points on the border)line is of the type x=k
         else
-            for (int j = i + 2; j != Polygon.size(); j++)
+            for (int t = 0; t < std::min(10, (int)Polygon.size() - 2); t++)
             {
+                int j = (i + 2 + t) % Polygon.size();
+
                 Vertex c = Polygon[j], d = Polygon[j + 1];
 
                 //Skip segments on the border too 
