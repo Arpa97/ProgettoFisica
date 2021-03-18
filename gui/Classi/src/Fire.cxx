@@ -299,7 +299,7 @@ void Fire::checkEdges()
         int ncanc = end - index;
         if (ncanc < 0)
         {
-            ncanc += Polygon.size();
+            ncanc += (int)Polygon.size();
         }
 
         // Qua la cosa diventa difficile, 
@@ -316,13 +316,11 @@ void Fire::checkEdges()
             index = temp - 1;
         }
 
-        //int count = 0;
-        for (int j = 0; j != ncanc; j++)
-        {
-            DeleteVertex(index + 1);
-            //count++;
-        }
-        //std::cerr << count << '\n';
+        //for (int j = 0; j != ncanc; j++)
+        //{
+        //    DeleteVertex(index + 1);
+        //}
+        DeleteVertex(index + 1, index + 1 + ncanc);
 
         // Forest->timeHeap.deleteValue(Polygon[index+1].nextTime);
         // Forest->timeHeap.deleteValue(Polygon[index-1].nextTime);
@@ -408,6 +406,22 @@ void Fire::DeleteVertex(int n)
 
     // Forest->timeHeap.deleteValue(Polygon[i].nextTime);
     Polygon.erase(Polygon.begin() + i);
+}
+
+void Fire::DeleteVertex(int start, int end)
+{
+    start = start % Polygon.size();
+    end = end % Polygon.size();
+    int endT = end, endF = 0;
+
+    if (end < start)
+    {
+        endT = (int)Polygon.size() - 1;
+        endF = end;
+    }
+
+    Polygon.erase(Polygon.begin() + start, Polygon.begin() + endT);
+    Polygon.erase(Polygon.begin(), Polygon.begin() + endF);
 }
 
 void Fire::Visualize()
