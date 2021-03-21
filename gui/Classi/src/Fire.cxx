@@ -175,8 +175,8 @@ void Fire::calcVelocity(int i)
 
     den = std::sqrt(At * At + Bt * Bt);
     
-    if (num1 / den + cella->c * St > 1e3 || num1 / den + cella->c * St < -1 || num2 / den + cella->c * Ct >1e3 || num2 / den + cella->c * Ct < -1)
-        throw;
+    //if (num1 / den + cella->c * St > 1e3 || num1 / den + cella->c * St < -1 || num2 / den + cella->c * Ct >1e3 || num2 / den + cella->c * Ct < -1)
+    //    throw;
 
     double Xt = num1 / den + cella->c * St;
     double Yt = num2 / den + cella->c * Ct;
