@@ -530,6 +530,7 @@
    <zorder>fuelSelectionFrame</zorder>
    <zorder>pushButton_2</zorder>
    <zorder>frame_2</zorder>
+   <zorder>progressBar</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

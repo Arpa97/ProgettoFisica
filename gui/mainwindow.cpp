@@ -293,3 +293,14 @@ void MainWindow::on_drawFuelButton_clicked()
         drawingFuels = true;
     }
 }
+
+//Progress Bar Functions
+void MainWindow::on_progressBar_advancing(Environment* Forest){
+  QProgressBar* bar = ui->progressBar;
+  double Burned = Forest->getBurnedArea();
+  double Total = GRID_SIDE*GRID_SIDE;
+  double Val = (Burned/Total);
+  double Percentage = Val*100;
+  qDebug() << "Bruciato " << (int)Percentage;
+  bar->setValue((int)Percentage);
+}
