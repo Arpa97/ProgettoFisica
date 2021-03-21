@@ -241,6 +241,10 @@ void Environment::calcAll()
 	// Recalculate the times for all vertices
 	for(int i = 0; i != wildfire.size(); i++)
 	wildfire[i]->calcTimes();
+
+	// Calculate the areas
+	for(int i = 0; i != wildfire.size(); i++)
+	wildfire[i]->calcArea();
 }
 
 
