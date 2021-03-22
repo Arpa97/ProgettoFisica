@@ -25,23 +25,35 @@ public:
     QTimer *advancingTimer = new QTimer();
     double ADVANCE_DT = 1;
     int ncicli = 0;
+    bool addingFires = false;
+    bool drawingFuels = false;
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 private slots:
+    // custom methods
+    void printFires();
+    void updateAdvance();
+    void createNewFire(double x, double y);
+    QImage drawOriginalgrid();
+    QColor getBrushColor(int fuelNumber);
+    void buildForest();
+    void buildAndDraw();
+
+    // events
     void mousePressEvent(QMouseEvent *event);
     void on_singleAdvanceButton_clicked();
     void on_addFireButton_clicked();
-    void printFires();
     void on_startButton_clicked();
-    void updateAdvance();
     void on_exitButton_clicked();
-    //void on_windSpeed_sliderMoved(int position);
     void on_windDir_valueChanged(int position);
     void on_windSpeed_valueChanged(int value);
-    void createNewFire(double x, double y);
     void on_clearButton_clicked();
-    QImage drawOriginalgrid();
+    void on_addFuel_clicked();
+    void on_pushButton_clicked();
+    void on_pushButton_2_clicked();
+    void on_horizontalSlider_valueChanged(int value);
+    void on_drawFuelButton_clicked();
 
 private:
     Ui::MainWindow *ui;

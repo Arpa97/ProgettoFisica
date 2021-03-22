@@ -7,7 +7,8 @@
 
 void stress_test()
 {
-    double(*composizione)[2] = new double[3][2]{ {1, .5}, {13, .2}, {7, .3} };
+    //double(*composizione)[2] = new double[3][2]{ {1, .5}, {13, .2}, {7, .3} };
+    std::vector<std::vector<double>> composizione;
     int step = GRID_SIDE / CELL_SIDE;
     Environment* Foresta;
     time_t start = time(0);
@@ -20,7 +21,7 @@ void stress_test()
             {
                 for (double theta = -3; theta < 4; theta++)
                 {
-                    Foresta = new Environment(composizione, 3);
+                    Foresta = new Environment(composizione);
                     Foresta->setU(U);
                     Foresta->setTheta(theta);
                     Foresta->addFire((i + 1) * CELL_SIDE / 2, (j + 1) * CELL_SIDE / 2);

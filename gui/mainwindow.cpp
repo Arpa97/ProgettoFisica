@@ -6,22 +6,50 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     connect(advancingTimer, SIGNAL(timeout()), this, SLOT(updateAdvance()));
+    advancingTimer->setInterval(1000); // starting timer with 1 sec delay
+
     ui->setupUi(this);
 
-    if (MULTIPLE_FUELS) {
-        double (*composizione)[2] = new double[3][2] { {1, .5}, {13, .2}, {7, .3} };
-        Foresta = new Environment(composizione, 3);
-    }else {
-        Foresta = new Environment(nullptr);
-    }
+    buildAndDraw();
+
+    //double pos[2]{ 75, 75 }, pos1[2]{ 50, 70 };
+
+    //Foresta->addMountain(10, pos, 1000);
+    //Foresta->addMountain(10, pos1, 100);
+}
+
+void MainWindow::buildAndDraw(){
+    buildForest();
     rescale = ui->mainPicture->width() / (GRID_SIDE + .0);
     original = drawOriginalgrid();
+}
 
-    double pos[2]{ 75, 75 }, 
-        pos1[2]{ 50, 70 };
+void MainWindow::buildForest(){
+    std::vector<std::vector<double>> composizione;
+    QList<QListWidgetItem*> fuelsList = ui->fuelList->findItems("*", Qt::MatchWildcard);
+    if (fuelsList.isEmpty()){
+        Foresta = new Environment(composizione);
+    }
+    else {
+        int differentFuels = fuelsList.size();
+        double fraction = 1.0/differentFuels;
+        for(int i = 0; i < differentFuels; i++){
+            std::vector<double> toadd = {fuelsList.takeFirst()->text().toDouble(), fraction};
+            composizione.push_back(toadd);
+        }
+        Foresta = new Environment(composizione);
+    }
+}
 
-    Foresta->addMountain(10, pos, 1000);
-    //Foresta->addMountain(10, pos1, 100);
+QColor MainWindow::getBrushColor(int fuelNumber){
+    switch (fuelNumber) {
+        case 1: return Qt::green;
+        case 2: return Qt::darkGreen;
+        case 3: return Qt::gray;
+        case 4: return Qt::darkGray;
+        case 5: return Qt::lightGray;
+        default: return Qt::black;
+    }
 }
 
 QImage MainWindow::drawOriginalgrid(){
@@ -37,10 +65,7 @@ QImage MainWindow::drawOriginalgrid(){
          {
              for (int j = 0; j != step; j++)
              {
-                 if (Foresta->grid[i][j]->fuelNumber == 1) painter.setBrush(Qt::green);
-                 else if (Foresta->grid[i][j]->fuelNumber == 13) painter.setBrush(Qt::darkGreen);
-                 else if (Foresta->grid[i][j]->fuelNumber == 7) painter.setBrush(Qt::gray);
-                 else painter.setBrush(Qt::gray);
+                 painter.setBrush(getBrushColor(Foresta->grid[i][j]->fuelNumber));
                  painter.drawRect(i * drawSize, (GRID_SIDE * rescale) - (j + 1) * drawSize, drawSize, drawSize);
              }
          }
@@ -68,24 +93,48 @@ void MainWindow::on_singleAdvanceButton_clicked()
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
   if(ui->mainPicture->hasMouseTracking()){
-      int x = event->pos().x() - ui->mainPicture->x();
-      int y = event->pos().y() - ui->mainPicture->y();
-      if (0 < x && x < ui->mainPicture->width() && 0 < y && y < ui->mainPicture->height()){
-          createNewFire((double)x, (double)y);
+      if(addingFires){
+          int x = event->pos().x() - ui->mainPicture->x();
+          int y = event->pos().y() - ui->mainPicture->y();
+          if (0 < x && x < ui->mainPicture->width() && 0 < y && y < ui->mainPicture->height()){
+              createNewFire((double)x, (double)y);
+          }
       }
+       else if(drawingFuels){
+              double fuelNumber;
+              int x = event->pos().x() - ui->mainPicture->x();
+              int y = event->pos().y() - ui->mainPicture->y();
+              if (0 < x && x < ui->mainPicture->width() && 0 < y && y < ui->mainPicture->height()){
+                  QListWidgetItem* current = ui->fuelList->currentItem();
+                  if(current){
+                    fuelNumber = current->text().toInt();
+                    double xcell = x / rescale;
+                    double ycell = (GRID_SIDE - y / rescale);
+                    Foresta->setCellType(xcell, ycell, fuelNumber);
+                    original = drawOriginalgrid();
+                  }
+              }
+          }
     }
 }
 
 void MainWindow::on_addFireButton_clicked()
 {
+
     if (ui->mainPicture->hasMouseTracking()){
-        ui->addFireButton->setText("Add fires");
-        ui->mainPicture->setCursor(Qt::ArrowCursor);
-        ui->mainPicture->setMouseTracking(false);
+        if (addingFires){
+            ui->addFireButton->setText("Add fires");
+            ui->mainPicture->setCursor(Qt::ArrowCursor);
+            ui->mainPicture->setMouseTracking(false);
+            ui->drawFuelButton->setDisabled(false);
+            addingFires = false;
+        }
     } else {
         ui->addFireButton->setText("Stop adding fires");
         ui->mainPicture->setCursor(cursorTarget);
         ui->mainPicture->setMouseTracking(true);
+        ui->drawFuelButton->setDisabled(true);
+        addingFires = true;
     }
 }
 
@@ -108,7 +157,6 @@ void MainWindow::printFires(){
         ciclicVector<Vertex> polyFire = Foresta->getPolygon(i);
         QPen paintpen(Qt::red);
         QPolygon poly;
-
         
         QPoint* points = new QPoint[polyFire.size()];
 
@@ -191,4 +239,57 @@ void MainWindow::on_clearButton_clicked()
     //stoppare esecuzione
     ncicli=0;
     ui->labelInfoTime->setText(QString("Elapsed time: ") + QString().number(ncicli) + QString("s"));
+}
+
+void MainWindow::on_addFuel_clicked()
+{
+    QString selectedFuel = ui->fuelSelection->currentText();
+    QList<QListWidgetItem*> items = ui->fuelList->findItems(selectedFuel, Qt::MatchExactly);
+    if (items.isEmpty()){
+        ui->fuelList->addItem(selectedFuel);
+        buildAndDraw();
+    }
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    QString selectedFuel = ui->fuelSelection->currentText();
+    QList<QListWidgetItem*> items = ui->fuelList->findItems(selectedFuel, Qt::MatchExactly);
+    if (!items.isEmpty()) {
+        while (!items.isEmpty()){
+            ui->fuelList->takeItem(ui->fuelList->row(items.takeFirst()));
+        }
+        buildAndDraw();
+    }
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    buildAndDraw();
+}
+
+void MainWindow::on_horizontalSlider_valueChanged(int value)
+{
+    ui->simulationSpeedLabel->setText(QString("Simulation: ") + QString().number(value) + QString("x"));
+    advancingTimer->setInterval(1000/value);
+    qDebug() << "simSpeed" << value;
+}
+void MainWindow::on_drawFuelButton_clicked()
+{
+
+    if (ui->mainPicture->hasMouseTracking()){
+        if (drawingFuels){
+            ui->drawFuelButton->setText("Draw selected fuel");
+            ui->addFireButton->setDisabled(false);
+            ui->mainPicture->setCursor(Qt::ArrowCursor);
+            ui->mainPicture->setMouseTracking(false);
+            drawingFuels = false;
+        }
+    } else {
+        ui->drawFuelButton->setText("Stop drawing fuels");
+        ui->mainPicture->setCursor(Qt::UpArrowCursor);
+        ui->mainPicture->setMouseTracking(true);
+        ui->addFireButton->setDisabled(true);
+        drawingFuels = true;
+    }
 }

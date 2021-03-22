@@ -11,7 +11,7 @@ using std::endl;
 
 Cell* Environment::nullFuel = new Cell(0, 0);
 
-Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
+Environment::Environment(const std::vector<std::vector<double>> &fuelPercentages)
 {
 	U = 0;
 	theta = 0;
@@ -23,6 +23,9 @@ Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 	int step = GRID_SIDE / CELL_SIDE;	
 	int fuelNumber, number;
 	double validator;
+
+    int nDifferentFuels = fuelPercentages.size();
+
 	if (RANDOM)
 	{
 		srand(static_cast<unsigned int>(std::time(NULL)));
@@ -36,13 +39,12 @@ Environment::Environment(double (*fuelPercentages)[2], int nDifferentFuels)
 
 		for (int j = 0; j != step; j++)
 		{
-			if (fuelPercentages == nullptr) fuelNumber = 1;
-			else do
+            if (nDifferentFuels == 0) fuelNumber = 1;
+            else do
 			{
 				number = rand() % nDifferentFuels;
 				fuelNumber = (int)fuelPercentages[number][0];
 				validator = rand() / (RAND_MAX + 0.0);
-
 			} while (validator > fuelPercentages[number][1]);
 
 			grid[i][j] = new Cell(fuelNumber, 0);
@@ -290,11 +292,21 @@ void Environment::addMountain(double h, double pos[2], double lar)
 	calcAll();
 }
 
-void Environment::setCellType(double& x, double& y, int fNumber)
+void Environment::setCellType(double &x, double &y, int fNumber)
 {
 	Cell* cella = getCell(x, y);
 
 	cella->fuelNumber = fNumber;
 	cella->fuelIndex = cella->numberToIndex(fNumber);
 	cella->setR(U, theta);
+}
+
+double Environment::getBurnedArea()
+{
+	double totarea = 0;
+	for (auto &fire : wildfire)
+	{
+		totarea += fire->area;
+	}
+	return totarea;
 }

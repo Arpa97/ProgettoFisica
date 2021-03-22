@@ -36,9 +36,7 @@ public:
 
 
 	//Constructor that creates a grid based on an array of couples fuelIndex-fuelPercentage (sum of all percentages must be 1)
-	//Nota: bozza eventualmente da buttare a seconda di come si deciderà gestire la variabilità dei fuel, 
-	//e può essere reso un std::array in modo da contenere l'informazione sulla size 
-	Environment(double (*fuelPercentages)[2], int nDifferentFuels = 0);
+    Environment(const std::vector<std::vector<double>>& fuelPercentages);
 
 	//---------------Methods----------------
 	
@@ -64,13 +62,15 @@ public:
 	double getM_f() const;
 
 	// Method to set the type of a cell
-	void setCellType(double& x, double &y, int fNumber);
+    void setCellType(double &x, double &y, int fNumber);
 
 	// Method for heigth computing
 	void addMountain(double h, double pos[2], double lar);
 
 	// Methods for getting the polygon of a specific fire in the index i
 	ciclicVector<Vertex> getPolygon(int i);
+
+	double getBurnedArea();
 
 	//Method to visualize the grid
 	void VisualizeGrid();
