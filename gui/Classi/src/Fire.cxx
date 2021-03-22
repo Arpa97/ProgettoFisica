@@ -175,8 +175,8 @@ void Fire::calcVelocity(int i)
 
     den = std::sqrt(At * At + Bt * Bt);
     
-    if (num1 / den + cella->c * St > 1e3 || num1 / den + cella->c * St < -1 || num2 / den + cella->c * Ct >1e3 || num2 / den + cella->c * Ct < -1)
-        throw;
+    //if (num1 / den + cella->c * St > 1e3 || num1 / den + cella->c * St < -1 || num2 / den + cella->c * Ct >1e3 || num2 / den + cella->c * Ct < -1)
+    //    throw;
 
     double Xt = num1 / den + cella->c * St;
     double Yt = num2 / den + cella->c * Ct;
@@ -281,34 +281,26 @@ void Fire::checkDistance(bool heap)
 
 void Fire::checkEdges()
 {
-    int index = 1;
+    int index = 0;
 
     while (index < Polygon.size())
     {
-        Vertex Int = findIntersection(index - 1);
+        Vertex Int = findIntersection(index);
 
         if (Int.cellIndex == -1) break;
 
         index = Int.cellIndex;
-
-        //if (Int.dx != 0)
-        //{
-        //    cout << index << '\t' << Int.dx << '\t' << Polygon.size() << endl;
-
-        //    while (1)
-        //    {
-        //        double l = 0;
-        //        std::cin >> l;
-        //        if (l == 1)
-        //            break;
-        //    }
-        //}
+        int end = (int)Int.dx;
 
         if (Int.x == Polygon[index].x && Int.y == Polygon[index].dy) continue;
 
         insertVertex(Int, index);
 
-        int ncanc = (int)Int.dx - index;
+        int ncanc = end - index;
+        if (ncanc < 0)
+        {
+            ncanc += (int)Polygon.size();
+        }
 
         // Qua la cosa diventa difficile, 
         // in pratica se per sfiga becco che uno dei primi
@@ -316,18 +308,19 @@ void Fire::checkEdges()
         // taglia tutto il poligono. Per cui se gli esce che il numero di 
         // roba da tagliare è più della metà taglio al contrario.
         // Quindi elimino partendo dall'ultimo in fondo e vado avanti
-        if (Int.dx - index > Polygon.size() / 2)
+        if (Int.dx - index > Polygon.size() / 2)    //  !di fatto non serve in questa versione
         {
-            ncanc = ((int)Polygon.size() - (int)Int.dx) + index;
-            int temp = (int)Int.dx;
-            Int.dx = index;
+            ncanc = ((int)Polygon.size() - end) + index;
+            int temp = end;
+            end = index;
             index = temp - 1;
         }
 
-        for (int j = 0; j != ncanc; j++)
-        {
-            DeleteVertex(index + 1);
-        }
+        //for (int j = 0; j != ncanc; j++)
+        //{
+        //    DeleteVertex(index + 1);
+        //}
+        DeleteVertex(index + 1, index + 1 + ncanc);
 
         // Forest->timeHeap.deleteValue(Polygon[index+1].nextTime);
         // Forest->timeHeap.deleteValue(Polygon[index-1].nextTime);
@@ -339,6 +332,8 @@ void Fire::checkEdges()
         // Polygon[index].cellIndex = Forest->findCell(Polygon[index]);
         // calcVelocity(index);
         // calcTime(index);
+
+        index--;
     }
 }
 
@@ -411,6 +406,22 @@ void Fire::DeleteVertex(int n)
 
     // Forest->timeHeap.deleteValue(Polygon[i].nextTime);
     Polygon.erase(Polygon.begin() + i);
+}
+
+void Fire::DeleteVertex(int start, int end)
+{
+    start = start % Polygon.size();
+    end = end % Polygon.size();
+    int endT = end, endF = 0;
+
+    if (end < start)
+    {
+        endT = (int)Polygon.size() - 1;
+        endF = end;
+    }
+
+    Polygon.erase(Polygon.begin() + start, Polygon.begin() + endT);
+    Polygon.erase(Polygon.begin(), Polygon.begin() + endF);
 }
 
 void Fire::Visualize()
