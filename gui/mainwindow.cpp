@@ -91,6 +91,15 @@ void MainWindow::on_singleAdvanceButton_clicked()
     this->updateAdvance();
 }
 
+// MOUSE EVENTS
+void MainWindow::mouseMoveEvent(QMouseEvent *event){
+    if(ui->mainPicture->hasMouseTracking()){
+        if(drawingFuels){
+              drawFuel(event);
+          }
+    }
+}
+
 void MainWindow::mousePressEvent(QMouseEvent *event){
   if(ui->mainPicture->hasMouseTracking()){
       if(addingFires){
@@ -100,21 +109,25 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
               createNewFire((double)x, (double)y);
           }
       }
-       else if(drawingFuels){
-              double fuelNumber;
-              int x = event->pos().x() - ui->mainPicture->x();
-              int y = event->pos().y() - ui->mainPicture->y();
-              if (0 < x && x < ui->mainPicture->width() && 0 < y && y < ui->mainPicture->height()){
-                  QListWidgetItem* current = ui->fuelList->currentItem();
-                  if(current){
-                    fuelNumber = current->text().toInt();
-                    double xcell = x / rescale;
-                    double ycell = (GRID_SIDE - y / rescale);
-                    Foresta->setCellType(xcell, ycell, fuelNumber);
-                    original = drawOriginalgrid();
-                  }
-              }
-          }
+      else if(drawingFuels){
+          drawFuel(event);
+      }
+    }
+}
+
+void MainWindow::drawFuel(QMouseEvent *event){
+    double fuelNumber;
+    int x = event->pos().x() - ui->mainPicture->x();
+    int y = event->pos().y() - ui->mainPicture->y();
+    if (0 < x && x < ui->mainPicture->width() && 0 < y && y < ui->mainPicture->height()){
+        QListWidgetItem* current = ui->fuelList->currentItem();
+        if(current){
+          fuelNumber = current->text().toInt();
+          double xcell = x / rescale;
+          double ycell = (GRID_SIDE - y / rescale);
+          Foresta->setCellType(xcell, ycell, fuelNumber);
+          original = drawOriginalgrid();
+        }
     }
 }
 

@@ -42,6 +42,8 @@ private slots:
 
     // events
     void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void drawFuel(QMouseEvent *event);
     void on_singleAdvanceButton_clicked();
     void on_addFireButton_clicked();
     void on_startButton_clicked();
