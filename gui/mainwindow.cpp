@@ -82,6 +82,7 @@ MainWindow::~MainWindow()
 void MainWindow::updateAdvance(){
     ncicli+=ADVANCE_DT;
     Foresta->advance(ADVANCE_DT);
+    on_progressBar_advancing(Foresta);
     this->printFires();
     //qDebug() << Foresta->wildfire[0]->area;
 }

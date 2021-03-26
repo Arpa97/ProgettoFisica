@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>846</width>
-    <height>489</height>
+    <height>553</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -518,6 +518,19 @@
       <string>Simulation: 1x</string>
      </property>
     </widget>
+   </widget>
+   <widget class="QProgressBar" name="progressBar">
+    <property name="geometry">
+     <rect>
+      <x>27</x>
+      <y>480</y>
+      <width>791</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="value">
+     <number>0</number>
+    </property>
    </widget>
    <zorder>frame</zorder>
    <zorder>mainPicture</zorder>
