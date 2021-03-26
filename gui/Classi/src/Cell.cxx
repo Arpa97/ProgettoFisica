@@ -123,7 +123,9 @@ void Cell::FillFuelType(double M_f)
 		
 		//Inizializzo max Wind e Nome
 		fcin >> FuelType[i]->Umax;
-		getline(fcin, FuelType[i]->name, '\n');
+
+        fcin.get(); // To remove the space char before the next line, cleaning the name (i.e. " Timber Glass" becomes "Timber Glass")
+        getline(fcin, FuelType[i]->name, '\n');
 	}
 
 	// Adding the fuel of type 0

@@ -340,31 +340,6 @@
        <height>31</height>
       </rect>
      </property>
-     <item>
-      <property name="text">
-       <string>1</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>2</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>3</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>4</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>5</string>
-      </property>
-     </item>
     </widget>
     <widget class="QPushButton" name="addFuel">
      <property name="geometry">
@@ -399,7 +374,7 @@
       <string>Fuel selection</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="removeFuel">
      <property name="geometry">
       <rect>
        <x>120</x>
