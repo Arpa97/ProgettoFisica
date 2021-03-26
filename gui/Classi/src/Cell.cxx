@@ -120,9 +120,6 @@ void Cell::FillFuelType(double M_f)
 		FuelType[i] = new Fuel(w_0, SAV, delta, M_x, type);
 		FuelType[i]->setR0(M_f);
 
-		
-		//Inizializzo max Wind e Nome
-		fcin >> FuelType[i]->Umax;
 
         fcin.get(); // To remove the space char before the next line, cleaning the name (i.e. " Timber Glass" becomes "Timber Glass")
         getline(fcin, FuelType[i]->name, '\n');
@@ -145,6 +142,14 @@ void Cell::setR(double U, double theta)
 
 	// Putting the wind angle in the direction where it came for convention
 	theta += M_PI;
+	
+	if (WIND_LIMIT)
+	{
+		if (U > FuelType[fuelIndex]->Umax)
+		{
+			U = FuelType[fuelIndex]->Umax;
+		}
+	}
 	double Uft = U / 0.00508;
 
 	// Computing max direction
@@ -162,7 +167,9 @@ void Cell::setR(double U, double theta)
 
 	// storing the max direction angle and ros
 	maxTheta = std::atan2(MaxDirX, MaxDirY) + aspect + M_PI;
-	R = R0*(1 + std::sqrt(std::pow(MaxDirX, 2) + std::pow(MaxDirY, 2))) * 0.00508;
+	double Uws = std::sqrt(std::pow(MaxDirX, 2) + std::pow(MaxDirY, 2));		//wind speed efficace
+
+	R = R0*(1 + Uws) * 0.00508;
 
 	updateEllipseParams(U);
 }

@@ -247,6 +247,8 @@ double Rothermel2_R0(Fuel* fuel, double _M_f)	//in ft/min
 	fuel->params[2] = sigma;
 	fuel->params[3] = I_R;
 
+	fuel->Umax = 0.9 * I_R * 0.00508;
+
 	R0 = I_R * csi / sink;
 	return R0;
 }
