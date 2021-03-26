@@ -1,0 +1,54 @@
+Fuel model code	Fuel model code2	Type	Fuel load 1-h	Fuel load 10-h	Fuel load 100-h	Fuel load live herbaceous	Fuel load live woody	SAV 1-h	SAV live and dead herb.	SAV live woody	Fuel bed depth	Dead fuel moist. of extintion	Max wind speed	Name
+1	1	S	0.74	0.00	0.00	0.00	0.00	3500	0	0	1.00	12.00	2.45739	Short grass
+2	2	S	2.00	1.00	0.50	0.50	0.00	3000	1500	0	1.00	15.00	15.4749	Timber grass and understory
+3	3	S	3.00	0.00	0.00	0.00	0.00	1500	0	0	2.50	25.00	11.7902	Tall grass
+4	4	S	5.00	4.00	2.00	0.00	5.00	2000	0	1500	6.00	20.00	66.7655	Chaparral
+5	5	S	1.00	0.50	0.00	0.00	2.00	2000	0	1500	2.00	20.00	17.3864	Brush
+6	6	S	1.50	2.50	2.00	0.00	0.00	1750	0	0	2.50	25.00	7.83539	Dormant brush, hardwood slash
+7	7	S	1.10	1.90	1.50	0.00	0.37	1750	0	1500	2.50	40.00	9.07968	Southern rough
+8	8	S	1.50	1.00	2.50	0.00	0.00	2000	0	0	0.20	30.00	3.71441	Short needle litter
+9	9	S	2.90	0.41	0.15	0.00	0.00	2500	0	0	0.20	25.00	9.76091	Long needle or hardwood litter
+10	10	S	3.00	2.00	5.00	0.00	2.00	2000	0	1500	1.00	25.00	29.8194	Timber litter and understory
+11	11	S	1.50	4.50	5.50	0.00	0.00	1500	0	0	1.00	15.00	9.68529	Light logging slash
+12	12	S	4.00	14.00	16.50	0.00	0.00	1500	0	0	2.30	20.00	28.0397	Medium logging slash
+13	13	S	7.00	23.00	28.00	0.00	0.00	1500	0	0	3.00	25.00	40.4576	Heavy logging slash
+GR1	101	D	0.10	0.00	0.00	0.30	0.00	2200	2000	0	0.40	15.00	1.3443	Short, sparse, dry climate grass
+GR2	102	D	0.10	0.00	0.00	1.00	0.00	2000	1800	0	1.00	15.00	3.38383	Low load, dry climate grass
+GR3	103	D	0.10	0.40	0.00	1.50	0.00	1500	1300	0	2.00	30.00	4.43922	Low load, very coarse, humid climate grass
+GR4	104	D	0.25	0.00	0.00	1.90	0.00	2000	1800	0	2.00	15.00	6.63607	Moderate load, dry climate grass
+GR5	105	D	0.40	0.00	0.00	2.50	0.00	1800	1600	0	1.50	40.00	13.3778	Low load, humid climate grass
+GR6	106	D	0.10	0.00	0.00	3.40	0.00	2200	2000	0	1.50	40.00	17.8637	Moderate load, humid climate grass
+GR7	107	D	1.00	0.00	0.00	5.40	0.00	2000	1800	0	3.00	15.00	23.6315	High load, dry climate grass
+GR8	108	D	0.50	1.00	0.00	7.30	0.00	1500	1300	0	4.00	30.00	29.0192	High load, very coarse, humid climate grass 
+GR9	109	D	1.00	1.00	0.00	9.00	0.00	1800	1600	0	5.00	40.00	46.7015	Very high load, humid climate grass
+GS1	121	D	0.20	0.00	0.00	0.50	0.65	2000	1800	1800	0.90	15.00	7.34198	Low load, dry climate grass-shrub
+GS2	122	D	0.50	0.50	0.00	0.60	1.00	2000	1800	1800	1.50	15.00	11.8806	Moderate load, dry climate grass-shrub
+GS3	123	D	0.30	0.25	0.00	1.45	1.25	1800	1600	1600	1.80	40.00	17.9874	Moderate load, humid climate grass-shrub
+GS4	124	D	1.90	0.30	0.10	3.40	7.10	1800	1600	1600	2.10	40.00	93.2186	High load, humid climate grass-shrub
+SH1	141	D	0.25	0.25	0.00	0.15	1.30	2000	1800	1600	1.00	15.00	8.00631	Low load, dry climate shrub
+SH2	142	S	1.35	2.40	0.75	0.00	3.85	2000	0	1600	1.00	15.00	30.1012	Moderate load, dry climate shrub
+SH3	143	S	0.45	3.00	0.00	0.00	6.20	1600	0	1400	2.40	40.00	42.4625	Moderate load, humid climate shrub
+SH4	144	S	0.85	1.15	0.20	0.00	2.55	2000	1800	1600	5.00	30.00	17.6187	Low load, humid climate timber-shrub
+SH5	145	S	3.60	2.10	0.00	0.00	2.90	750	0	1600	6.00	15.00	27.3702	High load, dry climate shrub
+SH6	146	S	2.90	1.45	0.00	0.00	1.40	750	0	1600	2.00	30.00	22.8699	Low load, humid climate shrub
+SH7	147	S	3.50	5.30	2.20	0.00	3.40	750	0	1600	6.00	15.00	36.9618	Very high load, dry climate shrub
+SH8	148	S	2.05	3.40	0.85	0.00	4.35	750	0	1600	3.00	40.00	46.5933	High load, humid climate shrub
+SH9	149	D	4.50	2.45	0.00	1.55	7.00	750	1800	1500	4.40	40.00	72.1512	Very high load, humid climate shrub
+TU1	161	D	0.20	0.90	1.50	0.20	0.90	2000	1800	1600	0.60	20.00	9.91193	Light load, dry climate timber-grass-shrub
+TU2	162	S	0.95	1.80	1.25	0.00	0.20	2000	0	1600	1.00	30.00	7.86963	Moderate load, humid climate timber-shrub
+TU3	163	D	1.10	0.15	0.25	0.65	1.10	1800	1600	1400	1.30	30.00	17.8707	Moderate load, humid climate timber-grass-shrub
+TU4	164	S	4.50	0.00	0.00	0.00	2.00	2300	0	2000	0.50	12.00	24.8706	Dwarf conifer understory
+TU5	165	S	4.00	4.00	3.00	0.00	3.00	1500	0	750	1.00	25.00	40.6076	Very high load, dry climate timber-shrub
+TL1	181	S	1.00	2.20	3.60	0.00	0.00	2000	0	0	0.20	30.00	1.88605	Low load, compact conifer litter
+TL2	182	S	1.40	2.30	2.20	0.00	0.00	2000	0	0	0.20	25.00	2.79396	Low broadleaf litter
+TL3	183	S	0.50	2.20	2.80	0.00	0.00	2000	0	0	0.30	20.00	3.35057	Moderate load conifer litter
+TL4	184	S	0.50	1.50	4.20	0.00	0.00	2000	0	0	0.40	25.00	4.04162	Small downed logs
+TL5	185	S	1.15	2.50	4.40	0.00	0.00	2000	0	1600	0.60	25.00	6.38694	High load conifer litter
+TL6	186	S	2.40	1.20	1.20	0.00	0.00	2000	0	0	0.30	25.00	9.06583	Moderate load broadleaf litter
+TL7	187	S	0.30	1.40	8.10	0.00	0.00	2000	0	0	0.40	25.00	6.65963	Large downed logs
+TL8	188	S	5.80	1.40	1.10	0.00	0.00	1800	0	0	0.30	35.00	12.8607	Long-needle litter
+TL9	189	S	6.65	3.30	4.15	0.00	0.00	1800	0	1600	0.60	35.00	18.655	Very high load broadleaf litter
+SB1	201	S	1.50	3.00	11.00	0.00	0.00	2000	0	0	1.00	25.00	10.1005	Low load_activity fuel
+SB2	202	S	4.50	4.25	4.00	0.00	0.00	2000	0	0	1.00	25.00	20.1329	Moderate load activity or low load blowdown
+SB3	203	S	5.50	2.75	3.00	0.00	0.00	2000	0	0	1.20	25.00	27.6879	High load activity fuel or moderate low blowdown
+SB4	204	S	5.25	3.50	5.25	0.00	0.00	2000	0	0	2.70	25.00	29.2206	High load blowdown
