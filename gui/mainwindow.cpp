@@ -355,6 +355,7 @@ void MainWindow::on_progressBar_advancing(Environment* Forest){
   double Total = GRID_SIDE*GRID_SIDE;
   double Val = (Burned/Total);
   double Percentage = Val*100;
-  qDebug() << "Bruciato " << (int)Percentage;
-  bar->setValue((int)Percentage);
+  qDebug() << "Bruciato " << (int)(Percentage * 100);
+  bar->setFormat(QString("%1%").arg(Percentage, 0, 'f', 2));
+  bar->setValue((int)(Percentage*100));
 }
