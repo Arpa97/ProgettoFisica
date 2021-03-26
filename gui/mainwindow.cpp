@@ -5,12 +5,23 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    // INITIALIZATION
+    // ----------------------------- //
+
+    // Setup timer
     connect(advancingTimer, SIGNAL(timeout()), this, SLOT(updateAdvance()));
     advancingTimer->setInterval(1000); // starting timer with 1 sec delay
 
+    // Setup ui
     ui->setupUi(this);
 
+    // Build and draw forest
     buildAndDraw();
+
+    // Get fuel info
+    Fuel** fuelInfo;
+    fuelInfo = Foresta->getFuelInfo();
+    qDebug() << QString().number(sizeof(fuelInfo)/sizeof(fuelInfo[0]));
 }
 
 void MainWindow::buildAndDraw(){
