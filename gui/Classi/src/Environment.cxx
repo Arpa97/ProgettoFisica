@@ -310,3 +310,8 @@ double Environment::getBurnedArea()
 	}
 	return totarea;
 }
+
+Fuel ** Environment::getFuelInfo()
+{
+	return Cell::FuelType;
+}

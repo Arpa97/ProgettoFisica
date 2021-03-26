@@ -9,6 +9,7 @@
 
 #include "Definitions.hxx"
 #include <vector>
+#include <string>
 
 struct Fuel
 {
@@ -28,6 +29,10 @@ struct Fuel
 	//Reduced rate of spread, calculated only via fuel parameters and moisture content. 
 	double R0;
 	double params[4];
+
+	//Nome e velocità massima del vento per il fuel
+	std::string name;
+	double Umax;
 
 	//-----------Constructors-------------
 	Fuel(std::vector<std::vector<double>> _w_0, std::vector<std::vector<double>> _SAV, double _delta, double _M_x, char _type)

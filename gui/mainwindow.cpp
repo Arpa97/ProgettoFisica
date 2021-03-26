@@ -11,11 +11,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     buildAndDraw();
-
-    //double pos[2]{ 75, 75 }, pos1[2]{ 50, 70 };
-
-    //Foresta->addMountain(10, pos, 1000);
-    //Foresta->addMountain(10, pos1, 100);
 }
 
 void MainWindow::buildAndDraw(){
