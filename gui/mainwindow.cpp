@@ -356,6 +356,7 @@ void MainWindow::on_progressBar_advancing(Environment* Forest){
   double Val = (Burned/Total);
   double Percentage = Val*100;
   qDebug() << "Bruciato " << (int)(Percentage * 100);
-  bar->setFormat(QString("%1%").arg(Percentage, 0, 'f', 2));
+  //bar->setFormat(QString("%1%").arg(Percentage, 0, 'f', 2));
+  bar->setFormat(QString("%1 ha").arg(Burned*1e-4, 0, 'f', 2));     //m2 to hectares
   bar->setValue((int)(Percentage*100));
 }
