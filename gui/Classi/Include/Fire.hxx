@@ -53,4 +53,5 @@ public:
 
     // Method to delete verteces
     void DeleteVertex(int n);
+    void DeleteVertex(int start, int end);
 };

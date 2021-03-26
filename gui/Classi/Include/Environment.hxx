@@ -74,4 +74,10 @@ public:
 
 	//Method to visualize the grid
 	void VisualizeGrid();
+
+	//Method to get the fuels information
+	//Questo array di puntatori a fuel ha dimensione N_FUEL_TYPES + 1 e il valore storato a [0] è il tipo nullo
+	//il quale NON deve essere messo nelle scelte possibili con cui disegnare la mappa
+	//Per prendere il nome di un fuel basta quindi fare Environment::getFuelInfo()[i]->name;
+    static std::vector<Fuel*> getFuelInfo();
 };

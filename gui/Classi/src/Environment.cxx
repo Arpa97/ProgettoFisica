@@ -310,3 +310,10 @@ double Environment::getBurnedArea()
 	}
 	return totarea;
 }
+
+std::vector<Fuel*> Environment::getFuelInfo()
+{
+    std::vector<Fuel*> FuelVector;
+    FuelVector.insert(FuelVector.end(), &Cell::FuelType[0], &Cell::FuelType[N_FUEL_TYPES + 1]);
+    return FuelVector;
+}

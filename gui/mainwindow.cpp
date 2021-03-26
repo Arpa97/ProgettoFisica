@@ -5,23 +5,45 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    // INITIALIZATION
+    // ----------------------------- //
+
+    // Setup timer
     connect(advancingTimer, SIGNAL(timeout()), this, SLOT(updateAdvance()));
     advancingTimer->setInterval(1000); // starting timer with 1 sec delay
 
+    // Setup ui
     ui->setupUi(this);
 
+    // Build and draw forest
     buildAndDraw();
 
-    //double pos[2]{ 75, 75 }, pos1[2]{ 50, 70 };
+    // Get fuel info
+    fuelInfo = Foresta->getFuelInfo();
 
-    //Foresta->addMountain(10, pos, 1000);
-    //Foresta->addMountain(10, pos1, 100);
+    for (Fuel* f : fuelInfo){
+        fuelColors.push_back(0);
+        if (f->name.compare("Nullo")){
+            ui->fuelSelection->addItem(QString::fromUtf8(f->name.c_str()));
+        }
+    }
 }
 
 void MainWindow::buildAndDraw(){
+    updateColors();
     buildForest();
     rescale = ui->mainPicture->width() / (GRID_SIDE + .0);
     original = drawOriginalgrid();
+}
+
+double MainWindow::getFuelIndex(QString fuelName){
+    for (double i=0; i < fuelInfo.size();i++){
+        qDebug() << QString().number(i);
+        if (!fuelName.compare(QString::fromUtf8(fuelInfo[i]->name.c_str()))){
+            return i;
+        }
+    }
+    return -1;
 }
 
 void MainWindow::buildForest(){
@@ -34,15 +56,31 @@ void MainWindow::buildForest(){
         int differentFuels = fuelsList.size();
         double fraction = 1.0/differentFuels;
         for(int i = 0; i < differentFuels; i++){
-            std::vector<double> toadd = {fuelsList.takeFirst()->text().toDouble(), fraction};
+            std::vector<double> toadd = {getFuelIndex(fuelsList.takeFirst()->text()), fraction};
             composizione.push_back(toadd);
         }
         Foresta = new Environment(composizione);
     }
 }
 
+void MainWindow::updateColors(){
+    QList<QListWidgetItem*> fuelsList = ui->fuelList->findItems("*", Qt::MatchWildcard);
+    int differentFuels = fuelsList.size();
+    for (int idx = 0; idx < differentFuels; idx++){
+        QListWidgetItem* item = fuelsList.takeFirst();
+        int fuelIndex = getFuelIndex(item->text());
+        fuelColors[fuelIndex] = idx+1;
+        item->setForeground(getBrushColor(fuelIndex));
+    }
+}
+
 QColor MainWindow::getBrushColor(int fuelNumber){
-    switch (fuelNumber) {
+    int n = 0;
+    if (int(fuelColors.size()) > fuelNumber){
+        n = fuelColors[fuelNumber];
+    }
+
+    switch (n) {
         case 1: return Qt::green;
         case 2: return Qt::darkGreen;
         case 3: return Qt::gray;
@@ -92,6 +130,15 @@ void MainWindow::on_singleAdvanceButton_clicked()
     this->updateAdvance();
 }
 
+// MOUSE EVENTS
+void MainWindow::mouseMoveEvent(QMouseEvent *event){
+    if(ui->mainPicture->hasMouseTracking()){
+        if(drawingFuels){
+              drawFuel(event);
+          }
+    }
+}
+
 void MainWindow::mousePressEvent(QMouseEvent *event){
   if(ui->mainPicture->hasMouseTracking()){
       if(addingFires){
@@ -101,21 +148,26 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
               createNewFire((double)x, (double)y);
           }
       }
-       else if(drawingFuels){
-              double fuelNumber;
-              int x = event->pos().x() - ui->mainPicture->x();
-              int y = event->pos().y() - ui->mainPicture->y();
-              if (0 < x && x < ui->mainPicture->width() && 0 < y && y < ui->mainPicture->height()){
-                  QListWidgetItem* current = ui->fuelList->currentItem();
-                  if(current){
-                    fuelNumber = current->text().toInt();
-                    double xcell = x / rescale;
-                    double ycell = (GRID_SIDE - y / rescale);
-                    Foresta->setCellType(xcell, ycell, fuelNumber);
-                    original = drawOriginalgrid();
-                  }
-              }
-          }
+      else if(drawingFuels){
+          drawFuel(event);
+      }
+    }
+}
+
+void MainWindow::drawFuel(QMouseEvent *event){
+    double fuelNumber;
+    int x = event->pos().x() - ui->mainPicture->x();
+    int y = event->pos().y() - ui->mainPicture->y();
+    if (0 < x && x < ui->mainPicture->width() && 0 < y && y < ui->mainPicture->height()){
+        QListWidgetItem* current = ui->fuelList->currentItem();
+        if(current){
+           //current->text().toInt();
+          fuelNumber = getFuelIndex(current->text());
+          double xcell = x / rescale;
+          double ycell = (GRID_SIDE - y / rescale);
+          Foresta->setCellType(xcell, ycell, fuelNumber);
+          original = drawOriginalgrid();
+        }
     }
 }
 
@@ -175,7 +227,7 @@ void MainWindow::printFires(){
         linepen.setWidth(8);
         
         painter.setPen(linepen);
-        for (int i = 0; i != polyFire.size(); i++)
+        for (int i = 0; i != int(polyFire.size()); i++)
         {
             //if (i == 0)
             //{
@@ -246,19 +298,20 @@ void MainWindow::on_addFuel_clicked()
 {
     QString selectedFuel = ui->fuelSelection->currentText();
     QList<QListWidgetItem*> items = ui->fuelList->findItems(selectedFuel, Qt::MatchExactly);
-    if (items.isEmpty()){
+    if (items.isEmpty() && ui->fuelList->count() < 5){
         ui->fuelList->addItem(selectedFuel);
         buildAndDraw();
     }
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_removeFuel_clicked()
 {
     QString selectedFuel = ui->fuelSelection->currentText();
     QList<QListWidgetItem*> items = ui->fuelList->findItems(selectedFuel, Qt::MatchExactly);
     if (!items.isEmpty()) {
         while (!items.isEmpty()){
-            ui->fuelList->takeItem(ui->fuelList->row(items.takeFirst()));
+            // remove item from the list using "takeItem" while setting its colour to 0
+            fuelColors[getFuelIndex(ui->fuelList->takeItem(ui->fuelList->row(items.takeFirst()))->text())] = 0;
         }
         buildAndDraw();
     }
