@@ -77,6 +77,7 @@ MainWindow::~MainWindow()
 void MainWindow::updateAdvance(){
     ncicli+=ADVANCE_DT;
     Foresta->advance(ADVANCE_DT);
+    on_progressBar_advancing(Foresta);
     this->printFires();
     //qDebug() << Foresta->wildfire[0]->area;
 }
@@ -287,4 +288,15 @@ void MainWindow::on_drawFuelButton_clicked()
         ui->addFireButton->setDisabled(true);
         drawingFuels = true;
     }
+}
+
+//Progress Bar Functions
+void MainWindow::on_progressBar_advancing(Environment* Forest){
+  QProgressBar* bar = ui->progressBar;
+  double Burned = Forest->getBurnedArea();
+  double Total = GRID_SIDE*GRID_SIDE;
+  double Val = (Burned/Total);
+  double Percentage = Val*100;
+  qDebug() << "Bruciato " << (int)Percentage;
+  bar->setValue((int)Percentage);
 }
