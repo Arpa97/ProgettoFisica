@@ -67,7 +67,10 @@ void MainWindow::updateColors(){
     QList<QListWidgetItem*> fuelsList = ui->fuelList->findItems("*", Qt::MatchWildcard);
     int differentFuels = fuelsList.size();
     for (int idx = 0; idx < differentFuels; idx++){
-        fuelColors[getFuelIndex(fuelsList.takeFirst()->text())] = idx+1;
+        QListWidgetItem* item = fuelsList.takeFirst();
+        int fuelIndex = getFuelIndex(item->text());
+        fuelColors[fuelIndex] = idx+1;
+        item->setForeground(getBrushColor(fuelIndex));
     }
 }
 
