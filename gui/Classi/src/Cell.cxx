@@ -119,11 +119,17 @@ void Cell::FillFuelType(double M_f)
 
 		FuelType[i] = new Fuel(w_0, SAV, delta, M_x, type);
 		FuelType[i]->setR0(M_f);
+
+		
+		//Inizializzo max Wind e Nome
+		fcin >> FuelType[i]->Umax;
+		getline(fcin, FuelType[i]->name, '\n');
 	}
 
 	// Adding the fuel of type 0
 	FuelType[0] = new Fuel({}, {}, 0, 0, 'S');
 	FuelType[0]->R0 = 0;
+	FuelType[0]->name = "Nullo";
 }
 
 
