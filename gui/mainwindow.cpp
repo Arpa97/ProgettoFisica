@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Setup timer
     connect(advancingTimer, SIGNAL(timeout()), this, SLOT(updateAdvance()));
-    advancingTimer->setInterval(1000); // starting timer with 1 sec delay
+    advancingTimer->setInterval(1000/400); // starting timer with 1/400 sec delay
 
     // Setup ui
     ui->setupUi(this);

@@ -450,6 +450,9 @@
      <property name="singleStep">
       <number>10</number>
      </property>
+     <property name="value">
+      <number>400</number>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -490,7 +493,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Simulation: 1x</string>
+      <string>Simulation: 400x</string>
      </property>
     </widget>
    </widget>
