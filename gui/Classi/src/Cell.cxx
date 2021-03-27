@@ -156,7 +156,8 @@ void Cell::setR(double U, double theta)
 	double R0 = FuelType[fuelIndex]->R0;
 	double aspect = std::atan2(slope[0], slope[1]);
 	double tanSlo = std::sqrt(slope[0]*slope[0] + slope[1]*slope[1]);
-    double C = 7.47 * exp(-0.133 * pow(FuelType[fuelIndex]->params[2], 0.55));
+	double E = E = 0.715 * exp(-3.59e-4 * FuelType[fuelIndex]->params[2]);
+    double C = 7.47 * exp(-0.133 * pow(FuelType[fuelIndex]->params[2], 0.55))*pow(FuelType[fuelIndex]->params[0] / FuelType[fuelIndex]->params[1], -E);
     double A = 5.275 * pow(FuelType[fuelIndex]->params[0], -0.3);
     double B = 0.02526 * pow(FuelType[fuelIndex]->params[2], 0.54);
 	
@@ -171,7 +172,7 @@ void Cell::setR(double U, double theta)
 
 	R = R0*(1 + Uws) * 0.00508;
 
-	updateEllipseParams(U);
+	updateEllipseParams(std::pow(Uws/C, 1/B) * 0.00508);
 }
 
 void Cell::updateEllipseParams(double U)
