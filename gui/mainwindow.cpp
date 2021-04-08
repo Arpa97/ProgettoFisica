@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Setup timer
     connect(advancingTimer, SIGNAL(timeout()), this, SLOT(updateAdvance()));
-    advancingTimer->setInterval(1000); // starting timer with 1 sec delay
+    advancingTimer->setInterval(1000/400); // starting timer with 1/400 sec delay
 
     // Setup ui
     ui->setupUi(this);
@@ -355,6 +355,8 @@ void MainWindow::on_progressBar_advancing(Environment* Forest){
   double Total = GRID_SIDE*GRID_SIDE;
   double Val = (Burned/Total);
   double Percentage = Val*100;
-  qDebug() << "Bruciato " << (int)Percentage;
-  bar->setValue((int)Percentage);
+  qDebug() << "Bruciato " << (int)(Percentage * 100);
+  //bar->setFormat(QString("%1%").arg(Percentage, 0, 'f', 2));
+  bar->setFormat(QString("%1 ha").arg(Burned*1e-4, 0, 'f', 2));     //m2 to hectares
+  bar->setValue((int)(Percentage*100));
 }

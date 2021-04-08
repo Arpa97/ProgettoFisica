@@ -450,6 +450,9 @@
      <property name="singleStep">
       <number>10</number>
      </property>
+     <property name="value">
+      <number>400</number>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -490,11 +493,14 @@
       </rect>
      </property>
      <property name="text">
-      <string>Simulation: 1x</string>
+      <string>Simulation: 400x</string>
      </property>
     </widget>
    </widget>
    <widget class="QProgressBar" name="progressBar">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>27</x>
@@ -503,8 +509,29 @@
       <height>23</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="acceptDrops">
+     <bool>false</bool>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QProgressBar { border: 2px solid grey; border-radius: 0px; text-align: center; } QProgressBar::chunk {background-color: #3add36; width: 1px;}</string>
+    </property>
+    <property name="maximum">
+     <number>10000</number>
+    </property>
     <property name="value">
      <number>0</number>
+    </property>
+    <property name="format">
+     <string>%p%</string>
     </property>
    </widget>
    <zorder>frame</zorder>
