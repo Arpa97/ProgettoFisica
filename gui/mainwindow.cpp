@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
         }
     }
 
-    // Build and draw forest addfuel
+    // Build and draw forest
     on_addFuel_clicked();
     buildAndDraw();
 }
@@ -41,7 +41,7 @@ void MainWindow::buildAndDraw(){
 }
 
 double MainWindow::getFuelIndex(QString fuelName){
-    for (double i=0; i < fuelInfo.size();i++){
+    for (int i=0; i < int(fuelInfo.size()); i++){
         qDebug() << QString().number(i);
         if (!fuelName.compare(QString::fromUtf8(fuelInfo[i]->name.c_str()))){
             return i;
