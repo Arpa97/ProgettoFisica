@@ -27,6 +27,10 @@ MainWindow::MainWindow(QWidget *parent)
             ui->fuelSelection->addItem(QString::fromUtf8(f->name.c_str()));
         }
     }
+
+    // Build and draw forest addfuel
+    on_addFuel_clicked();
+    buildAndDraw();
 }
 
 void MainWindow::buildAndDraw(){
@@ -175,13 +179,7 @@ void MainWindow::on_addFireButton_clicked()
 {
 
     if (ui->mainPicture->hasMouseTracking()){
-        if (addingFires){
-            ui->addFireButton->setText("Add fires");
-            ui->mainPicture->setCursor(Qt::ArrowCursor);
-            ui->mainPicture->setMouseTracking(false);
-            ui->drawFuelButton->setDisabled(false);
-            addingFires = false;
-        }
+        stopAddingFires();
     } else {
         ui->addFireButton->setText("Stop adding fires");
         ui->mainPicture->setCursor(cursorTarget);
@@ -256,8 +254,18 @@ void MainWindow::on_startButton_clicked()
       ui->mainPicture->setCursor(Qt::ArrowCursor);
       ui->mainPicture->setMouseTracking(false);
       ui->startButton->setText(advancingTimer->isActive() ? "Start" : "Stop");
+      stopAddingFires();
+      toggleFuelsPanel();
       advancingTimer->isActive() ? advancingTimer->stop() : advancingTimer->start();
     }
+}
+
+void MainWindow::toggleFuelsPanel(){
+    stopDrawingFuel();
+    ui->addFuel->isEnabled() ? ui->addFuel->setEnabled(false) : ui->addFuel->setEnabled(true);
+    ui->removeFuel->isEnabled() ? ui->removeFuel->setEnabled(false) : ui->removeFuel->setEnabled(true);
+    ui->removeAllFuels->isEnabled() ? ui->removeAllFuels->setEnabled(false) : ui->removeAllFuels->setEnabled(true);
+    ui->drawFuelButton->isEnabled() ? ui->drawFuelButton->setEnabled(false) : ui->drawFuelButton->setEnabled(true);
 }
 
 void MainWindow::on_exitButton_clicked()
@@ -327,23 +335,39 @@ void MainWindow::on_horizontalSlider_valueChanged(int value)
     advancingTimer->setInterval(1000/value);
     qDebug() << "simSpeed" << value;
 }
+
 void MainWindow::on_drawFuelButton_clicked()
 {
-
     if (ui->mainPicture->hasMouseTracking()){
-        if (drawingFuels){
-            ui->drawFuelButton->setText("Draw selected fuel");
-            ui->addFireButton->setDisabled(false);
-            ui->mainPicture->setCursor(Qt::ArrowCursor);
-            ui->mainPicture->setMouseTracking(false);
-            drawingFuels = false;
-        }
+        stopDrawingFuel();
     } else {
         ui->drawFuelButton->setText("Stop drawing fuels");
         ui->mainPicture->setCursor(Qt::UpArrowCursor);
         ui->mainPicture->setMouseTracking(true);
         ui->addFireButton->setDisabled(true);
         drawingFuels = true;
+    }
+}
+
+void MainWindow::stopDrawingFuel(){
+    if (drawingFuels){
+        ui->drawFuelButton->setText("Draw selected fuel");
+        ui->mainPicture->setCursor(Qt::ArrowCursor);
+        ui->mainPicture->setMouseTracking(false);
+        ui->addFireButton->setDisabled(false);
+        drawingFuels = false;
+    }
+}
+
+void MainWindow::stopAddingFires(){
+    if (addingFires){
+        ui->addFireButton->setText("Add fires");
+        ui->mainPicture->setCursor(Qt::ArrowCursor);
+        ui->mainPicture->setMouseTracking(false);
+        if(!advancingTimer->isActive()){
+            ui->drawFuelButton->setDisabled(false);
+        }
+        addingFires = false;
     }
 }
 
@@ -360,7 +384,7 @@ void MainWindow::on_progressBar_advancing(Environment* Forest){
   bar->setValue((int)(Percentage*100));
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_removeAllFuels_clicked()
 {
     QList<QListWidgetItem*> fuelsList = ui->fuelList->findItems("*", Qt::MatchWildcard);
     if (!fuelsList.isEmpty()) {

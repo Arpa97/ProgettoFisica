@@ -55,10 +55,21 @@ private slots:
     // update colors used to draw fuels
     void updateColors();
 
-    // events
+    // toggle fuels panel, allowing or not changes
+    void toggleFuelsPanel();
+
+    // if fuel drawing is enabled, stop it
+    void stopDrawingFuel();
+
+    // if fires adding is enabled, disables it
+    void stopAddingFires();
+
+    // mouse events
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void drawFuel(QMouseEvent *event);
+
+    // events
     void on_singleAdvanceButton_clicked();
     void on_addFireButton_clicked();
     void on_startButton_clicked();
@@ -73,7 +84,7 @@ private slots:
     void on_drawFuelButton_clicked();
     void on_progressBar_advancing(Environment* Forest);
 
-    void on_pushButton_clicked();
+    void on_removeAllFuels_clicked();
 
 private:
     Ui::MainWindow *ui;
