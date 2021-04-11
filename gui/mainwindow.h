@@ -73,6 +73,8 @@ private slots:
     void on_drawFuelButton_clicked();
     void on_progressBar_advancing(Environment* Forest);
 
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

@@ -306,13 +306,12 @@ void MainWindow::on_addFuel_clicked()
 
 void MainWindow::on_removeFuel_clicked()
 {
-    QString selectedFuel = ui->fuelSelection->currentText();
-    QList<QListWidgetItem*> items = ui->fuelList->findItems(selectedFuel, Qt::MatchExactly);
-    if (!items.isEmpty()) {
-        while (!items.isEmpty()){
-            // remove item from the list using "takeItem" while setting its colour to 0
-            fuelColors[getFuelIndex(ui->fuelList->takeItem(ui->fuelList->row(items.takeFirst()))->text())] = 0;
-        }
+    //QString selectedFuel = ui->fuelSelection->currentText();
+    //QList<QListWidgetItem*> items = ui->fuelList->findItems(selectedFuel, Qt::MatchExactly);
+    QListWidgetItem* current = ui->fuelList->currentItem();
+    if (current) {
+        // remove item from the list using "takeItem" while setting its colour to 0
+        fuelColors[getFuelIndex(ui->fuelList->takeItem(ui->fuelList->row(current))->text())] = 0;
         buildAndDraw();
     }
 }
@@ -359,4 +358,16 @@ void MainWindow::on_progressBar_advancing(Environment* Forest){
   //bar->setFormat(QString("%1%").arg(Percentage, 0, 'f', 2));
   bar->setFormat(QString("%1 ha").arg(Burned*1e-4, 0, 'f', 2));     //m2 to hectares
   bar->setValue((int)(Percentage*100));
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    QList<QListWidgetItem*> fuelsList = ui->fuelList->findItems("*", Qt::MatchWildcard);
+    if (!fuelsList.isEmpty()) {
+        while (!fuelsList.isEmpty()){
+            // remove item from the list using "takeItem" while setting its colour to 0
+            fuelColors[getFuelIndex(ui->fuelList->takeItem(ui->fuelList->row(fuelsList.takeFirst()))->text())] = 0;
+        }
+        buildAndDraw();
+    }
 }
