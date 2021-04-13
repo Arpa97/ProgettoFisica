@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     // Build and draw forest
-    buildAndDraw();
+    buildForest();
 
     // Get fuel info
     fuelInfo = Foresta->getFuelInfo();
@@ -29,11 +29,13 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     // Build and draw forest
-    on_addFuel_clicked();
     buildAndDraw();
 }
 
 void MainWindow::buildAndDraw(){
+    if (ui->fuelList->findItems("*", Qt::MatchWildcard).isEmpty()){
+         addSpecificFuel(DEFAULT_FUEL);
+    }
     updateColors();
     buildForest();
     rescale = ui->mainPicture->width() / (GRID_SIDE + .0);
@@ -302,14 +304,17 @@ void MainWindow::on_clearButton_clicked()
     ui->labelInfoTime->setText(QString("Elapsed time: ") + QString().number(ncicli) + QString("s"));
 }
 
-void MainWindow::on_addFuel_clicked()
-{
-    QString selectedFuel = ui->fuelSelection->currentText();
+void MainWindow::addSpecificFuel(QString selectedFuel){
     QList<QListWidgetItem*> items = ui->fuelList->findItems(selectedFuel, Qt::MatchExactly);
     if (items.isEmpty() && ui->fuelList->count() < 5){
         ui->fuelList->addItem(selectedFuel);
         buildAndDraw();
     }
+}
+
+void MainWindow::on_addFuel_clicked()
+{
+    addSpecificFuel(ui->fuelSelection->currentText());
 }
 
 void MainWindow::on_removeFuel_clicked()

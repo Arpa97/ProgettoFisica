@@ -64,6 +64,9 @@ private slots:
     // if fires adding is enabled, disables it
     void stopAddingFires();
 
+    //add specific fuel to the list
+    void addSpecificFuel(QString selectedFuel);
+
     // mouse events
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
