@@ -269,19 +269,19 @@ void Environment::addMountain(double h, double pos[2], double lar)
 	for(int j = 0; j != step; j++)
 	{
 		// Compute the vertex coordinate of the cell 
-		// rescalated for using in the heigth function
+        // rescalated for using in the height function
 		x0 = CELL_SIDE*i - pos[0];
 		y0 = CELL_SIDE*j - pos[1];
 		x1 = CELL_SIDE*(i+1) - pos[0];
 		y1 = CELL_SIDE*(j+1) - pos[1];
 
-		// Compute of the heigth at cell borders
+        // Compute of the height at cell borders
 		h0 = h*std::exp( -(x0*x0 + y0*y0)/sigma);
 		h1 = h*std::exp( -(x0*x0 + y1*y1)/sigma);
 		h2 = h*std::exp( -(x1*x1 + y0*y0)/sigma);
 		h3 = h*std::exp( -(x1*x1 + y1*y1)/sigma);
 
-		// Adding the heigth mean and the derivative value in every cell
+        // Adding the heigth mean and the derivative value in every cell
 		grid[i][j]->height += (h0 + h1 + h2 + h3)/4;
 		grid[i][j]->slope[0] += (h0 + h1 - h2 - h3)/(2*CELL_SIDE);
 		grid[i][j]->slope[1] += (h0 + h2 - h1 - h3)/(2*CELL_SIDE);

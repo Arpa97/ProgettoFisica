@@ -28,3 +28,5 @@
 
 #define TOPOGRAPHIC_SLOPE 0.349		//20 deg		
 #define TOPOGRAPHIC_ASPECT 1.5707	//90 deg
+
+#define MAX_HEIGHT 10                           // Maximum mountain height, to compute opacity

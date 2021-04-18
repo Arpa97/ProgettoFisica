@@ -64,7 +64,7 @@ public:
 	// Method to set the type of a cell
     void setCellType(double &x, double &y, int fNumber);
 
-	// Method for heigth computing
+    // Method for height computing
 	void addMountain(double h, double pos[2], double lar);
 
 	// Methods for getting the polygon of a specific fire in the index i

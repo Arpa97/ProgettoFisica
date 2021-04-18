@@ -595,6 +595,19 @@
      <string>Moisture:</string>
     </property>
    </widget>
+   <widget class="QCheckBox" name="invertCheckBox">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>540</y>
+      <width>161</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Inverted mountain opacity</string>
+    </property>
+   </widget>
    <zorder>frame</zorder>
    <zorder>mainPicture</zorder>
    <zorder>singleAdvanceButton</zorder>
@@ -610,6 +623,7 @@
    <zorder>moistureSlider</zorder>
    <zorder>moistureLabelTop</zorder>
    <zorder>moistureLabelValue</zorder>
+   <zorder>invertCheckBox</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

@@ -43,15 +43,21 @@ private slots:
 
     // get the brush color corresponding to a fuel index
     QColor getBrushColor(int fuelNumber);
+    // get the opacity from specific height
+    double getOpacity(double height);
 
     // builds the forest
     void buildForest();
+
+    // test method to add a mountain in a fixed place
+    void addMountain();
 
     // builds the forest and draw it on the canvas
     void buildAndDraw();
 
     // gets the index from the fuel name
     double getFuelIndex(QString fuelName);
+
     // update colors used to draw fuels
     void updateColors();
 
@@ -90,6 +96,8 @@ private slots:
     void on_removeAllFuels_clicked();
 
     void on_moistureSlider_valueChanged(int value);
+
+    void on_invertCheckBox_stateChanged(int arg1);
 
 private:
     Ui::MainWindow *ui;

@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     // Setup ui
     ui->setupUi(this);
 
-    // Build and draw forest
+    // Build empty forest
     buildForest();
 
     // Get fuel info
@@ -30,7 +30,14 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Set moisture to default value (also draws forest)
     ui->moistureSlider->setValue(MOISTURE_CONTENT*10);
-    //buildAndDraw();
+}
+
+void MainWindow::addMountain(){
+    // Test mountain
+    double pos[2] = {200,200};
+
+    Foresta->addMountain(10, pos, 300);
+    //Foresta->addMountain(10, pos1, 100);
 }
 
 void MainWindow::buildAndDraw(){
@@ -68,6 +75,8 @@ void MainWindow::buildForest(){
         }
         Foresta = new Environment(composizione, ui->moistureSlider->value()/10.0);
     }
+    // Method to add single predefined mountain
+    addMountain();
 }
 
 void MainWindow::updateColors(){
@@ -78,6 +87,14 @@ void MainWindow::updateColors(){
         int fuelIndex = getFuelIndex(item->text());
         fuelColors[fuelIndex] = idx+1;
         item->setForeground(getBrushColor(fuelIndex));
+    }
+}
+
+double MainWindow::getOpacity(double height){
+    if (ui->invertCheckBox->isChecked()){
+        return height/MAX_HEIGHT;
+    } else {
+        return 1-height/MAX_HEIGHT;
     }
 }
 
@@ -103,17 +120,25 @@ QImage MainWindow::drawOriginalgrid(){
      QPen paintpen(Qt::black);
 
      painter.setPen(paintpen);
+
+     // clears previous drawings
+     painter.setBrush(Qt::white);
+     painter.setOpacity(1);
+     painter.drawRect(0, 0, GRID_SIDE, GRID_SIDE);
+
      int step = GRID_SIDE / CELL_SIDE;
      double drawSize = CELL_SIDE * rescale;
 
      for (int i = 0; i != step; i++)
+     {
+         for (int j = 0; j != step; j++)
          {
-             for (int j = 0; j != step; j++)
-             {
-                 painter.setBrush(getBrushColor(Foresta->grid[i][j]->fuelNumber));
-                 painter.drawRect(i * drawSize, (GRID_SIDE * rescale) - (j + 1) * drawSize, drawSize, drawSize);
-             }
+             // draw new square
+             painter.setBrush(getBrushColor(Foresta->grid[i][j]->fuelNumber));
+             painter.setOpacity(getOpacity(Foresta->grid[i][j]->height));
+             painter.drawRect(i * drawSize, (GRID_SIDE * rescale) - (j + 1) * drawSize, drawSize, drawSize);
          }
+     }
 
      ui->mainPicture->setPixmap(QPixmap::fromImage(tmp));
      return tmp;
@@ -409,4 +434,9 @@ void MainWindow::on_moistureSlider_valueChanged(int value)
     ui->moistureLabelValue->setText(QString("Moisture: ") + QString().number(value/10.0));
     buildAndDraw();
     ui->moistureSlider->setDisabled(false);
+}
+
+void MainWindow::on_invertCheckBox_stateChanged(int arg1)
+{
+    original = drawOriginalgrid();
 }
