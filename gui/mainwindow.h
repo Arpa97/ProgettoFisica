@@ -72,6 +72,9 @@ private slots:
     void mouseMoveEvent(QMouseEvent *event);
     void drawFuel(QMouseEvent *event);
 
+    //Get Wind Speed Description
+    QString getWindClassification(double speed);
+
     // events
     void on_singleAdvanceButton_clicked();
     void on_addFireButton_clicked();
