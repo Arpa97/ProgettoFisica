@@ -36,7 +36,7 @@ public:
 
 
 	//Constructor that creates a grid based on an array of couples fuelIndex-fuelPercentage (sum of all percentages must be 1)
-    Environment(const std::vector<std::vector<double>>& fuelPercentages);
+    Environment(const std::vector<std::vector<double>>& fuelPercentages, double moistureContent);
 
 	//---------------Methods----------------
 	

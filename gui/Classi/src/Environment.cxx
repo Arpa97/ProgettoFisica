@@ -11,11 +11,11 @@ using std::endl;
 
 Cell* Environment::nullFuel = new Cell(0, 0);
 
-Environment::Environment(const std::vector<std::vector<double>> &fuelPercentages)
+Environment::Environment(const std::vector<std::vector<double>> &fuelPercentages, double moistureContent)
 {
 	U = 0;
-	theta = 0;
-	M_f = MOISTURE_CONTENT;
+    theta = 0;
+    M_f = moistureContent;
 	Cell::FillFuelType(M_f);
 	nullFuel->setR(0);
 	Fire::setEnvironment(this);

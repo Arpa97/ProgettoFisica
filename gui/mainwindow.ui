@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>846</width>
-    <height>553</height>
+    <width>849</width>
+    <height>636</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -547,6 +547,54 @@
      <string>%p%</string>
     </property>
    </widget>
+   <widget class="QSlider" name="moistureSlider">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>540</y>
+      <width>160</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <number>10</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+    <property name="tickPosition">
+     <enum>QSlider::TicksBelow</enum>
+    </property>
+    <property name="tickInterval">
+     <number>1</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="moistureLabelTop">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>520</y>
+      <width>141</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Moisture Slider</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="moistureLabelValue">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>570</y>
+      <width>71</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Moisture:</string>
+    </property>
+   </widget>
    <zorder>frame</zorder>
    <zorder>mainPicture</zorder>
    <zorder>singleAdvanceButton</zorder>
@@ -559,6 +607,9 @@
    <zorder>pushButton_2</zorder>
    <zorder>frame_2</zorder>
    <zorder>progressBar</zorder>
+   <zorder>moistureSlider</zorder>
+   <zorder>moistureLabelTop</zorder>
+   <zorder>moistureLabelValue</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

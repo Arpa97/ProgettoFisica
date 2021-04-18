@@ -28,8 +28,9 @@ MainWindow::MainWindow(QWidget *parent)
         }
     }
 
-    // Build and draw forest
-    buildAndDraw();
+    // Set moisture to default value (also draws forest)
+    ui->moistureSlider->setValue(MOISTURE_CONTENT*10);
+    //buildAndDraw();
 }
 
 void MainWindow::buildAndDraw(){
@@ -44,7 +45,7 @@ void MainWindow::buildAndDraw(){
 
 double MainWindow::getFuelIndex(QString fuelName){
     for (int i=0; i < int(fuelInfo.size()); i++){
-        qDebug() << QString().number(i);
+        //qDebug() << QString().number(i);
         if (!fuelName.compare(QString::fromUtf8(fuelInfo[i]->name.c_str()))){
             return i;
         }
@@ -56,7 +57,7 @@ void MainWindow::buildForest(){
     std::vector<std::vector<double>> composizione;
     QList<QListWidgetItem*> fuelsList = ui->fuelList->findItems("*", Qt::MatchWildcard);
     if (fuelsList.isEmpty()){
-        Foresta = new Environment(composizione);
+        Foresta = new Environment(composizione, ui->moistureSlider->value()/10.0);
     }
     else {
         int differentFuels = fuelsList.size();
@@ -65,7 +66,7 @@ void MainWindow::buildForest(){
             std::vector<double> toadd = {getFuelIndex(fuelsList.takeFirst()->text()), fraction};
             composizione.push_back(toadd);
         }
-        Foresta = new Environment(composizione);
+        Foresta = new Environment(composizione, ui->moistureSlider->value()/10.0);
     }
 }
 
@@ -258,6 +259,7 @@ void MainWindow::on_startButton_clicked()
       ui->startButton->setText(advancingTimer->isActive() ? "Start" : "Stop");
       stopAddingFires();
       toggleFuelsPanel();
+      advancingTimer->isActive() ? ui->moistureSlider->setDisabled(false) : ui->moistureSlider->setDisabled(true);
       advancingTimer->isActive() ? advancingTimer->stop() : advancingTimer->start();
     }
 }
@@ -280,7 +282,7 @@ void MainWindow::on_windDir_valueChanged(int position)
     double newTheta = (double)position/100;
     ui->windDirLabel->setText(QString("Angle: ") + QString().number(newTheta) + QString(" rad"));
     Foresta->setTheta(newTheta);
-    qDebug() << "winDir" << QString().number(newTheta);
+    //qDebug() << "winDir" << QString().number(newTheta);
 }
 
 void MainWindow::on_windSpeed_valueChanged(int value)
@@ -288,7 +290,7 @@ void MainWindow::on_windSpeed_valueChanged(int value)
   double newSpeed = (double)value*MAXWINDSPEED/100;
   ui->windSpeedLabel->setText(QString("Speed: ") + QString().number(newSpeed) + QString(" m/s"));
   Foresta->setU(newSpeed);
-  qDebug() << "winSpeed" << newSpeed;
+  //qDebug() << "winSpeed" << newSpeed;
 }
 
 void MainWindow::on_clearButton_clicked()
@@ -338,7 +340,7 @@ void MainWindow::on_horizontalSlider_valueChanged(int value)
 {
     ui->simulationSpeedLabel->setText(QString("Simulation: ") + QString().number(value) + QString("x"));
     advancingTimer->setInterval(1000/value);
-    qDebug() << "simSpeed" << value;
+    //qDebug() << "simSpeed" << value;
 }
 
 void MainWindow::on_drawFuelButton_clicked()
@@ -383,7 +385,7 @@ void MainWindow::on_progressBar_advancing(Environment* Forest){
   double Total = GRID_SIDE*GRID_SIDE;
   double Val = (Burned/Total);
   double Percentage = Val*100;
-  qDebug() << "Bruciato " << (int)(Percentage * 100);
+  //qDebug() << "Bruciato " << (int)(Percentage * 100);
   //bar->setFormat(QString("%1%").arg(Percentage, 0, 'f', 2));
   bar->setFormat(QString("%1 ha").arg(Burned*1e-4, 0, 'f', 2));     //m2 to hectares
   bar->setValue((int)(Percentage*100));
@@ -399,4 +401,12 @@ void MainWindow::on_removeAllFuels_clicked()
         }
         buildAndDraw();
     }
+}
+
+void MainWindow::on_moistureSlider_valueChanged(int value)
+{
+    ui->moistureSlider->setDisabled(true);
+    ui->moistureLabelValue->setText(QString("Moisture: ") + QString().number(value/10.0));
+    buildAndDraw();
+    ui->moistureSlider->setDisabled(false);
 }

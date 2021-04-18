@@ -89,6 +89,8 @@ private slots:
 
     void on_removeAllFuels_clicked();
 
+    void on_moistureSlider_valueChanged(int value);
+
 private:
     Ui::MainWindow *ui;
 };
