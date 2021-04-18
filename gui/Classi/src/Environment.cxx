@@ -24,7 +24,7 @@ Environment::Environment(const std::vector<std::vector<double>> &fuelPercentages
 	int fuelNumber, number;
 	double validator;
 
-    int nDifferentFuels = fuelPercentages.size();
+    int nDifferentFuels = (int)fuelPercentages.size();
 
 	if (RANDOM)
 	{
