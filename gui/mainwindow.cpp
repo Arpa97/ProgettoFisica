@@ -35,9 +35,10 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::addMountain(){
     // Test mountain
     double pos[2] = {200,200};
+    int height = 10;
+    int lar = 300;
 
-    Foresta->addMountain(10, pos, 300);
-    //Foresta->addMountain(10, pos1, 100);
+    Foresta->addMountain(height, pos, lar);
 }
 
 void MainWindow::buildAndDraw(){
