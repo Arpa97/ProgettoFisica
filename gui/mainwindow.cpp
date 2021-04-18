@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     // Build and draw forest
-    buildAndDraw();
+    buildForest();
 
     // Get fuel info
     fuelInfo = Foresta->getFuelInfo();
@@ -27,9 +27,15 @@ MainWindow::MainWindow(QWidget *parent)
             ui->fuelSelection->addItem(QString::fromUtf8(f->name.c_str()));
         }
     }
+
+    // Build and draw forest
+    buildAndDraw();
 }
 
 void MainWindow::buildAndDraw(){
+    if (ui->fuelList->findItems("*", Qt::MatchWildcard).isEmpty()){
+         addSpecificFuel(DEFAULT_FUEL);
+    }
     updateColors();
     buildForest();
     rescale = ui->mainPicture->width() / (GRID_SIDE + .0);
@@ -37,7 +43,7 @@ void MainWindow::buildAndDraw(){
 }
 
 double MainWindow::getFuelIndex(QString fuelName){
-    for (double i=0; i < fuelInfo.size();i++){
+    for (int i=0; i < int(fuelInfo.size()); i++){
         qDebug() << QString().number(i);
         if (!fuelName.compare(QString::fromUtf8(fuelInfo[i]->name.c_str()))){
             return i;
@@ -175,13 +181,7 @@ void MainWindow::on_addFireButton_clicked()
 {
 
     if (ui->mainPicture->hasMouseTracking()){
-        if (addingFires){
-            ui->addFireButton->setText("Add fires");
-            ui->mainPicture->setCursor(Qt::ArrowCursor);
-            ui->mainPicture->setMouseTracking(false);
-            ui->drawFuelButton->setDisabled(false);
-            addingFires = false;
-        }
+        stopAddingFires();
     } else {
         ui->addFireButton->setText("Stop adding fires");
         ui->mainPicture->setCursor(cursorTarget);
@@ -256,8 +256,18 @@ void MainWindow::on_startButton_clicked()
       ui->mainPicture->setCursor(Qt::ArrowCursor);
       ui->mainPicture->setMouseTracking(false);
       ui->startButton->setText(advancingTimer->isActive() ? "Start" : "Stop");
+      stopAddingFires();
+      toggleFuelsPanel();
       advancingTimer->isActive() ? advancingTimer->stop() : advancingTimer->start();
     }
+}
+
+void MainWindow::toggleFuelsPanel(){
+    stopDrawingFuel();
+    ui->addFuel->isEnabled() ? ui->addFuel->setEnabled(false) : ui->addFuel->setEnabled(true);
+    ui->removeFuel->isEnabled() ? ui->removeFuel->setEnabled(false) : ui->removeFuel->setEnabled(true);
+    ui->removeAllFuels->isEnabled() ? ui->removeAllFuels->setEnabled(false) : ui->removeAllFuels->setEnabled(true);
+    ui->drawFuelButton->isEnabled() ? ui->drawFuelButton->setEnabled(false) : ui->drawFuelButton->setEnabled(true);
 }
 
 void MainWindow::on_exitButton_clicked()
@@ -294,9 +304,7 @@ void MainWindow::on_clearButton_clicked()
     ui->labelInfoTime->setText(QString("Elapsed time: ") + QString().number(ncicli) + QString("s"));
 }
 
-void MainWindow::on_addFuel_clicked()
-{
-    QString selectedFuel = ui->fuelSelection->currentText();
+void MainWindow::addSpecificFuel(QString selectedFuel){
     QList<QListWidgetItem*> items = ui->fuelList->findItems(selectedFuel, Qt::MatchExactly);
     if (items.isEmpty() && ui->fuelList->count() < 5){
         ui->fuelList->addItem(selectedFuel);
@@ -304,15 +312,19 @@ void MainWindow::on_addFuel_clicked()
     }
 }
 
+void MainWindow::on_addFuel_clicked()
+{
+    addSpecificFuel(ui->fuelSelection->currentText());
+}
+
 void MainWindow::on_removeFuel_clicked()
 {
-    QString selectedFuel = ui->fuelSelection->currentText();
-    QList<QListWidgetItem*> items = ui->fuelList->findItems(selectedFuel, Qt::MatchExactly);
-    if (!items.isEmpty()) {
-        while (!items.isEmpty()){
-            // remove item from the list using "takeItem" while setting its colour to 0
-            fuelColors[getFuelIndex(ui->fuelList->takeItem(ui->fuelList->row(items.takeFirst()))->text())] = 0;
-        }
+    //QString selectedFuel = ui->fuelSelection->currentText();
+    //QList<QListWidgetItem*> items = ui->fuelList->findItems(selectedFuel, Qt::MatchExactly);
+    QListWidgetItem* current = ui->fuelList->currentItem();
+    if (current) {
+        // remove item from the list using "takeItem" while setting its colour to 0
+        fuelColors[getFuelIndex(ui->fuelList->takeItem(ui->fuelList->row(current))->text())] = 0;
         buildAndDraw();
     }
 }
@@ -328,23 +340,39 @@ void MainWindow::on_horizontalSlider_valueChanged(int value)
     advancingTimer->setInterval(1000/value);
     qDebug() << "simSpeed" << value;
 }
+
 void MainWindow::on_drawFuelButton_clicked()
 {
-
     if (ui->mainPicture->hasMouseTracking()){
-        if (drawingFuels){
-            ui->drawFuelButton->setText("Draw selected fuel");
-            ui->addFireButton->setDisabled(false);
-            ui->mainPicture->setCursor(Qt::ArrowCursor);
-            ui->mainPicture->setMouseTracking(false);
-            drawingFuels = false;
-        }
+        stopDrawingFuel();
     } else {
         ui->drawFuelButton->setText("Stop drawing fuels");
         ui->mainPicture->setCursor(Qt::UpArrowCursor);
         ui->mainPicture->setMouseTracking(true);
         ui->addFireButton->setDisabled(true);
         drawingFuels = true;
+    }
+}
+
+void MainWindow::stopDrawingFuel(){
+    if (drawingFuels){
+        ui->drawFuelButton->setText("Draw selected fuel");
+        ui->mainPicture->setCursor(Qt::ArrowCursor);
+        ui->mainPicture->setMouseTracking(false);
+        ui->addFireButton->setDisabled(false);
+        drawingFuels = false;
+    }
+}
+
+void MainWindow::stopAddingFires(){
+    if (addingFires){
+        ui->addFireButton->setText("Add fires");
+        ui->mainPicture->setCursor(Qt::ArrowCursor);
+        ui->mainPicture->setMouseTracking(false);
+        if(!advancingTimer->isActive()){
+            ui->drawFuelButton->setDisabled(false);
+        }
+        addingFires = false;
     }
 }
 
@@ -359,4 +387,16 @@ void MainWindow::on_progressBar_advancing(Environment* Forest){
   //bar->setFormat(QString("%1%").arg(Percentage, 0, 'f', 2));
   bar->setFormat(QString("%1 ha").arg(Burned*1e-4, 0, 'f', 2));     //m2 to hectares
   bar->setValue((int)(Percentage*100));
+}
+
+void MainWindow::on_removeAllFuels_clicked()
+{
+    QList<QListWidgetItem*> fuelsList = ui->fuelList->findItems("*", Qt::MatchWildcard);
+    if (!fuelsList.isEmpty()) {
+        while (!fuelsList.isEmpty()){
+            // remove item from the list using "takeItem" while setting its colour to 0
+            fuelColors[getFuelIndex(ui->fuelList->takeItem(ui->fuelList->row(fuelsList.takeFirst()))->text())] = 0;
+        }
+        buildAndDraw();
+    }
 }

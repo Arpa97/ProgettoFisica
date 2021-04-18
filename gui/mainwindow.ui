@@ -346,12 +346,12 @@
       <rect>
        <x>10</x>
        <y>240</y>
-       <width>101</width>
+       <width>61</width>
        <height>41</height>
       </rect>
      </property>
      <property name="text">
-      <string>Add Fuel</string>
+      <string>Add</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_6">
@@ -377,14 +377,14 @@
     <widget class="QPushButton" name="removeFuel">
      <property name="geometry">
       <rect>
-       <x>120</x>
+       <x>80</x>
        <y>240</y>
-       <width>91</width>
+       <width>51</width>
        <height>41</height>
       </rect>
      </property>
      <property name="text">
-      <string>Remove Fuel</string>
+      <string>Remove</string>
      </property>
     </widget>
     <widget class="QPushButton" name="drawFuelButton">
@@ -398,6 +398,19 @@
      </property>
      <property name="text">
       <string>Draw selected fuel</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="removeAllFuels">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>240</y>
+       <width>71</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Remove all</string>
      </property>
     </widget>
    </widget>
