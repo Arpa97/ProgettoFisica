@@ -56,7 +56,7 @@ double Rothermel2_R0(Fuel* fuel, double _M_f)	//in ft/min
 		}
 		else
 		{
-			double T = -1.11 * M_f[1][0] + 1.33;
+			T = -1.11 * M_f[1][0] + 1.33;
 		}
 		w_0[0][3] = T * w_0[1][0];
 		w_0[1][0] = w_0[1][0] - T * w_0[1][0];
@@ -196,7 +196,9 @@ double Rothermel2_R0(Fuel* fuel, double _M_f)	//in ft/min
 		}
 
 		r_M[i] = M_f1[i] / M_x[i];
+		r_M[i] = std::min(r_M[i], 1.0);
 		eta_M[i] = 1 - 2.59 * r_M[i] + 5.11 * pow(r_M[i], 2) - 3.52 * pow(r_M[i], 3);
+		if (eta_M[i] < 1e-5)	eta_M[i] = 0;
 	}
 
 	sigma = rho_b = beta = 0;
