@@ -62,6 +62,11 @@ double MainWindow::getFuelIndex(QString fuelName){
 }
 
 void MainWindow::buildForest(){
+    // set elapsed time to 0
+    ncicli = 0;
+    ui->labelInfoTime->setText(QString("Elapsed time: ") + QString().number(ncicli) + QString("s"));
+
+    // build forest
     std::vector<std::vector<double>> composizione;
     QList<QListWidgetItem*> fuelsList = ui->fuelList->findItems("*", Qt::MatchWildcard);
     if (fuelsList.isEmpty()){
