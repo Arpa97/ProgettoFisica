@@ -315,8 +315,25 @@ void MainWindow::on_windSpeed_valueChanged(int value)
 {
   double newSpeed = (double)value*MAXWINDSPEED/100;
   ui->windSpeedLabel->setText(QString("Speed: ") + QString().number(newSpeed) + QString(" m/s"));
+  ui->Wind_Description->setText(getWindClassification(newSpeed));
   Foresta->setU(newSpeed);
   //qDebug() << "winSpeed" << newSpeed;
+}
+
+QString MainWindow::getWindClassification(double speed){
+  if (speed >= 0 && speed < 0.5) return "Calm:\nSmoke rises vertically";
+  else if (speed >= 0.5 && speed <= 1.5) return "Light Air:\nSmoke drifts with air,\nweather vanes inactive";
+  else if (speed > 1.5 && speed <= 3) return "Light Breeze:\nWeather vanes active,\nwind felt on face, leaves rustle";
+  else if (speed > 3 && speed <= 5) return "Gentle Breeze:\nLeaves & small twigs move,\nlight flags extend";
+  else if (speed > 5 && speed <= 8) return "Moderate Breeze:\nSmall branches sway,\ndust & loose paper blows about";
+  else if (speed > 8 && speed <= 10.5) return "Fresh Breeze:\nSmall trees sway,\nwaves break on inland waters";
+  else if (speed > 10.5 && speed <= 13.5) return "Strong Breeze:\nLarge branches sway,\numbrellas difficult to use";
+  else if (speed > 13.5 && speed <= 16.5) return "Moderate Gale:\nWhole trees sway,\ndifficult to walk against wind";
+  else if (speed > 16.5 && speed <= 20) return "Fresh Gale:\nTwigs broken off trees,\nwalking against wind very difficult";
+  else if (speed > 20 && speed <= 23.5) return "Strong Gale:\nSlight damage to buildings,\nshingles blown off roof";
+  else if (speed > 23.5 && speed <= 27.5) return "Whole Gale:\nTrees uprooted,\nconsiderable damage to buildings";
+  else if (speed > 27.5 && speed <= 31.5) return "Storm:\nWidespread damage,\nvery rare occurrence";
+  else if (speed > 31.5) return "Hurricane:\nViolent destruction";
 }
 
 void MainWindow::on_clearButton_clicked()
