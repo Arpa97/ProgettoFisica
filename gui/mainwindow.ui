@@ -561,7 +561,7 @@ Smoke rises vertically</string>
      <number>0</number>
     </property>
     <property name="format">
-     <string>%p%</string>
+     <string>%p ha</string>
     </property>
    </widget>
    <widget class="QSlider" name="moistureSlider">

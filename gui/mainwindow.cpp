@@ -42,6 +42,8 @@ void MainWindow::addMountain(){
 }
 
 void MainWindow::buildAndDraw(){
+    ui->progressBar->setValue(0);
+    ui->progressBar->setFormat("0 ha");
     if (ui->fuelList->findItems("*", Qt::MatchWildcard).isEmpty()){
          addSpecificFuel(DEFAULT_FUEL);
     }
@@ -82,6 +84,8 @@ void MainWindow::buildForest(){
         Foresta = new Environment(composizione, ui->moistureSlider->value()/10.0);
     }
     // Method to add single predefined mountain
+    Foresta->setU(ui->windSpeed->value() * MAXWINDSPEED / 100);
+    Foresta->setTheta(ui->windDir->value() / 100);
     addMountain();
 }
 
@@ -349,6 +353,9 @@ void MainWindow::on_clearButton_clicked()
     ui->mainPicture->setPixmap(QPixmap::fromImage(original));
     //pulire vettore wildfire
     Foresta->wildfire.clear();
+    //reset progressBar
+    ui->progressBar->setValue(0);
+    ui->progressBar->setFormat("0 ha");
     //stoppare esecuzione
     ncicli=0;
     ui->labelInfoTime->setText(QString("Elapsed time: ") + QString().number(ncicli) + QString("s"));
