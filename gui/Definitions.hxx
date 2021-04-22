@@ -27,3 +27,5 @@
 #define WIND_LIMIT true							// If true, wind limit is applied
 
 #define MAX_HEIGHT 10                         // Maximum mountain height, to compute opacity
+
+#define NPOINTS_CHECK 10						//Number of adjacent points checked for intersections by checkEdges
