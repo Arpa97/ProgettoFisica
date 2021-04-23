@@ -197,7 +197,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
           int x = event->pos().x() - ui->mainPicture->x();
           int y = event->pos().y() - ui->mainPicture->y();
           if (0 < x && x < ui->mainPicture->width() && 0 < y && y < ui->mainPicture->height()){
-              double height = ui->mountainHeightSlider->value();
+              double height = ui->mountainHeightSlider->value() * MAX_HEIGHT / 10;
               double width = ui->mountainWidthSlider->value();
               addMountain((double)x, (double)y, height, width);
           }
@@ -358,7 +358,7 @@ QString MainWindow::getWindClassification(double speed){
   else if (speed > 20 && speed <= 23.5) return "Strong Gale:\nSlight damage to buildings,\nshingles blown off roof";
   else if (speed > 23.5 && speed <= 27.5) return "Whole Gale:\nTrees uprooted,\nconsiderable damage to buildings";
   else if (speed > 27.5 && speed <= 31.5) return "Storm:\nWidespread damage,\nvery rare occurrence";
-  else if (speed > 31.5) return "Hurricane:\nViolent destruction";
+  else return "Hurricane:\nViolent destruction";
 }
 
 void MainWindow::on_clearButton_clicked()
@@ -507,7 +507,7 @@ void MainWindow::on_mountainAddButton_clicked()
         stopAddingMountains();
     } else {
         ui->mountainAddButton->setText("Stop adding mountains");
-        ui->mainPicture->setCursor(Qt::UpArrowCursor);
+        ui->mainPicture->setCursor(cursorTarget);
         ui->mainPicture->setMouseTracking(true);
         ui->addFireButton->setDisabled(true);
         ui->drawFuelButton->setDisabled(true);
