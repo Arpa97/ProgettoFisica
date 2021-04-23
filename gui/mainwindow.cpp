@@ -199,7 +199,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
           if (0 < x && x < ui->mainPicture->width() && 0 < y && y < ui->mainPicture->height()){
               double height = ui->mountainHeightSlider->value();
               double width = ui->mountainWidthSlider->value();
-              addMountain((double)x, (double)y, width, height);
+              addMountain((double)x, (double)y, height, width);
           }
       }
     }

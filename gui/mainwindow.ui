@@ -655,6 +655,12 @@ Smoke rises vertically</string>
      <property name="minimum">
       <number>1</number>
      </property>
+     <property name="maximum">
+      <number>10</number>
+     </property>
+     <property name="pageStep">
+      <number>1</number>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -675,7 +681,7 @@ Smoke rises vertically</string>
       <number>1</number>
      </property>
      <property name="maximum">
-      <number>400</number>
+      <number>200</number>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
