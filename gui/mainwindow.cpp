@@ -32,13 +32,14 @@ MainWindow::MainWindow(QWidget *parent)
     ui->moistureSlider->setValue(DEFAULT_MOISTURE*10);
 }
 
-void MainWindow::addMountain(){
-    // Test mountain
-    double pos[2] = {200,200};
-    int height = 10;
-    int lar = 300;
-
-    Foresta->addMountain(height, pos, lar);
+void MainWindow::addMountain(double x, double y, double height, double width){
+    double pos[2] = {x / rescale, (GRID_SIDE - y / rescale)};
+    Foresta->addMountain(height, pos, width);
+    drawOriginalgrid();
+    qDebug() << QString("x") << QString().number(x);
+    qDebug() << QString("y") << QString().number(y);
+    qDebug() << QString("height") << QString().number(height);
+    qDebug() << QString("width") << QString().number(width);
 }
 
 void MainWindow::buildAndDraw(){
@@ -86,7 +87,6 @@ void MainWindow::buildForest(){
     // Method to add single predefined mountain
     Foresta->setU(ui->windSpeed->value() * MAXWINDSPEED / 100);
     Foresta->setTheta(ui->windDir->value() / 100);
-    addMountain();
 }
 
 void MainWindow::updateColors(){
@@ -193,6 +193,15 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
       else if(drawingFuels){
           drawFuel(event);
       }
+      else if(addingMountain){
+          int x = event->pos().x() - ui->mainPicture->x();
+          int y = event->pos().y() - ui->mainPicture->y();
+          if (0 < x && x < ui->mainPicture->width() && 0 < y && y < ui->mainPicture->height()){
+              double height = ui->mountainHeightSlider->value();
+              double width = ui->mountainWidthSlider->value();
+              addMountain((double)x, (double)y, height, width);
+          }
+      }
     }
 }
 
@@ -223,6 +232,7 @@ void MainWindow::on_addFireButton_clicked()
         ui->mainPicture->setCursor(cursorTarget);
         ui->mainPicture->setMouseTracking(true);
         ui->drawFuelButton->setDisabled(true);
+        ui->mountainAddButton->setDisabled(true);
         addingFires = true;
     }
 }
@@ -293,10 +303,16 @@ void MainWindow::on_startButton_clicked()
       ui->mainPicture->setMouseTracking(false);
       ui->startButton->setText(advancingTimer->isActive() ? "Start" : "Stop");
       stopAddingFires();
+      toggleMountainPanel();
       toggleFuelsPanel();
       advancingTimer->isActive() ? ui->moistureSlider->setDisabled(false) : ui->moistureSlider->setDisabled(true);
       advancingTimer->isActive() ? advancingTimer->stop() : advancingTimer->start();
     }
+}
+
+void MainWindow::toggleMountainPanel(){
+    stopAddingMountains();
+    ui->mountainAddButton->isEnabled() ? ui->mountainAddButton->setEnabled(false) : ui->mountainAddButton->setEnabled(true);
 }
 
 void MainWindow::toggleFuelsPanel(){
@@ -407,6 +423,7 @@ void MainWindow::on_drawFuelButton_clicked()
         ui->mainPicture->setCursor(Qt::UpArrowCursor);
         ui->mainPicture->setMouseTracking(true);
         ui->addFireButton->setDisabled(true);
+        ui->mountainAddButton->setDisabled(true);
         drawingFuels = true;
     }
 }
@@ -417,7 +434,19 @@ void MainWindow::stopDrawingFuel(){
         ui->mainPicture->setCursor(Qt::ArrowCursor);
         ui->mainPicture->setMouseTracking(false);
         ui->addFireButton->setDisabled(false);
+        ui->mountainAddButton->setDisabled(false);
         drawingFuels = false;
+    }
+}
+
+void MainWindow::stopAddingMountains(){
+    if (addingMountain){
+        ui->mountainAddButton->setText("Add mountain");
+        ui->mainPicture->setCursor(Qt::ArrowCursor);
+        ui->mainPicture->setMouseTracking(false);
+        ui->addFireButton->setDisabled(false);
+        ui->drawFuelButton->setDisabled(false);
+        addingMountain = false;
     }
 }
 
@@ -428,6 +457,7 @@ void MainWindow::stopAddingFires(){
         ui->mainPicture->setMouseTracking(false);
         if(!advancingTimer->isActive()){
             ui->drawFuelButton->setDisabled(false);
+            ui->mountainAddButton->setDisabled(false);
         }
         addingFires = false;
     }
@@ -469,4 +499,18 @@ void MainWindow::on_moistureSlider_valueChanged(int value)
 void MainWindow::on_invertCheckBox_stateChanged(int arg1)
 {
     original = drawOriginalgrid();
+}
+
+void MainWindow::on_mountainAddButton_clicked()
+{
+    if (ui->mainPicture->hasMouseTracking()){
+        stopAddingMountains();
+    } else {
+        ui->mountainAddButton->setText("Stop adding mountains");
+        ui->mainPicture->setCursor(Qt::UpArrowCursor);
+        ui->mainPicture->setMouseTracking(true);
+        ui->addFireButton->setDisabled(true);
+        ui->drawFuelButton->setDisabled(true);
+        addingMountain = true;
+    }
 }

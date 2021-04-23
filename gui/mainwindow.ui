@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>994</width>
-    <height>616</height>
+    <height>635</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -422,7 +422,7 @@ Smoke rises vertically</string>
       <rect>
        <x>130</x>
        <y>240</y>
-       <width>91</width>
+       <width>81</width>
        <height>41</height>
       </rect>
      </property>
@@ -612,18 +612,143 @@ Smoke rises vertically</string>
      <string>Moisture:</string>
     </property>
    </widget>
-   <widget class="QCheckBox" name="invertCheckBox">
+   <widget class="QFrame" name="frame_3">
     <property name="geometry">
      <rect>
       <x>500</x>
-      <y>540</y>
-      <width>161</width>
-      <height>21</height>
+      <y>509</y>
+      <width>461</width>
+      <height>101</height>
      </rect>
     </property>
-    <property name="text">
-     <string>Inverted mountain opacity</string>
+    <property name="autoFillBackground">
+     <bool>true</bool>
     </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Plain</enum>
+    </property>
+    <widget class="QPushButton" name="mountainAddButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>111</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Add mountain</string>
+     </property>
+    </widget>
+    <widget class="QSlider" name="mountainHeightSlider">
+     <property name="geometry">
+      <rect>
+       <x>260</x>
+       <y>30</y>
+       <width>160</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>10</number>
+     </property>
+     <property name="pageStep">
+      <number>1</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="tickPosition">
+      <enum>QSlider::TicksBelow</enum>
+     </property>
+    </widget>
+    <widget class="QSlider" name="mountainWidthSlider">
+     <property name="geometry">
+      <rect>
+       <x>260</x>
+       <y>60</y>
+       <width>160</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>400</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="tickPosition">
+      <enum>QSlider::TicksBelow</enum>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="invertCheckBox">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>70</y>
+       <width>161</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Inverted mountain opacity</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_8">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>0</y>
+       <width>161</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Mountain selection</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>30</y>
+       <width>47</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Height</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>60</y>
+       <width>47</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Width</string>
+     </property>
+    </widget>
    </widget>
    <zorder>frame</zorder>
    <zorder>mainPicture</zorder>
@@ -640,7 +765,7 @@ Smoke rises vertically</string>
    <zorder>moistureSlider</zorder>
    <zorder>moistureLabelTop</zorder>
    <zorder>moistureLabelValue</zorder>
-   <zorder>invertCheckBox</zorder>
+   <zorder>frame_3</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

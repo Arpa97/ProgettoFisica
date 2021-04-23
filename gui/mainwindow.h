@@ -31,6 +31,7 @@ public:
     int ncicli = 0;
     bool addingFires = false;
     bool drawingFuels = false;
+    bool addingMountain = false;
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
@@ -50,7 +51,7 @@ private slots:
     void buildForest();
 
     // test method to add a mountain in a fixed place
-    void addMountain();
+    void addMountain(double x, double y, double height, double width);
 
     // builds the forest and draw it on the canvas
     void buildAndDraw();
@@ -61,14 +62,18 @@ private slots:
     // update colors used to draw fuels
     void updateColors();
 
-    // toggle fuels panel, allowing or not changes
+    // toggle panels, allowing or not changes
     void toggleFuelsPanel();
+    void toggleMountainPanel();
 
     // if fuel drawing is enabled, stop it
     void stopDrawingFuel();
 
     // if fires adding is enabled, disables it
     void stopAddingFires();
+
+    // if mountain adding is enabled, disables it
+    void stopAddingMountains();
 
     //add specific fuel to the list
     void addSpecificFuel(QString selectedFuel);
@@ -101,6 +106,8 @@ private slots:
     void on_moistureSlider_valueChanged(int value);
 
     void on_invertCheckBox_stateChanged(int arg1);
+
+    void on_mountainAddButton_clicked();
 
 private:
     Ui::MainWindow *ui;
