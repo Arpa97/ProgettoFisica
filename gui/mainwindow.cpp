@@ -35,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::addMountain(double x, double y, double height, double width){
     double pos[2] = {x / rescale, (GRID_SIDE - y / rescale)};
     Foresta->addMountain(height, pos, width);
-    drawOriginalgrid();
+    original = drawOriginalgrid();
     qDebug() << QString("x") << QString().number(x);
     qDebug() << QString("y") << QString().number(y);
     qDebug() << QString("height") << QString().number(height);
