@@ -232,6 +232,7 @@ void MainWindow::on_addFireButton_clicked()
         ui->mainPicture->setCursor(cursorTarget);
         ui->mainPicture->setMouseTracking(true);
         ui->drawFuelButton->setDisabled(true);
+        ui->mountainAddButton->setDisabled(true);
         addingFires = true;
     }
 }
@@ -302,10 +303,16 @@ void MainWindow::on_startButton_clicked()
       ui->mainPicture->setMouseTracking(false);
       ui->startButton->setText(advancingTimer->isActive() ? "Start" : "Stop");
       stopAddingFires();
+      toggleMountainPanel();
       toggleFuelsPanel();
       advancingTimer->isActive() ? ui->moistureSlider->setDisabled(false) : ui->moistureSlider->setDisabled(true);
       advancingTimer->isActive() ? advancingTimer->stop() : advancingTimer->start();
     }
+}
+
+void MainWindow::toggleMountainPanel(){
+    stopAddingMountains();
+    ui->mountainAddButton->isEnabled() ? ui->mountainAddButton->setEnabled(false) : ui->mountainAddButton->setEnabled(true);
 }
 
 void MainWindow::toggleFuelsPanel(){
@@ -416,6 +423,7 @@ void MainWindow::on_drawFuelButton_clicked()
         ui->mainPicture->setCursor(Qt::UpArrowCursor);
         ui->mainPicture->setMouseTracking(true);
         ui->addFireButton->setDisabled(true);
+        ui->mountainAddButton->setDisabled(true);
         drawingFuels = true;
     }
 }
@@ -502,7 +510,7 @@ void MainWindow::on_mountainAddButton_clicked()
         ui->mainPicture->setCursor(Qt::UpArrowCursor);
         ui->mainPicture->setMouseTracking(true);
         ui->addFireButton->setDisabled(true);
-        ui->addFuel->setDisabled(true);
+        ui->drawFuelButton->setDisabled(true);
         addingMountain = true;
     }
 }

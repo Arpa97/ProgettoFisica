@@ -62,8 +62,9 @@ private slots:
     // update colors used to draw fuels
     void updateColors();
 
-    // toggle fuels panel, allowing or not changes
+    // toggle panels, allowing or not changes
     void toggleFuelsPanel();
+    void toggleMountainPanel();
 
     // if fuel drawing is enabled, stop it
     void stopDrawingFuel();
