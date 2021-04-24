@@ -440,10 +440,10 @@ Smoke rises vertically</string>
       </rect>
      </property>
      <property name="minimum">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="maximum">
-      <number>5</number>
+      <number>4</number>
      </property>
      <property name="singleStep">
       <number>1</number>
@@ -452,7 +452,7 @@ Smoke rises vertically</string>
       <number>1</number>
      </property>
      <property name="value">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -689,7 +689,7 @@ Smoke rises vertically</string>
       <rect>
        <x>10</x>
        <y>30</y>
-       <width>111</width>
+       <width>151</width>
        <height>31</height>
       </rect>
      </property>
