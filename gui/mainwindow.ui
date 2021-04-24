@@ -467,17 +467,17 @@ Smoke rises vertically</string>
     <widget class="QLabel" name="BrushSizeLabel">
      <property name="geometry">
       <rect>
-       <x>30</x>
+       <x>60</x>
        <y>60</y>
-       <width>161</width>
+       <width>111</width>
        <height>20</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>12</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
+       <pointsize>11</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
       </font>
      </property>
      <property name="text">
