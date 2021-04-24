@@ -374,8 +374,8 @@ Smoke rises vertically</string>
     <widget class="QLabel" name="label_6">
      <property name="geometry">
       <rect>
-       <x>50</x>
-       <y>20</y>
+       <x>60</x>
+       <y>0</y>
        <width>112</width>
        <height>20</height>
       </rect>
@@ -408,7 +408,7 @@ Smoke rises vertically</string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>50</y>
+       <y>20</y>
        <width>201</width>
        <height>41</height>
       </rect>
@@ -428,6 +428,60 @@ Smoke rises vertically</string>
      </property>
      <property name="text">
       <string>Remove all</string>
+     </property>
+    </widget>
+    <widget class="QSlider" name="PaintDimension">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>80</y>
+       <width>160</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>5</number>
+     </property>
+     <property name="singleStep">
+      <number>1</number>
+     </property>
+     <property name="pageStep">
+      <number>1</number>
+     </property>
+     <property name="value">
+      <number>1</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="tickPosition">
+      <enum>QSlider::TicksBelow</enum>
+     </property>
+     <property name="tickInterval">
+      <number>30</number>
+     </property>
+    </widget>
+    <widget class="QLabel" name="BrushSizeLabel">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>60</y>
+       <width>161</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Brush size : XS</string>
      </property>
     </widget>
    </widget>

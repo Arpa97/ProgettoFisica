@@ -204,19 +204,53 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
       }
     }
 }
-
 void MainWindow::drawFuel(QMouseEvent *event){
     double fuelNumber;
     int x = event->pos().x() - ui->mainPicture->x();
     int y = event->pos().y() - ui->mainPicture->y();
+    int size = ui->PaintDimension->value();
     if (0 < x && x < ui->mainPicture->width() && 0 < y && y < ui->mainPicture->height()){
         QListWidgetItem* current = ui->fuelList->currentItem();
         if(current){
            //current->text().toInt();
           fuelNumber = getFuelIndex(current->text());
-          double xcell = x / rescale;
-          double ycell = (GRID_SIDE - y / rescale);
-          Foresta->setCellType(xcell, ycell, fuelNumber);
+          double xcell = x / (rescale);
+          double ycell = (GRID_SIDE - y / (rescale));
+          if (size >= 1){
+            Foresta->setCellType(xcell, ycell, fuelNumber);
+            if (size >= 2){
+              double xcell2 = xcell +10;
+              if (xcell2 > 398) xcell2 = xcell;
+              Foresta->setCellType(xcell2, ycell, fuelNumber);
+              double xcell3 = xcell -10;
+              if (xcell3 < 0) xcell3 = xcell;
+              Foresta->setCellType(xcell3, ycell, fuelNumber);
+              if (size >= 3){
+                double ycell2 = ycell +10;
+                if (ycell2 > 398) ycell2 = ycell;
+                Foresta->setCellType(xcell, ycell2, fuelNumber);
+                double ycell3 = ycell -10;
+                if (ycell3 < 0) ycell3 = ycell;
+                Foresta->setCellType(xcell, ycell3, fuelNumber);
+                if (size >= 4){
+                  double ycell2 = ycell +10;
+                  if (ycell2 > 398) ycell2 = ycell;
+                  Foresta->setCellType(xcell2, ycell2, fuelNumber);
+                  double ycell3 = ycell -10;
+                  if (ycell3 < 0) ycell3 = ycell;
+                  Foresta->setCellType(xcell2, ycell3, fuelNumber);
+                  if (size == 5){
+                    double ycell2 = ycell +10;
+                    if (ycell2 > 398) ycell2 = ycell;
+                    Foresta->setCellType(xcell3, ycell2, fuelNumber);
+                    double ycell3 = ycell -10;
+                    if (ycell3 < 0) ycell3 = ycell;
+                    Foresta->setCellType(xcell3, ycell3, fuelNumber);
+                  }
+                }
+              }
+            }
+          }
           original = drawOriginalgrid();
         }
     }
@@ -343,6 +377,15 @@ void MainWindow::on_windSpeed_valueChanged(int value)
   ui->Wind_Description->setText(getWindClassification(newSpeed));
   Foresta->setU(newSpeed);
   //qDebug() << "winSpeed" << newSpeed;
+}
+
+void MainWindow::on_PaintDimension_valueChanged(int value)
+{
+  if (value == 1) ui->BrushSizeLabel->setText(QString("Brush size: XS"));
+  else if (value == 2) ui->BrushSizeLabel->setText(QString("Brush size: S"));
+  else if (value == 3) ui->BrushSizeLabel->setText(QString("Brush size: M"));
+  else if (value == 4) ui->BrushSizeLabel->setText(QString("Brush size: L"));
+  else ui->BrushSizeLabel->setText(QString("Brush size: XL"));
 }
 
 QString MainWindow::getWindClassification(double speed){
