@@ -512,7 +512,7 @@ void MainWindow::on_moistureSlider_valueChanged(int value)
 {
     ui->moistureSlider->setDisabled(true);
     ui->moistureLabelValue->setText(QString("Moisture: ") + QString().number(value/10.0));
-    buildAndDraw();
+    Foresta->setMf(ui->moistureSlider->value()/10.0);
     ui->moistureSlider->setDisabled(false);
 }
 

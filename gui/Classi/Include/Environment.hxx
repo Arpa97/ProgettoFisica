@@ -57,6 +57,7 @@ public:
 	// Methods for the wind setting and getting
 	void setU(double _U);
 	void setTheta(double _theta);
+	void setMf(double _Mf);
 	double getU() const;
 	double getTheta() const;
 	double getM_f() const;
