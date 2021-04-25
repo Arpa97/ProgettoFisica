@@ -50,7 +50,10 @@ Environment::Environment(const std::vector<std::vector<double>> &fuelPercentages
 			grid[i][j] = new Cell(fuelNumber, 0);
             grid[i][j]->setR(U, theta);
 		}
-	}	
+    }
+
+    // Check to limit the maximum moisture of the forest
+    M_f = M_f < getMaximumMoisture() ? M_f : getMaximumMoisture();
 }
 
 double Environment::getMaximumMoisture(){
@@ -68,6 +71,7 @@ double Environment::getMaximumMoisture(){
         }
     }
 
+    // Remove 0.01 from the max moisture to avoid non-propagating fire
     maxMoisture = maxMoisture - 0.01;
     return maxMoisture;
 }
