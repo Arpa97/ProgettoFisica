@@ -8,6 +8,7 @@
 #pragma once 
 
 #define DEFAULT_MOISTURE 0.1					// fraction. Not changing run-time
+#define SCALER_MOISTURE 100.0                   // scaler for the moisture slider
 
 #define CELL_SIDE 10							// m. Length of the cell (square) side. Cannot be chosen by user.
 #define GRID_SIDE 400							// m. Length of the grid size. Must be a multiple of CELL_SIDE. Can be chosen by user.
