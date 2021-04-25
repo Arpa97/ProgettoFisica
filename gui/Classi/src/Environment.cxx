@@ -48,9 +48,28 @@ Environment::Environment(const std::vector<std::vector<double>> &fuelPercentages
 			} while (validator > fuelPercentages[number][1]);
 
 			grid[i][j] = new Cell(fuelNumber, 0);
-			grid[i][j]->setR(U, theta);
+            grid[i][j]->setR(U, theta);
 		}
 	}	
+}
+
+double Environment::getMaximumMoisture(){
+    int step = GRID_SIDE / CELL_SIDE;
+    double maxMoisture = 1;
+    double M_x;
+    std::vector<Fuel*> fuelsInForest = getFuelInfo();
+
+    for (int i = 0; i != step; i++)
+    {
+        for (int j = 0; j != step; j++)
+        {
+            M_x = fuelsInForest[grid[i][j]->fuelIndex]->M_x;
+            maxMoisture = maxMoisture < M_x ? maxMoisture : M_x;
+        }
+    }
+
+    maxMoisture = maxMoisture - 0.01;
+    return maxMoisture;
 }
 
 
@@ -118,7 +137,6 @@ void Environment::advance_withoutHeap()
 	{
 		wildfire[i]->Propagate_withoutHeap(dt);
 	}
-
 }
 
 

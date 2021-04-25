@@ -80,4 +80,7 @@ public:
 	//il quale NON deve essere messo nelle scelte possibili con cui disegnare la mappa
 	//Per prendere il nome di un fuel basta quindi fare Environment::getFuelInfo()[i]->name;
     static std::vector<Fuel*> getFuelInfo();
+
+    // Get maximum moisture for this forest
+    double getMaximumMoisture();
 };
