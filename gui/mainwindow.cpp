@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Set moisture to default value (also draws forest)
     ui->moistureSlider->setValue(DEFAULT_MOISTURE*SCALER_MOISTURE);
+    buildAndDraw();
 }
 
 void MainWindow::addMountain(double x, double y, double height, double width){
