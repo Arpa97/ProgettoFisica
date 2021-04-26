@@ -103,6 +103,8 @@ private slots:
 
     void on_removeAllFuels_clicked();
 
+    void on_PaintDimension_valueChanged(int value);
+
     void on_moistureSlider_valueChanged(int value);
 
     void on_invertCheckBox_stateChanged(int arg1);

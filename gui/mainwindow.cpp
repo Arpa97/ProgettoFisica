@@ -209,19 +209,30 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
       }
     }
 }
-
 void MainWindow::drawFuel(QMouseEvent *event){
     double fuelNumber;
     int x = event->pos().x() - ui->mainPicture->x();
     int y = event->pos().y() - ui->mainPicture->y();
+    int size = ui->PaintDimension->value();
     if (0 < x && x < ui->mainPicture->width() && 0 < y && y < ui->mainPicture->height()){
         QListWidgetItem* current = ui->fuelList->currentItem();
         if(current){
            //current->text().toInt();
           fuelNumber = getFuelIndex(current->text());
-          double xcell = x / rescale;
-          double ycell = (GRID_SIDE - y / rescale);
-          Foresta->setCellType(xcell, ycell, fuelNumber);
+          double xcell = x / (rescale);
+          double ycell = (GRID_SIDE - y / (rescale));
+          for (int i = -size; i <= size; i++)
+          {
+              for (int j = -size; j <= size; j++)
+              {
+                  double xc = xcell + i * CELL_SIDE;
+                  double yc = ycell + j * CELL_SIDE;
+                  if (xc > 0 && xc < GRID_SIDE && yc > 0 && yc < GRID_SIDE)
+                  {
+                      Foresta->setCellType(xc, yc, fuelNumber);
+                  }
+              }
+          }
           original = drawOriginalgrid();
         }
     }
@@ -348,6 +359,15 @@ void MainWindow::on_windSpeed_valueChanged(int value)
   ui->Wind_Description->setText(getWindClassification(newSpeed));
   Foresta->setU(newSpeed);
   //qDebug() << "winSpeed" << newSpeed;
+}
+
+void MainWindow::on_PaintDimension_valueChanged(int value)
+{
+    if (value == 0) ui->BrushSizeLabel->setText(QString("Brush size: XS"));
+    else if (value == 1) ui->BrushSizeLabel->setText(QString("Brush size: S"));
+    else if (value == 2) ui->BrushSizeLabel->setText(QString("Brush size: M"));
+    else if (value == 3) ui->BrushSizeLabel->setText(QString("Brush size: L"));
+    else ui->BrushSizeLabel->setText(QString("Brush size: XL"));
 }
 
 QString MainWindow::getWindClassification(double speed){
@@ -497,7 +517,7 @@ void MainWindow::on_moistureSlider_valueChanged(int value)
 {
     ui->moistureSlider->setDisabled(true);
     ui->moistureLabelValue->setText(QString("Moisture: ") + QString().number(value/SCALER_MOISTURE));
-    buildAndDraw();
+    Foresta->setMf(ui->moistureSlider->value()/SCALER_MOISTURE);
     ui->moistureSlider->setDisabled(false);
 }
 

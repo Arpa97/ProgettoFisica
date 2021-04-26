@@ -231,6 +231,24 @@ void Environment::setTheta(double _theta){
 	calcAll();
 }
 
+void Environment::setMf(double _Mf){
+	M_f = _Mf;
+
+	Cell::FillFuelType(M_f);
+
+	int step = GRID_SIDE / CELL_SIDE;
+	for (int i = 0; i != step; i++)
+	{
+		for (int j = 0; j != step; j++)
+		{
+			grid[i][j]->setR(U, theta);
+		}
+	}
+
+	// Recalculate all timesteps
+	calcAll();
+}
+
 double Environment::getU() const
 {
 	return U;
