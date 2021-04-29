@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include <cmath>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -29,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     // Set moisture to default value
-    ui->moistureSlider->setValue(DEFAULT_MOISTURE*10);
+    ui->moistureSlider->setValue(DEFAULT_MOISTURE*SCALER_MOISTURE);
     buildAndDraw();
 }
 
@@ -74,7 +75,7 @@ void MainWindow::buildForest(){
     std::vector<std::vector<double>> composizione;
     QList<QListWidgetItem*> fuelsList = ui->fuelList->findItems("*", Qt::MatchWildcard);
     if (fuelsList.isEmpty()){
-        Foresta = new Environment(composizione, ui->moistureSlider->value()/10.0);
+        Foresta = new Environment(composizione, ui->moistureSlider->value()/SCALER_MOISTURE);
     }
     else {
         int differentFuels = fuelsList.size();
@@ -83,11 +84,17 @@ void MainWindow::buildForest(){
             std::vector<double> toadd = {getFuelIndex(fuelsList.takeFirst()->text()), fraction};
             composizione.push_back(toadd);
         }
-        Foresta = new Environment(composizione, ui->moistureSlider->value()/10.0);
+        Foresta = new Environment(composizione, ui->moistureSlider->value()/SCALER_MOISTURE);
     }
     // Method to add single predefined mountain
     Foresta->setU(ui->windSpeed->value() * MAXWINDSPEED / 100);
     Foresta->setTheta(ui->windDir->value() / 100);
+
+    // Get and set maximum moisture
+    double M_fmax = Foresta->getMaximumMoisture();
+    //qDebug() << QString().number(M_fmax);
+    ui->moistureSlider->setMaximum(round(M_fmax*SCALER_MOISTURE));
+    ui->moistureSlider->setSingleStep(M_fmax/SCALER_MOISTURE);
 }
 
 void MainWindow::updateColors(){
@@ -512,8 +519,8 @@ void MainWindow::on_removeAllFuels_clicked()
 void MainWindow::on_moistureSlider_valueChanged(int value)
 {
     ui->moistureSlider->setDisabled(true);
-    ui->moistureLabelValue->setText(QString("Moisture: ") + QString().number(value/10.0));
-    Foresta->setMf(ui->moistureSlider->value()/10.0);
+    ui->moistureLabelValue->setText(QString("Moisture: ") + QString().number(value/SCALER_MOISTURE));
+    Foresta->setMf(ui->moistureSlider->value()/SCALER_MOISTURE);
     ui->moistureSlider->setDisabled(false);
 }
 
