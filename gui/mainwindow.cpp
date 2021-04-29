@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include <cmath>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -90,9 +91,10 @@ void MainWindow::buildForest(){
     Foresta->setTheta(ui->windDir->value() / 100);
 
     // Get and set maximum moisture
-    //qDebug() << QString().number(Foresta->getMaximumMoisture());
-    ui->moistureSlider->setMaximum(Foresta->getMaximumMoisture()*SCALER_MOISTURE);
-    ui->moistureSlider->setSingleStep(Foresta->getMaximumMoisture()/SCALER_MOISTURE);
+    double M_fmax = Foresta->getMaximumMoisture();
+    //qDebug() << QString().number(M_fmax);
+    ui->moistureSlider->setMaximum(round(M_fmax*SCALER_MOISTURE));
+    ui->moistureSlider->setSingleStep(M_fmax/SCALER_MOISTURE);
 }
 
 void MainWindow::updateColors(){

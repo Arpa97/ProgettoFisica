@@ -53,7 +53,8 @@ Environment::Environment(const std::vector<std::vector<double>> &fuelPercentages
     }
 
     // Check to limit the maximum moisture of the forest
-    M_f = M_f < getMaximumMoisture() ? M_f : getMaximumMoisture();
+	double M_fmax = getMaximumMoisture();
+    M_f = M_f < M_fmax ? M_f : M_fmax;
 }
 
 double Environment::getMaximumMoisture(){
@@ -70,9 +71,9 @@ double Environment::getMaximumMoisture(){
             maxMoisture = maxMoisture < M_x ? maxMoisture : M_x;
         }
     }
-
     // Remove 0.01 from the max moisture to avoid non-propagating fire
     maxMoisture = maxMoisture - 0.01;
+
     return maxMoisture;
 }
 
