@@ -7,7 +7,8 @@
 
 #pragma once 
 
-#define MOISTURE_CONTENT 0.1					// fraction. Not changing run-time
+#define DEFAULT_MOISTURE 0.1					// fraction. Not changing run-time
+#define SCALER_MOISTURE 100.0                   // scaler for the moisture slider
 
 #define CELL_SIDE 10							// m. Length of the cell (square) side. Cannot be chosen by user.
 #define GRID_SIDE 400							// m. Length of the grid size. Must be a multiple of CELL_SIDE. Can be chosen by user.
@@ -26,5 +27,6 @@
 #define HETEROGENEOUS_FUEL true					// If true, Rothermel2 is used
 #define WIND_LIMIT true							// If true, wind limit is applied
 
-#define TOPOGRAPHIC_SLOPE 0.349		//20 deg		
-#define TOPOGRAPHIC_ASPECT 1.5707	//90 deg
+#define MAX_HEIGHT 30                         // Maximum mountain height, to compute opacity
+
+#define NPOINTS_CHECK 10						//Number of adjacent points checked for intersections by checkEdges

@@ -93,7 +93,7 @@ Vertex WaveFront::findIntersection(int start)
 
 
         if(a.x != b.x)
-            for (int t = 0; t < std::min(10, (int)Polygon.size() - 2); t++)
+            for (int t = 0; t < std::min(NPOINTS_CHECK, (int)Polygon.size() - 2); t++)
             {
                 int j = (i + 2 + t) % Polygon.size();
 

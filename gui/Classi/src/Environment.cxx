@@ -11,11 +11,11 @@ using std::endl;
 
 Cell* Environment::nullFuel = new Cell(0, 0);
 
-Environment::Environment(const std::vector<std::vector<double>> &fuelPercentages)
+Environment::Environment(const std::vector<std::vector<double>> &fuelPercentages, double moistureContent)
 {
 	U = 0;
-	theta = 0;
-	M_f = MOISTURE_CONTENT;
+    theta = 0;
+    M_f = moistureContent;
 	Cell::FillFuelType(M_f);
 	nullFuel->setR(0);
 	Fire::setEnvironment(this);
@@ -24,7 +24,7 @@ Environment::Environment(const std::vector<std::vector<double>> &fuelPercentages
 	int fuelNumber, number;
 	double validator;
 
-    int nDifferentFuels = fuelPercentages.size();
+    int nDifferentFuels = (int)fuelPercentages.size();
 
 	if (RANDOM)
 	{
@@ -48,9 +48,33 @@ Environment::Environment(const std::vector<std::vector<double>> &fuelPercentages
 			} while (validator > fuelPercentages[number][1]);
 
 			grid[i][j] = new Cell(fuelNumber, 0);
-			grid[i][j]->setR(U, theta);
+            grid[i][j]->setR(U, theta);
 		}
-	}	
+    }
+
+    // Check to limit the maximum moisture of the forest
+	double M_fmax = getMaximumMoisture();
+    M_f = M_f < M_fmax ? M_f : M_fmax;
+}
+
+double Environment::getMaximumMoisture(){
+    int step = GRID_SIDE / CELL_SIDE;
+    double maxMoisture = 1;
+    double M_x;
+    std::vector<Fuel*> fuelsInForest = getFuelInfo();
+
+    for (int i = 0; i != step; i++)
+    {
+        for (int j = 0; j != step; j++)
+        {
+            M_x = fuelsInForest[grid[i][j]->fuelIndex]->M_x;
+            maxMoisture = maxMoisture < M_x ? maxMoisture : M_x;
+        }
+    }
+    // Remove 0.01 from the max moisture to avoid non-propagating fire
+    maxMoisture = maxMoisture - 0.01;
+
+    return maxMoisture;
 }
 
 
@@ -118,7 +142,6 @@ void Environment::advance_withoutHeap()
 	{
 		wildfire[i]->Propagate_withoutHeap(dt);
 	}
-
 }
 
 
@@ -209,6 +232,24 @@ void Environment::setTheta(double _theta){
 	calcAll();
 }
 
+void Environment::setMf(double _Mf){
+	M_f = _Mf;
+
+	Cell::FillFuelType(M_f);
+
+	int step = GRID_SIDE / CELL_SIDE;
+	for (int i = 0; i != step; i++)
+	{
+		for (int j = 0; j != step; j++)
+		{
+			grid[i][j]->setR(U, theta);
+		}
+	}
+
+	// Recalculate all timesteps
+	calcAll();
+}
+
 double Environment::getU() const
 {
 	return U;
@@ -269,19 +310,19 @@ void Environment::addMountain(double h, double pos[2], double lar)
 	for(int j = 0; j != step; j++)
 	{
 		// Compute the vertex coordinate of the cell 
-		// rescalated for using in the heigth function
+        // rescalated for using in the height function
 		x0 = CELL_SIDE*i - pos[0];
 		y0 = CELL_SIDE*j - pos[1];
 		x1 = CELL_SIDE*(i+1) - pos[0];
 		y1 = CELL_SIDE*(j+1) - pos[1];
 
-		// Compute of the heigth at cell borders
+        // Compute of the height at cell borders
 		h0 = h*std::exp( -(x0*x0 + y0*y0)/sigma);
 		h1 = h*std::exp( -(x0*x0 + y1*y1)/sigma);
 		h2 = h*std::exp( -(x1*x1 + y0*y0)/sigma);
 		h3 = h*std::exp( -(x1*x1 + y1*y1)/sigma);
 
-		// Adding the heigth mean and the derivative value in every cell
+        // Adding the heigth mean and the derivative value in every cell
 		grid[i][j]->height += (h0 + h1 + h2 + h3)/4;
 		grid[i][j]->slope[0] += (h0 + h1 - h2 - h3)/(2*CELL_SIDE);
 		grid[i][j]->slope[1] += (h0 + h2 - h1 - h3)/(2*CELL_SIDE);

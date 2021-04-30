@@ -155,7 +155,7 @@ void Fire::calcVelocity(int i)
 {
     Cell* cella = Forest->getCell(Polygon[i]);
 
-    if (cella == Forest->nullFuel)
+    if (cella == Forest->nullFuel || cella->R == 0)
     {
         Polygon[i].dx = Polygon[i].dy = 0;
         return;

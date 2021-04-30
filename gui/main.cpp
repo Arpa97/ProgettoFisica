@@ -21,7 +21,7 @@ void stress_test()
             {
                 for (double theta = -3; theta < 4; theta++)
                 {
-                    Foresta = new Environment(composizione);
+                    Foresta = new Environment(composizione, DEFAULT_MOISTURE);
                     Foresta->setU(U);
                     Foresta->setTheta(theta);
                     Foresta->addFire((i + 1) * CELL_SIDE / 2, (j + 1) * CELL_SIDE / 2);

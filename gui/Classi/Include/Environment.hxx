@@ -36,7 +36,7 @@ public:
 
 
 	//Constructor that creates a grid based on an array of couples fuelIndex-fuelPercentage (sum of all percentages must be 1)
-    Environment(const std::vector<std::vector<double>>& fuelPercentages);
+    Environment(const std::vector<std::vector<double>>& fuelPercentages, double moistureContent);
 
 	//---------------Methods----------------
 	
@@ -57,6 +57,7 @@ public:
 	// Methods for the wind setting and getting
 	void setU(double _U);
 	void setTheta(double _theta);
+	void setMf(double _Mf);
 	double getU() const;
 	double getTheta() const;
 	double getM_f() const;
@@ -64,7 +65,7 @@ public:
 	// Method to set the type of a cell
     void setCellType(double &x, double &y, int fNumber);
 
-	// Method for heigth computing
+    // Method for height computing
 	void addMountain(double h, double pos[2], double lar);
 
 	// Methods for getting the polygon of a specific fire in the index i
@@ -80,4 +81,7 @@ public:
 	//il quale NON deve essere messo nelle scelte possibili con cui disegnare la mappa
 	//Per prendere il nome di un fuel basta quindi fare Environment::getFuelInfo()[i]->name;
     static std::vector<Fuel*> getFuelInfo();
+
+    // Get maximum moisture for this forest
+    double getMaximumMoisture();
 };

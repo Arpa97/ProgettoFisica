@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include <cmath>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -15,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     // Setup ui
     ui->setupUi(this);
 
-    // Build and draw forest
+    // Build empty forest
     buildForest();
 
     // Get fuel info
@@ -28,11 +29,24 @@ MainWindow::MainWindow(QWidget *parent)
         }
     }
 
-    // Build and draw forest
+    // Set moisture to default value
+    ui->moistureSlider->setValue(DEFAULT_MOISTURE*SCALER_MOISTURE);
     buildAndDraw();
 }
 
+void MainWindow::addMountain(double x, double y, double height, double width){
+    double pos[2] = {x / rescale, (GRID_SIDE - y / rescale)};
+    Foresta->addMountain(height, pos, width);
+    original = drawOriginalgrid();
+    qDebug() << QString("x") << QString().number(x);
+    qDebug() << QString("y") << QString().number(y);
+    qDebug() << QString("height") << QString().number(height);
+    qDebug() << QString("width") << QString().number(width);
+}
+
 void MainWindow::buildAndDraw(){
+    ui->progressBar->setValue(0);
+    ui->progressBar->setFormat("0 ha");
     if (ui->fuelList->findItems("*", Qt::MatchWildcard).isEmpty()){
          addSpecificFuel(DEFAULT_FUEL);
     }
@@ -44,7 +58,7 @@ void MainWindow::buildAndDraw(){
 
 double MainWindow::getFuelIndex(QString fuelName){
     for (int i=0; i < int(fuelInfo.size()); i++){
-        qDebug() << QString().number(i);
+        //qDebug() << QString().number(i);
         if (!fuelName.compare(QString::fromUtf8(fuelInfo[i]->name.c_str()))){
             return i;
         }
@@ -53,10 +67,15 @@ double MainWindow::getFuelIndex(QString fuelName){
 }
 
 void MainWindow::buildForest(){
+    // set elapsed time to 0
+    ncicli = 0;
+    ui->labelInfoTime->setText(QString("Elapsed time: ") + QString().number(ncicli) + QString("s"));
+
+    // build forest
     std::vector<std::vector<double>> composizione;
     QList<QListWidgetItem*> fuelsList = ui->fuelList->findItems("*", Qt::MatchWildcard);
     if (fuelsList.isEmpty()){
-        Foresta = new Environment(composizione);
+        Foresta = new Environment(composizione, ui->moistureSlider->value()/SCALER_MOISTURE);
     }
     else {
         int differentFuels = fuelsList.size();
@@ -65,8 +84,17 @@ void MainWindow::buildForest(){
             std::vector<double> toadd = {getFuelIndex(fuelsList.takeFirst()->text()), fraction};
             composizione.push_back(toadd);
         }
-        Foresta = new Environment(composizione);
+        Foresta = new Environment(composizione, ui->moistureSlider->value()/SCALER_MOISTURE);
     }
+    // Method to add single predefined mountain
+    Foresta->setU(ui->windSpeed->value() * MAXWINDSPEED / 100);
+    Foresta->setTheta(ui->windDir->value() / 100);
+
+    // Get and set maximum moisture
+    double M_fmax = Foresta->getMaximumMoisture();
+    //qDebug() << QString().number(M_fmax);
+    ui->moistureSlider->setMaximum(round(M_fmax*SCALER_MOISTURE));
+    ui->moistureSlider->setSingleStep(M_fmax/SCALER_MOISTURE);
 }
 
 void MainWindow::updateColors(){
@@ -77,6 +105,14 @@ void MainWindow::updateColors(){
         int fuelIndex = getFuelIndex(item->text());
         fuelColors[fuelIndex] = idx+1;
         item->setForeground(getBrushColor(fuelIndex));
+    }
+}
+
+double MainWindow::getOpacity(double height){
+    if (ui->invertCheckBox->isChecked()){
+        return height/MAX_HEIGHT;
+    } else {
+        return 1-height/MAX_HEIGHT;
     }
 }
 
@@ -102,17 +138,25 @@ QImage MainWindow::drawOriginalgrid(){
      QPen paintpen(Qt::black);
 
      painter.setPen(paintpen);
-     int step = GRID_SIDE / CELL_SIDE;
+
+     // clears previous drawings
+     painter.setBrush(Qt::white);
+     painter.setOpacity(1);
+     painter.drawRect(-1, -1, ui->mainPicture->width()+1, ui->mainPicture->height()+1);
+
+     int cellsPerRow = GRID_SIDE / CELL_SIDE;
      double drawSize = CELL_SIDE * rescale;
 
-     for (int i = 0; i != step; i++)
+     for (int i = 0; i < cellsPerRow; i++)
+     {
+         for (int j = 0; j < cellsPerRow; j++)
          {
-             for (int j = 0; j != step; j++)
-             {
-                 painter.setBrush(getBrushColor(Foresta->grid[i][j]->fuelNumber));
-                 painter.drawRect(i * drawSize, (GRID_SIDE * rescale) - (j + 1) * drawSize, drawSize, drawSize);
-             }
+             // draw new square
+             painter.setBrush(getBrushColor(Foresta->grid[i][j]->fuelNumber));
+             painter.setOpacity(getOpacity(Foresta->grid[i][j]->height));
+             painter.drawRect(i * drawSize, (GRID_SIDE * rescale) - (j + 1) * drawSize, drawSize, drawSize);
          }
+     }
 
      ui->mainPicture->setPixmap(QPixmap::fromImage(tmp));
      return tmp;
@@ -157,21 +201,41 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
       else if(drawingFuels){
           drawFuel(event);
       }
+      else if(addingMountain){
+          int x = event->pos().x() - ui->mainPicture->x();
+          int y = event->pos().y() - ui->mainPicture->y();
+          if (0 < x && x < ui->mainPicture->width() && 0 < y && y < ui->mainPicture->height()){
+              double height = ui->mountainHeightSlider->value() * MAX_HEIGHT / 10;
+              double width = ui->mountainWidthSlider->value();
+              addMountain((double)x, (double)y, height, width);
+          }
+      }
     }
 }
-
 void MainWindow::drawFuel(QMouseEvent *event){
     double fuelNumber;
     int x = event->pos().x() - ui->mainPicture->x();
     int y = event->pos().y() - ui->mainPicture->y();
+    int size = ui->PaintDimension->value();
     if (0 < x && x < ui->mainPicture->width() && 0 < y && y < ui->mainPicture->height()){
         QListWidgetItem* current = ui->fuelList->currentItem();
         if(current){
            //current->text().toInt();
           fuelNumber = getFuelIndex(current->text());
-          double xcell = x / rescale;
-          double ycell = (GRID_SIDE - y / rescale);
-          Foresta->setCellType(xcell, ycell, fuelNumber);
+          double xcell = x / (rescale);
+          double ycell = (GRID_SIDE - y / (rescale));
+          for (int i = -size; i <= size; i++)
+          {
+              for (int j = -size; j <= size; j++)
+              {
+                  double xc = xcell + i * CELL_SIDE;
+                  double yc = ycell + j * CELL_SIDE;
+                  if (xc > 0 && xc < GRID_SIDE && yc > 0 && yc < GRID_SIDE)
+                  {
+                      Foresta->setCellType(xc, yc, fuelNumber);
+                  }
+              }
+          }
           original = drawOriginalgrid();
         }
     }
@@ -187,6 +251,7 @@ void MainWindow::on_addFireButton_clicked()
         ui->mainPicture->setCursor(cursorTarget);
         ui->mainPicture->setMouseTracking(true);
         ui->drawFuelButton->setDisabled(true);
+        ui->mountainAddButton->setDisabled(true);
         addingFires = true;
     }
 }
@@ -257,9 +322,16 @@ void MainWindow::on_startButton_clicked()
       ui->mainPicture->setMouseTracking(false);
       ui->startButton->setText(advancingTimer->isActive() ? "Start" : "Stop");
       stopAddingFires();
+      toggleMountainPanel();
       toggleFuelsPanel();
+      advancingTimer->isActive() ? ui->moistureSlider->setDisabled(false) : ui->moistureSlider->setDisabled(true);
       advancingTimer->isActive() ? advancingTimer->stop() : advancingTimer->start();
     }
+}
+
+void MainWindow::toggleMountainPanel(){
+    stopAddingMountains();
+    ui->mountainAddButton->isEnabled() ? ui->mountainAddButton->setEnabled(false) : ui->mountainAddButton->setEnabled(true);
 }
 
 void MainWindow::toggleFuelsPanel(){
@@ -280,7 +352,7 @@ void MainWindow::on_windDir_valueChanged(int position)
     double newTheta = (double)position/100;
     ui->windDirLabel->setText(QString("Angle: ") + QString().number(newTheta) + QString(" rad"));
     Foresta->setTheta(newTheta);
-    qDebug() << "winDir" << QString().number(newTheta);
+    //qDebug() << "winDir" << QString().number(newTheta);
 }
 
 void MainWindow::on_windSpeed_valueChanged(int value)
@@ -289,7 +361,16 @@ void MainWindow::on_windSpeed_valueChanged(int value)
   ui->windSpeedLabel->setText(QString("Speed: ") + QString().number(newSpeed) + QString(" m/s"));
   ui->Wind_Description->setText(getWindClassification(newSpeed));
   Foresta->setU(newSpeed);
-  qDebug() << "winSpeed" << newSpeed;
+  //qDebug() << "winSpeed" << newSpeed;
+}
+
+void MainWindow::on_PaintDimension_valueChanged(int value)
+{
+    if (value == 0) ui->BrushSizeLabel->setText(QString("Brush size: XS"));
+    else if (value == 1) ui->BrushSizeLabel->setText(QString("Brush size: S"));
+    else if (value == 2) ui->BrushSizeLabel->setText(QString("Brush size: M"));
+    else if (value == 3) ui->BrushSizeLabel->setText(QString("Brush size: L"));
+    else ui->BrushSizeLabel->setText(QString("Brush size: XL"));
 }
 
 QString MainWindow::getWindClassification(double speed){
@@ -305,7 +386,7 @@ QString MainWindow::getWindClassification(double speed){
   else if (speed > 20 && speed <= 23.5) return "Strong Gale:\nSlight damage to buildings,\nshingles blown off roof";
   else if (speed > 23.5 && speed <= 27.5) return "Whole Gale:\nTrees uprooted,\nconsiderable damage to buildings";
   else if (speed > 27.5 && speed <= 31.5) return "Storm:\nWidespread damage,\nvery rare occurrence";
-  else if (speed > 31.5) return "Hurricane:\nViolent destruction";
+  else return "Hurricane:\nViolent destruction";
 }
 
 void MainWindow::on_clearButton_clicked()
@@ -316,6 +397,9 @@ void MainWindow::on_clearButton_clicked()
     ui->mainPicture->setPixmap(QPixmap::fromImage(original));
     //pulire vettore wildfire
     Foresta->wildfire.clear();
+    //reset progressBar
+    ui->progressBar->setValue(0);
+    ui->progressBar->setFormat("0 ha");
     //stoppare esecuzione
     ncicli=0;
     ui->labelInfoTime->setText(QString("Elapsed time: ") + QString().number(ncicli) + QString("s"));
@@ -355,7 +439,7 @@ void MainWindow::on_horizontalSlider_valueChanged(int value)
 {
     ui->simulationSpeedLabel->setText(QString("Simulation: ") + QString().number(value) + QString("x"));
     advancingTimer->setInterval(1000/value);
-    qDebug() << "simSpeed" << value;
+    //qDebug() << "simSpeed" << value;
 }
 
 void MainWindow::on_drawFuelButton_clicked()
@@ -367,6 +451,7 @@ void MainWindow::on_drawFuelButton_clicked()
         ui->mainPicture->setCursor(Qt::UpArrowCursor);
         ui->mainPicture->setMouseTracking(true);
         ui->addFireButton->setDisabled(true);
+        ui->mountainAddButton->setDisabled(true);
         drawingFuels = true;
     }
 }
@@ -377,7 +462,19 @@ void MainWindow::stopDrawingFuel(){
         ui->mainPicture->setCursor(Qt::ArrowCursor);
         ui->mainPicture->setMouseTracking(false);
         ui->addFireButton->setDisabled(false);
+        ui->mountainAddButton->setDisabled(false);
         drawingFuels = false;
+    }
+}
+
+void MainWindow::stopAddingMountains(){
+    if (addingMountain){
+        ui->mountainAddButton->setText("Add mountain");
+        ui->mainPicture->setCursor(Qt::ArrowCursor);
+        ui->mainPicture->setMouseTracking(false);
+        ui->addFireButton->setDisabled(false);
+        ui->drawFuelButton->setDisabled(false);
+        addingMountain = false;
     }
 }
 
@@ -388,6 +485,7 @@ void MainWindow::stopAddingFires(){
         ui->mainPicture->setMouseTracking(false);
         if(!advancingTimer->isActive()){
             ui->drawFuelButton->setDisabled(false);
+            ui->mountainAddButton->setDisabled(false);
         }
         addingFires = false;
     }
@@ -400,7 +498,7 @@ void MainWindow::on_progressBar_advancing(Environment* Forest){
   double Total = GRID_SIDE*GRID_SIDE;
   double Val = (Burned/Total);
   double Percentage = Val*100;
-  qDebug() << "Bruciato " << (int)(Percentage * 100);
+  //qDebug() << "Bruciato " << (int)(Percentage * 100);
   //bar->setFormat(QString("%1%").arg(Percentage, 0, 'f', 2));
   bar->setFormat(QString("%1 ha").arg(Burned*1e-4, 0, 'f', 2));     //m2 to hectares
   bar->setValue((int)(Percentage*100));
@@ -415,5 +513,32 @@ void MainWindow::on_removeAllFuels_clicked()
             fuelColors[getFuelIndex(ui->fuelList->takeItem(ui->fuelList->row(fuelsList.takeFirst()))->text())] = 0;
         }
         buildAndDraw();
+    }
+}
+
+void MainWindow::on_moistureSlider_valueChanged(int value)
+{
+    ui->moistureSlider->setDisabled(true);
+    ui->moistureLabelValue->setText(QString("Moisture: ") + QString().number(value/SCALER_MOISTURE));
+    Foresta->setMf(ui->moistureSlider->value()/SCALER_MOISTURE);
+    ui->moistureSlider->setDisabled(false);
+}
+
+void MainWindow::on_invertCheckBox_stateChanged(int arg1)
+{
+    original = drawOriginalgrid();
+}
+
+void MainWindow::on_mountainAddButton_clicked()
+{
+    if (ui->mainPicture->hasMouseTracking()){
+        stopAddingMountains();
+    } else {
+        ui->mountainAddButton->setText("Stop adding mountains");
+        ui->mainPicture->setCursor(cursorTarget);
+        ui->mainPicture->setMouseTracking(true);
+        ui->addFireButton->setDisabled(true);
+        ui->drawFuelButton->setDisabled(true);
+        addingMountain = true;
     }
 }
