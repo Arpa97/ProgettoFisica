@@ -142,14 +142,14 @@ QImage MainWindow::drawOriginalgrid(){
      // clears previous drawings
      painter.setBrush(Qt::white);
      painter.setOpacity(1);
-     painter.drawRect(0, 0, GRID_SIDE, GRID_SIDE);
+     painter.drawRect(-1, -1, ui->mainPicture->width()+1, ui->mainPicture->height()+1);
 
-     int step = GRID_SIDE / CELL_SIDE;
+     int cellsPerRow = GRID_SIDE / CELL_SIDE;
      double drawSize = CELL_SIDE * rescale;
 
-     for (int i = 0; i != step; i++)
+     for (int i = 0; i < cellsPerRow; i++)
      {
-         for (int j = 0; j != step; j++)
+         for (int j = 0; j < cellsPerRow; j++)
          {
              // draw new square
              painter.setBrush(getBrushColor(Foresta->grid[i][j]->fuelNumber));
