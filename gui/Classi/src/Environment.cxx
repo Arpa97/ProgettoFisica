@@ -5,6 +5,8 @@
 #include <ctime>
 #include <iostream>
 #include <iomanip> 
+#include <fstream>
+#include <filesystem>
 
 using std::cout;
 using std::endl;
@@ -53,6 +55,97 @@ Environment::Environment(const std::vector<std::vector<double>> &fuelPercentages
     }
 
     // Check to limit the maximum moisture of the forest
+	double M_fmax = getMaximumMoisture();
+    M_f = M_f < M_fmax ? M_f : M_fmax;
+}
+
+Environment::Environment(std::string Modello, double moistureContent)
+{
+	//-----Inizializing the principal variables-----
+	U = 0;
+    theta = 0;
+    M_f = moistureContent;
+	Cell::FillFuelType(M_f);
+	nullFuel->setR(0);
+	Fire::setEnvironment(this);
+
+	// Variables for the calculation on the grid
+	int step = GRID_SIDE / CELL_SIDE;
+
+	// Inizializing the grid
+	grid = new Cell * *[step];
+	for (int i = 0; i != step; i++)
+		grid[i] = new Cell * [step];
+
+	//-----Inizializing the model-----
+
+	// Path of the Models folder
+	std::filesystem::path p = std::filesystem::current_path();
+	p.replace_filename("File/Models/");
+
+	// Path to the file
+	std::string Path = std::string(p) + Modello;
+
+	// Open the file
+	std::ifstream file (Path.data(), std::ifstream::in);
+
+	// Control if the file is fine
+	if(!file.good())
+	{
+		cout << "Model not found, program aborting..." << endl;
+		abort();
+	}
+
+	//-----Reading the file-----
+	
+	// Skip the first line for the comment
+	getline(file, Modello, '\n');
+
+	// Control that the number on the second line correspond to STEP
+	getline(file, Modello, '\n');
+
+	if(step != stoi(Modello))
+	{
+		cout << "Model loaded not compatible with current forest, program aborting..."<< endl;
+		abort();
+	}
+
+	// Skipping another line
+	getline(file, Modello, '\n');
+
+	// Inizialize the forest
+	for(int cInd = 0; cInd != step*step; cInd++)
+	{
+		int j = cInd % step;
+		int i = (cInd - j) / step;
+
+		getline(file, Modello, '\n');
+
+		grid[i][j] = new Cell(stoi(Modello), 0);
+	}
+
+	// Skipping another line
+	getline(file, Modello, '\n');
+	double Height;
+
+	// Inizialize the Height
+	for(int cInd = 0; cInd != step*step; cInd++)
+	{
+		int j = cInd % step;
+		int i = (cInd - j) / step;
+
+		file >> Height;
+
+		grid[i][j]->height = Height;
+		grid[i][j]->setR(U, theta);
+	}
+
+	// Closing the file
+	file.close();
+
+	//-----General settings-----
+
+	// Check to limit the maximum moisture of the forest
 	double M_fmax = getMaximumMoisture();
     M_f = M_f < M_fmax ? M_f : M_fmax;
 }
@@ -357,4 +450,47 @@ std::vector<Fuel*> Environment::getFuelInfo()
     std::vector<Fuel*> FuelVector;
     FuelVector.insert(FuelVector.end(), &Cell::FuelType[0], &Cell::FuelType[N_FUEL_TYPES + 1]);
     return FuelVector;
+}
+
+void Environment::saveModel(std::string name)
+{
+	int step = GRID_SIDE/CELL_SIDE;
+
+	//-----Inizializing the model-----
+
+	// Path of the Models folder
+	std::filesystem::path p = std::filesystem::current_path();
+	p.replace_filename("File/Models/");
+
+	// Path to the file
+	std::string Path = std::string(p) + name;
+
+	// Open the file
+	std::ofstream file (Path.data(), std::ofstream::out);
+
+	// Writing the first things
+	file << "Forest model: " << name << "\n";
+	file << step << "\n";
+	file << "Start:\n";
+
+	//-----Writing the composition-----
+	Cell * c;
+
+	for(int i = 0; i != step*step; i++)
+	{
+		c = getCell(i);
+		file << c->fuelIndex << "\n";
+	}
+
+	// Height
+	file << "Heights:\n";
+
+	for(int i = 0; i != step*step; i++)
+	{
+		c = getCell(i);
+		file << c->height << "\n";
+	}
+
+	//-----Finishing-----
+	file.close();
 }

@@ -32,6 +32,7 @@ public:
     bool addingFires = false;
     bool drawingFuels = false;
     bool addingMountain = false;
+    bool daModello = true;
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
@@ -41,6 +42,7 @@ private slots:
     void updateAdvance();
     void createNewFire(double x, double y);
     QImage drawOriginalgrid();
+    void checkFuelList();
 
     // get the brush color corresponding to a fuel index
     QColor getBrushColor(int fuelNumber);

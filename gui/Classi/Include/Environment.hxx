@@ -14,6 +14,7 @@
 #include "PriorityQueue.hxx"
 
 #include <functional>
+#include <cstring>
 
 class Environment
 {
@@ -37,6 +38,7 @@ public:
 
 	//Constructor that creates a grid based on an array of couples fuelIndex-fuelPercentage (sum of all percentages must be 1)
     Environment(const std::vector<std::vector<double>>& fuelPercentages, double moistureContent);
+	Environment(std::string Modello, double moistureContent);
 
 	//---------------Methods----------------
 	
@@ -84,4 +86,7 @@ public:
 
     // Get maximum moisture for this forest
     double getMaximumMoisture();
+
+	// Method to save current forest composition to a file
+	void saveModel(std::string name);
 };

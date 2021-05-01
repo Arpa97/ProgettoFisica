@@ -29,6 +29,9 @@ MainWindow::MainWindow(QWidget *parent)
         }
     }
 
+    if(daModello)
+    checkFuelList();
+
     // Set moisture to default value
     ui->moistureSlider->setValue(DEFAULT_MOISTURE*SCALER_MOISTURE);
     buildAndDraw();
@@ -71,21 +74,29 @@ void MainWindow::buildForest(){
     ncicli = 0;
     ui->labelInfoTime->setText(QString("Elapsed time: ") + QString().number(ncicli) + QString("s"));
 
-    // build forest
-    std::vector<std::vector<double>> composizione;
-    QList<QListWidgetItem*> fuelsList = ui->fuelList->findItems("*", Qt::MatchWildcard);
-    if (fuelsList.isEmpty()){
-        Foresta = new Environment(composizione, ui->moistureSlider->value()/SCALER_MOISTURE);
-    }
-    else {
-        int differentFuels = fuelsList.size();
-        double fraction = 1.0/differentFuels;
-        for(int i = 0; i < differentFuels; i++){
-            std::vector<double> toadd = {getFuelIndex(fuelsList.takeFirst()->text()), fraction};
-            composizione.push_back(toadd);
+    // Se non la carico da modello allora la fai random
+    if(!daModello)
+    {
+        std::vector<std::vector<double>> composizione;
+        QList<QListWidgetItem*> fuelsList = ui->fuelList->findItems("*", Qt::MatchWildcard);
+        if (fuelsList.isEmpty()){
+            Foresta = new Environment(composizione, ui->moistureSlider->value()/SCALER_MOISTURE);
         }
-        Foresta = new Environment(composizione, ui->moistureSlider->value()/SCALER_MOISTURE);
+        else {
+            int differentFuels = fuelsList.size();
+            double fraction = 1.0/differentFuels;
+            for(int i = 0; i < differentFuels; i++){
+                std::vector<double> toadd = {getFuelIndex(fuelsList.takeFirst()->text()), fraction};
+                composizione.push_back(toadd);
+            }
+            Foresta = new Environment(composizione, ui->moistureSlider->value()/SCALER_MOISTURE);
+        }
     }
+
+    // Build the forest from Models File
+    if(daModello)
+        Foresta = new Environment("Prova.for", ui->moistureSlider->value()/SCALER_MOISTURE);
+
     // Method to add single predefined mountain
     Foresta->setU(ui->windSpeed->value() * MAXWINDSPEED / 100);
     Foresta->setTheta(ui->windDir->value() / 100);
@@ -391,6 +402,8 @@ QString MainWindow::getWindClassification(double speed){
 
 void MainWindow::on_clearButton_clicked()
 {
+    Foresta->saveModel("Prova.for");
+
     if (advancingTimer->isActive()){
       ui->startButton->click();
     }
@@ -540,5 +553,52 @@ void MainWindow::on_mountainAddButton_clicked()
         ui->addFireButton->setDisabled(true);
         ui->drawFuelButton->setDisabled(true);
         addingMountain = true;
+    }
+}
+
+
+
+
+
+
+
+
+
+//--------------------Funzioni aggiunte per il setup delle simulazioni------------------------
+
+bool checkIfPresent(std::vector<int> v, int j)
+{
+    for(int i = 0; i != v.size(); i++)
+    {
+        if(v[i] == j)
+            return true;
+    }
+
+    return false;
+}
+
+// Guarda nelle celle presenti i fuel che ci sono e li aggiunge alla lista
+void MainWindow::checkFuelList()
+{
+    Cell * cella = Foresta->getCell(0);
+    std::vector<int> fuelIndex(1);
+
+    fuelIndex[0] = cella->fuelIndex;
+
+    int step = GRID_SIDE/CELL_SIDE;
+
+    for(int i = 1; i != step*step; i++)
+    {
+        Cell * cella = Foresta->getCell(i);
+
+        if(!checkIfPresent(fuelIndex, cella->fuelIndex))
+        {
+            fuelIndex.push_back(cella->fuelIndex);
+        }
+    }
+
+    for(int i = 0; i != fuelIndex.size(); i++)
+    {
+        addSpecificFuel(fuelInfo[fuelIndex[i]]->name.data());
     }
 }
