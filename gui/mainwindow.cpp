@@ -24,9 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     for (Fuel* f : fuelInfo){
         fuelColors.push_back(0);
-        if (f->name.compare("Nullo")){
-            ui->fuelSelection->addItem(QString::fromUtf8(f->name.c_str()));
-        }
+        ui->fuelSelection->addItem(QString::fromUtf8(f->name.c_str()));
     }
 
     if(daModello)
@@ -95,7 +93,7 @@ void MainWindow::buildForest(){
 
     // Build the forest from Models File
     if(daModello)
-        Foresta = new Environment("Prova.for", ui->moistureSlider->value()/SCALER_MOISTURE);
+        Foresta = new Environment(Modello, ui->moistureSlider->value()/SCALER_MOISTURE);
 
     // Method to add single predefined mountain
     Foresta->setU(ui->windSpeed->value() * MAXWINDSPEED / 100);
@@ -113,6 +111,11 @@ void MainWindow::updateColors(){
     int differentFuels = fuelsList.size();
     for (int idx = 0; idx < differentFuels; idx++){
         QListWidgetItem* item = fuelsList.takeFirst();
+        
+        // The null fuel is settled black
+        if(item->text() == "Nullo")
+            continue;
+
         int fuelIndex = getFuelIndex(item->text());
         fuelColors[fuelIndex] = idx+1;
         item->setForeground(getBrushColor(fuelIndex));
@@ -402,7 +405,7 @@ QString MainWindow::getWindClassification(double speed){
 
 void MainWindow::on_clearButton_clicked()
 {
-    Foresta->saveModel("Prova.for");
+    Foresta->saveModel(saveModello);
 
     if (advancingTimer->isActive()){
       ui->startButton->click();

@@ -32,9 +32,13 @@ public:
     bool addingFires = false;
     bool drawingFuels = false;
     bool addingMountain = false;
-    bool daModello = true;
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    //--------------Variabili che controllano l'inizializzazione della foresta da file-------------
+    bool daModello = true;                      // Vero per inizializzazione da file, falso per randomica standard
+    std::string Modello = "Barriera.for";       // Qua c'è il nome del file da usare
+    std::string saveModello = "Barriera.for";   // Nome del file su cui salca quando premi "clear"
 
 private slots:
     // custom methods
