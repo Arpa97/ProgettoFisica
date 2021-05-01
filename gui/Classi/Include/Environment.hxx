@@ -15,6 +15,7 @@
 
 #include <functional>
 #include <cstring>
+#include <filesystem>
 
 class Environment
 {
@@ -24,8 +25,14 @@ class Environment
 	double theta;
 	double M_f;
 
+	// File su cui scrive i dati da analizzare
+	std::filesystem::path outputFile;
+
 	// Methods for inizializing the times and the factor in the vertices
 	void calcAll();
+
+	// Metodo con cui scrive i dati da analizzare
+	void writeData();
 
 public:
 
@@ -39,6 +46,9 @@ public:
 	//Constructor that creates a grid based on an array of couples fuelIndex-fuelPercentage (sum of all percentages must be 1)
     Environment(const std::vector<std::vector<double>>& fuelPercentages, double moistureContent);
 	Environment(std::string Modello, double moistureContent);
+
+	// Distruttore
+	~Environment();
 
 	//---------------Methods----------------
 	

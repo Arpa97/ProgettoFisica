@@ -57,6 +57,18 @@ Environment::Environment(const std::vector<std::vector<double>> &fuelPercentages
     // Check to limit the maximum moisture of the forest
 	double M_fmax = getMaximumMoisture();
     M_f = M_f < M_fmax ? M_f : M_fmax;
+
+	// Path of the Models folder
+	std::filesystem::path outputFile = std::filesystem::current_path();
+	outputFile.replace_filename("File/output.dat");
+
+	// Path to the file
+	std::string Path = std::string(outputFile);
+
+	std::ofstream file = std::ofstream(Path.data(), std::ofstream::out);
+
+	file << "File con i dati interessanti della simulazione:\n"; 
+	file.close();
 }
 
 Environment::Environment(std::string Modello, double moistureContent)
@@ -148,6 +160,23 @@ Environment::Environment(std::string Modello, double moistureContent)
 	// Check to limit the maximum moisture of the forest
 	double M_fmax = getMaximumMoisture();
     M_f = M_f < M_fmax ? M_f : M_fmax;
+
+	// Path of the Models folder
+	outputFile = std::filesystem::current_path();
+	outputFile.replace_filename("File/output.dat");
+
+	// Inizializing the outputFile
+	Path = std::string(outputFile);
+
+	std::ofstream File = std::ofstream(Path.data(), std::ofstream::out);
+
+	File << "File con i dati interessanti della simulazione:\n"; 
+	File.close();
+}
+
+Environment::~Environment()
+{
+
 }
 
 double Environment::getMaximumMoisture(){
@@ -208,6 +237,8 @@ void Environment::advance(double dt)
 
 		calcAll();		
 	}
+
+	writeData();
 }
 
 
@@ -235,6 +266,8 @@ void Environment::advance_withoutHeap()
 	{
 		wildfire[i]->Propagate_withoutHeap(dt);
 	}
+
+	writeData();
 }
 
 
@@ -492,5 +525,22 @@ void Environment::saveModel(std::string name)
 	}
 
 	//-----Finishing-----
+	file.close();
+}
+
+void Environment::writeData()
+{
+	// Inizializing the outputFile
+	std::string Path = std::string(outputFile);
+
+	std::ofstream file = std::ofstream(Path.data(), std::ofstream::out | std::ofstream::app);
+
+	double xMax = 0;
+
+	for(int i = 0; i != wildfire[0]->Polygon.size(); i++)
+		xMax = xMax > wildfire[0]->Polygon[i].x ? xMax : wildfire[0]->Polygon[i].x;
+
+	file << time << "\t" << xMax << "\n";
+
 	file.close();
 }
