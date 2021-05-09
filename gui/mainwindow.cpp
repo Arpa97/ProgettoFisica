@@ -33,6 +33,9 @@ MainWindow::MainWindow(QWidget *parent)
     // Set moisture to default value
     ui->moistureSlider->setValue(DEFAULT_MOISTURE*SCALER_MOISTURE);
     buildAndDraw();
+
+    // if(daModello)
+    // Foresta->addFire(150, 405);
 }
 
 void MainWindow::addMountain(double x, double y, double height, double width){
@@ -92,7 +95,7 @@ void MainWindow::buildForest(){
     }
 
     // Build the forest from Models File
-    if(daModello)
+    else
         Foresta = new Environment(Modello, ui->moistureSlider->value()/SCALER_MOISTURE);
 
     // Method to add single predefined mountain
@@ -101,6 +104,7 @@ void MainWindow::buildForest(){
 
     // Get and set maximum moisture
     double M_fmax = Foresta->getMaximumMoisture();
+
     //qDebug() << QString().number(M_fmax);
     ui->moistureSlider->setMaximum(round(M_fmax*SCALER_MOISTURE));
     ui->moistureSlider->setSingleStep(M_fmax/SCALER_MOISTURE);
@@ -220,7 +224,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
           int y = event->pos().y() - ui->mainPicture->y();
           if (0 < x && x < ui->mainPicture->width() && 0 < y && y < ui->mainPicture->height()){
               double height = ui->mountainHeightSlider->value() * MAX_HEIGHT / 10;
-              double width = ui->mountainWidthSlider->value();
+              double width = ui->mountainWidthSlider->value() * 100;
               addMountain((double)x, (double)y, height, width);
           }
       }
@@ -257,6 +261,9 @@ void MainWindow::drawFuel(QMouseEvent *event){
 
 void MainWindow::on_addFireButton_clicked()
 {
+    // Foresta->createBarrier(250, 245, 4, 32);
+
+    // Foresta->setCellType(100,100, 44);
 
     if (ui->mainPicture->hasMouseTracking()){
         stopAddingFires();
@@ -326,6 +333,9 @@ void MainWindow::printFires(){
 
 void MainWindow::on_startButton_clicked()
 {
+//   if(!daModello)
+//     Foresta->addFire(150, 250);
+
   if (Foresta->wildfire.size()<1){
       qWarning() << "No fire added...";
       QMessageBox::warning(this, tr("Attention"),tr("You should add a fire before starting the simulation"));
@@ -547,6 +557,7 @@ void MainWindow::on_invertCheckBox_stateChanged(int arg1)
 
 void MainWindow::on_mountainAddButton_clicked()
 {
+
     if (ui->mainPicture->hasMouseTracking()){
         stopAddingMountains();
     } else {

@@ -75,7 +75,7 @@ public:
 	double getM_f() const;
 
 	// Method to set the type of a cell
-    void setCellType(double &x, double &y, int fNumber);
+    void setCellType(double x, double y, int fNumber);
 
     // Method for height computing
 	void addMountain(double h, double pos[2], double lar);
@@ -99,4 +99,7 @@ public:
 
 	// Method to save current forest composition to a file
 	void saveModel(std::string name);
+
+	// Method to set up barriers faster
+	void createBarrier(double x, double y, int Alt, int Lar);
 };

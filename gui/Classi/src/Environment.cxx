@@ -59,7 +59,7 @@ Environment::Environment(const std::vector<std::vector<double>> &fuelPercentages
     M_f = M_f < M_fmax ? M_f : M_fmax;
 
 	// Path of the Models folder
-	std::filesystem::path outputFile = std::filesystem::current_path();
+	outputFile = std::filesystem::current_path();
 	outputFile.replace_filename("File/output.dat");
 
 	// Path to the file
@@ -189,6 +189,9 @@ double Environment::getMaximumMoisture(){
     {
         for (int j = 0; j != step; j++)
         {
+			if(grid[i][j]->fuelIndex == 0)
+				continue;
+
             M_x = fuelsInForest[grid[i][j]->fuelIndex]->M_x;
             maxMoisture = maxMoisture < M_x ? maxMoisture : M_x;
         }
@@ -459,7 +462,7 @@ void Environment::addMountain(double h, double pos[2], double lar)
 	calcAll();
 }
 
-void Environment::setCellType(double &x, double &y, int fNumber)
+void Environment::setCellType(double x, double y, int fNumber)
 {
 	Cell* cella = getCell(x, y);
 
@@ -540,7 +543,25 @@ void Environment::writeData()
 	for(int i = 0; i != wildfire[0]->Polygon.size(); i++)
 		xMax = xMax > wildfire[0]->Polygon[i].x ? xMax : wildfire[0]->Polygon[i].x;
 
+	if(xMax <= X_BREAKPOINT)
 	file << time << "\t" << xMax << "\n";
 
 	file.close();
+}
+
+void Environment::createBarrier(double x, double y, int Alt, int Lar)
+{
+	// Iterate over the number of cell needed
+	for(int i = 0; i != Alt; i++)
+	{
+		for(int j = 0; j != Lar; j++)
+		{
+			Cell* cella = getCell(x + i*CELL_SIDE, y + j*CELL_SIDE);
+
+			// Setting the cell to fuel null
+			cella->fuelNumber = 0;
+			cella->fuelIndex = cella->numberToIndex(0);
+			cella->setR(U, theta);
+		}
+	}
 }
