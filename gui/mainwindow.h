@@ -37,8 +37,8 @@ public:
 
     //--------------Variabili che controllano l'inizializzazione della foresta da file-------------
     bool daModello = true;                           // Vero per inizializzazione da file, falso per randomica standard
-    std::string Modello = "ParcoMartinaConMonte.for";       // Qua c'è il nome del file da usare
-    std::string saveModello = "ParcoMartinaConMonte.for";   // Nome del file su cui salca quando premi "clear"
+    std::string Modello = "ParcoMartinaConMontagne2.for";       // Qua c'è il nome del file da usare
+    std::string saveModello = "ParcoMartinaConMontagne2.for";   // Nome del file su cui salca quando premi "clear"
 
 private slots:
     // custom methods

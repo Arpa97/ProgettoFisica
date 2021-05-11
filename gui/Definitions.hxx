@@ -11,7 +11,7 @@
 #define SCALER_MOISTURE 100.0                   // scaler for the moisture slider
 
 #define CELL_SIDE 20							// m. Length of the cell (square) side. Cannot be chosen by user.
-#define GRID_SIDE 1500							// m. Length of the grid size. Must be a multiple of CELL_SIDE. Can be chosen by user.
+#define GRID_SIDE 1600							// m. Length of the grid size. Must be a multiple of CELL_SIDE. Can be chosen by user.
 #define MAX_DISTANCE 20							// m. Maximum distance between two vertices of the fire polygon.
 
 #define N_FUEL_TYPES 53							// Number of different fuel types.
