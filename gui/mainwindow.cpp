@@ -130,7 +130,8 @@ double MainWindow::getOpacity(double height){
     if (ui->invertCheckBox->isChecked()){
         return height/MAX_HEIGHT;
     } else {
-        return 1-height/MAX_HEIGHT;
+        // return 1-height/MAX_HEIGHT;
+        return 1;
     }
 }
 
