@@ -63,7 +63,7 @@ Environment::Environment(const std::vector<std::vector<double>> &fuelPercentages
 	outputFile.replace_filename("File/output.dat");
 
 	// Path to the file
-	std::string Path = std::string(outputFile);
+	std::string Path = outputFile.string();
 
 	std::ofstream file = std::ofstream(Path.data(), std::ofstream::out);
 
@@ -95,8 +95,18 @@ Environment::Environment(std::string Modello, double moistureContent)
 	std::filesystem::path p = std::filesystem::current_path();
 	p.replace_filename("File/Models/");
 
+	if (!std::filesystem::exists(p))
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			p = p.parent_path();
+		}
+
+		p.replace_filename("File/Models/");
+	}
+
 	// Path to the file
-	std::string Path = std::string(p) + Modello;
+	std::string Path = p.string() + Modello;
 
 	// Open the file
 	std::ifstream file (Path.data(), std::ifstream::in);
@@ -166,7 +176,7 @@ Environment::Environment(std::string Modello, double moistureContent)
 	outputFile.replace_filename("File/output.dat");
 
 	// Inizializing the outputFile
-	Path = std::string(outputFile);
+	Path = outputFile.string();
 
 	std::ofstream File = std::ofstream(Path.data(), std::ofstream::out);
 
@@ -499,7 +509,7 @@ void Environment::saveModel(std::string name)
 	p.replace_filename("File/Models/");
 
 	// Path to the file
-	std::string Path = std::string(p) + name;
+	std::string Path = p.string() + name;
 
 	// Open the file
 	std::ofstream file (Path.data(), std::ofstream::out);
@@ -534,7 +544,7 @@ void Environment::saveModel(std::string name)
 void Environment::writeData()
 {
 	// Inizializing the outputFile
-	std::string Path = std::string(outputFile);
+	std::string Path = outputFile.string();
 
 	std::ofstream file = std::ofstream(Path.data(), std::ofstream::out | std::ofstream::app);
 
